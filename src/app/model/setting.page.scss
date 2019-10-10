@@ -1,0 +1,28 @@
+
+ion-item{
+    padding-right: 16px;
+}
+
+.header-toolbar{
+    --border-width: 0 !important;
+
+}
+
+.mb-input{
+    // width: 90%;
+    /*padding-right: 20px;*/
+}
+
+.mb-input-remark{
+    color: rgba(0,0,0,0.4);
+    font-size: 0.7rem;
+    margin-top: -10px;
+}
+
+.button{
+    --border-radius: 25px !important;
+}
+
+.lbl-button{
+    margin-top: 15px;
+}

@@ -1,0 +1,98 @@
+
+<ion-header>
+   <ion-toolbar class="header-toolbar">
+     <div class="header-title"></div>
+     <ion-buttons slot="end">
+      <ion-button (click)="cancel(false)" color="danger">
+        <ion-icon name="arrow-down"></ion-icon> 
+     </ion-button>
+    </ion-buttons>
+   </ion-toolbar>
+ </ion-header>
+
+ <div class="main-box fadeIn">
+    <!-- <ion-toolbar translucent class="header-toolbar">
+        <div class="header-title"></div>
+        <ion-buttons slot="end">
+         <ion-button (click)="cancel(false)" color="danger">
+           <ion-icon name="ios-arrow-down"></ion-icon> 
+        </ion-button>
+       </ion-buttons>
+  </ion-toolbar> -->
+
+   <div class="header-box">
+     <div class="track-title">{{nowTrack.trackTitle}}</div>
+     <div class="track-artist">{{nowTrack.artist}} - {{nowTrack.album}}</div>
+     <div class="track-line3">
+       <span class="track-audioType">{{audioType}}</span>
+       <span class="track-sampleRate">{{nowTrack.sampleRate}}</span>
+     </div>
+   </div>
+   
+   <div id="nowplaying-coverImg" class="img-box">
+     <img *ngIf="(antimation == 'true')" src="{{coverImg}}" [(ngClass)]="{true: 'coverImgAnimation', false: 'coverImg'}[playState == '3']" />
+     <img *ngIf="(antimation != 'true')" src="{{coverImg}}" class="coverImgFixed"/>
+   </div>
+ 
+   <div class="footer-box">
+       
+    <ion-range [(ngModel)]="audiobar" min="0" max="{{duration}}" debounce="1000" color="danger" (click)="setPlayPosition($event)">
+      <span slot="start" class="audiobar-text">00:00</span>
+      <span slot="end" class="audiobar-text">{{rangerEnd}}</span>
+    </ion-range>
+ 
+    <ion-grid>
+      <ion-row class="play-row">
+        <ion-col>
+          <ion-buttons>
+            <ion-button color="danger" (click)="setRepeat()" class="play-button">
+              <ion-icon *ngIf="(repeat == 1)" name="ios-sync" class="play-infinite" ></ion-icon>
+              <ion-icon *ngIf="(repeat == 0)" name="ios-infinite" class="play-infinite"></ion-icon>
+              <ion-icon *ngIf="(repeat == 2)" name="ios-infinite" class="play-infinite"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col>
+          <ion-buttons>
+            <ion-button color="danger" (click)="playPrev()" class="play-button">
+              <ion-icon name="skip-backward" class="play-back"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col>
+          <!-- <div *ngIf="(playState == '3')" class="play-play-outbox" (click)="playPause()">
+            <ion-icon name="pause" class="play-play"></ion-icon>
+          </div>
+          <div *ngIf="(playState != '3')" class="play-pause-outbox" (click)="playPause()">
+            <ion-icon  name="play" class="play-pause"></ion-icon>
+          </div> -->
+          <ion-buttons>
+              <ion-button color="danger" (click)="playPause()" class="play-button">
+                <img *ngIf="(playState != '3')" src="assets/svg/play.svg" class="playPause-img"/>
+                <img *ngIf="(playState == '3')" src="assets/svg/pause.svg" class="playPause-img"/>
+              </ion-button>
+            </ion-buttons>
+        </ion-col>
+        <ion-col>
+          <ion-buttons>
+            <ion-button color="danger" (click)="playNext()" class="play-button">
+              <ion-icon name="skip-forward" class="play-next"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col>
+          <ion-buttons>
+            <ion-button color="danger" (click)="setShuffle()" class="play-button">
+              <ion-icon *ngIf="(!shuffle)" name="ios-menu" class="play-volume"></ion-icon>
+              <ion-icon *ngIf="(shuffle)" name="shuffle" class="play-volume"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <!--<ion-icon name="volume-off"></ion-icon>-->
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+ 
+ </div>
+
+ 

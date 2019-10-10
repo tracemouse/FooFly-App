@@ -1,0 +1,34 @@
+<ion-tabs>
+
+  <ion-tab-bar slot="bottom" class="tab-bar" (ionTabBarChanged)="change($event)">
+    <ion-tab-button tab="tab1">
+      <!-- <ion-icon name="stats" class="tab-icon"></ion-icon> -->
+      <img src="assets/svg/tab1-0.svg" class="tab-img" *ngIf="flag!='tab1'"/>
+      <img src="assets/svg/tab1-1.svg" class="tab-img" *ngIf="flag=='tab1'"/>
+      <ion-label class="tab-text">{{'tabs.tab1' | translate}}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab2">
+      <!-- <ion-icon name="musical-notes" class="tab-icon"></ion-icon> -->
+      <img src="assets/svg/tab2-0.svg" class="tab-img" *ngIf="flag!='tab2'"/>
+      <img src="assets/svg/tab2-1.svg" class="tab-img" *ngIf="flag=='tab2'"/>
+      <ion-label class="tab-text">{{'tabs.tab2' | translate}}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab3">
+      <!-- <ion-icon name="options" class="tab-icon"></ion-icon> -->
+      <img src="assets/svg/tab3-0.svg" class="tab-img" *ngIf="flag!='tab3'"/>
+      <img src="assets/svg/tab3-1.svg" class="tab-img" *ngIf="flag=='tab3'"/>
+      <ion-label class="tab-text">{{'tabs.tab3' | translate}}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab4">
+      <!-- <ion-icon name="settings" class="tab-icon"></ion-icon> -->
+      <img src="assets/svg/tab4-0.svg" class="tab-img" *ngIf="flag!='tab4'"/>
+      <img src="assets/svg/tab4-1.svg" class="tab-img" *ngIf="flag=='tab4'"/>
+      <ion-label class="tab-text">{{'tabs.tab4' | translate}}</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+</ion-tabs>

@@ -1,0 +1,7 @@
+{
+  "name": "musicbee",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

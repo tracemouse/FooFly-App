@@ -1,0 +1,37 @@
+<ion-header mode="ios">
+    <ion-toolbar class="header-toolbar">
+        <ion-title></ion-title>
+        <ion-buttons slot="start">
+           <ion-button [routerLink]="['/tabs/tab4']" color="danger">
+              <ion-icon name="ios-arrow-back"></ion-icon> 
+           </ion-button>
+        </ion-buttons>
+          <!--
+          <ion-buttons slot="start">
+              <ion-back-button>s</ion-back-button>
+          </ion-buttons>
+        -->
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content>
+    <div class="logo-box">
+        <img src="assets/img/cover.jpg" class="logo"/>
+    </div>
+    <p class="logo-title">MusicBee Fly</p>
+    <p class="logo-subtitle">{{'tab4.versionApp' | translate}} : {{versionApp}} / {{'tab4.versionPlugin' | translate}} : {{versionPlugin}}</p>
+    <p class="logo-subtitle">{{'tab4.author' | translate}} : <a href="mailto:">tracemouse</a></p>
+
+    <ion-list lines="none">
+      <ion-item></ion-item>
+      <ion-item button (click)="checkUpdate()" target="_blank">
+        <ion-label>{{'tab4.lbl-update' | translate}}</ion-label>
+        <ion-spinner slot="end" name="lines-small" *ngIf="reading"></ion-spinner>
+      </ion-item>
+      <ion-item button href="https://github.com/tracemouse/MusicBeeFly" target="_blank">
+        <ion-label>{{'tab4.lbl-help' | translate}}</ion-label>
+      </ion-item>
+    </ion-list>
+
+
+</ion-content>

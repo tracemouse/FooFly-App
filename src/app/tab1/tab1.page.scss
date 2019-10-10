@@ -1,0 +1,189 @@
+ion-content{
+  --ion-background-color: #fff;
+}
+
+.header-toolbar{
+  --border-width: 0 !important;
+
+}
+.header-title{
+  text-align:left;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #222;
+
+  .header-title-1{
+    display:inline-block;
+  }
+  .header-title-2{
+    display:inline-block;
+    vertical-align: bottom;
+    font-size: 0.7rem;
+    font-weight: 100;
+    color: #fff;
+    background-color: #ffce00;
+    border-radius: 16px;
+    // border: 1px solid #555;
+    padding: 2px 13px;
+    margin-left: 5px;
+    margin-bottom: 3px;
+  }
+
+}
+
+
+
+
+.track-seq{
+  /*width: 30px !important;*/
+  margin: 0 auto;
+  margin-right: 10px;
+  font-size: 0.6 rem;
+}
+
+.track-playbutton{
+  font-size: 1.3rem;
+  // margin-right: 0px !important;
+  margin: 0 auto; 
+}
+
+.track-isPlaying{
+  margin-right: 10px !important;
+  margin: 0 auto; 
+}
+
+.track-title{
+  color: #333;
+  font-size: 1rem;
+  font-weight: 400;
+  word-break: break-all;
+  white-space: normal;
+}
+
+.track-artist{
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.4);
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+  overflow: hidden;
+}
+
+.track-audioType{
+  text-transform:capitalize;
+  text-overflow: ellipsis;
+  font-size: 0.6rem;
+  line-height: 0.9rem;
+  color: #ffce00;
+  border: 1px solid #ffce00; 
+  border-radius: 3px;
+  margin: 0 auto;
+  margin-right: 5px;
+  padding: 1px;
+}
+
+.track-sampleRate{
+  text-transform:capitalize;
+  text-overflow: ellipsis;
+  font-size: 0.6rem;
+  line-height: 0.9rem;
+  color:#7ecfc0;
+  border: 1px solid #7ecfc0;
+  border-radius: 3px;
+  margin: 0 auto;
+  margin-right: 5px;
+  padding: 1px;
+}
+
+ion-card {
+  position: relative;
+  text-align: center;
+}
+
+.card-img-box{
+  display:inline-block;
+  text-align: center;
+  width:110px;
+  vertical-align: middle;
+  margin: 10px 0;
+
+  .card-img{
+    border-radius: 5%;
+    margin: 0 auto;
+    width: 90px;
+    height: 90px;
+  }
+}
+
+.card-text-box{
+ display:inline-block; 
+ width:calc(100% - 110px);
+ vertical-align: middle;
+ padding: 5px 8px 5px 0;
+
+  .card-title {
+    text-align: left;
+    font-size: 1.1rem;
+    // width: 100%;
+    font-weight: 500;
+    color: #333;
+    text-overflow: ellipsis;
+    white-space: normal; 
+    overflow: hidden;
+  }
+
+  .card-subtitle {
+    margin: 0;
+    margin-top: 5px;
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.4);
+    text-align: left;
+
+  }
+
+  .card-progress{
+    margin-top: 8px;
+    text-align:left;
+
+    Progress{
+      
+      height: 2px;
+      width: 95%;
+      border:none;
+      color:#ef4b4b; /*兼容IE10的已完成进度背景*/
+      background:#ef4b4b;/*这个属性也可当作Chrome的已完成进度背景，只不过被下面的::progress-bar覆盖了*/  
+      border-radius: 10%;
+    }
+
+    ::-webkit-progress-value
+    {
+      background-color:#ef4b4b;
+    }
+
+    ::-webkit-progress-bar {
+      background-color: #e4e4e4;
+    }
+  }
+
+  .card-button {
+    text-align: left;
+  }
+
+
+  .play-button{
+    font-size: 1.1rem;
+    margin-right: 15px;
+    // margin-top: 5px;
+    color: #ef4b4b;
+  }
+  
+  .play-button-1{
+    margin-left: -8px;
+  }
+
+}
+
+
+
+
+

@@ -1,0 +1,72 @@
+<div class="main-box">
+   <div class="header-box">
+      {{'shutdown.header'|translate}}
+   </div>
+   <div class="close-box">
+         <ion-buttons>
+               <ion-button (click)="cancel()" color="danger">
+                  <ion-icon name="close"></ion-icon> 
+               </ion-button>
+         </ion-buttons>
+   </div>
+   <div class="{{buttonBoxClass}}">
+      <ion-grid>
+         <ion-row>
+            <!-- <ion-col class="button-col-box">
+               <ion-buttons class="button-icon-box">
+                  <ion-button color="danger" (click)="closeScreen()" class="button">
+                     <img src="assets/svg/monitor.svg" class="button-icon" />
+                  </ion-button>
+               </ion-buttons>
+               <label class="button-text">{{'tab4.closescreen'|translate}}</label>
+            </ion-col> -->
+            <ion-col class="button-col-box">
+               <ion-buttons class="button-icon-box">
+                  <ion-button color="danger" (click)="shutdown(0)" class="button">
+                     <img src="assets/svg/shutdown.svg" class="button-icon" />
+                  </ion-button>
+                  <label class="button-icon-label">00</label>
+               </ion-buttons>
+               <label class="button-text">{{'shutdown.shutdown0'|translate}}</label>
+            </ion-col>
+            <ion-col class="button-col-box">
+               <ion-buttons class="button-icon-box">
+                  <ion-button color="danger" (click)="shutdown(30)" class="button">
+                     <img src="assets/svg/shutdown.svg" class="button-icon" />
+                  </ion-button>
+                  <label class="button-icon-label">30</label>
+               </ion-buttons>
+               <label class="button-text">{{'shutdown.shutdown30'|translate}}</label>
+            </ion-col>
+            <ion-col class="button-col-box">
+                  <ion-buttons class="button-icon-box">
+                     <ion-button color="danger" (click)="more()" class="button">
+                        <img src="assets/svg/shutdown.svg" class="button-icon" />
+                     </ion-button>
+                     <label class="button-icon-label">nn</label>
+                  </ion-buttons>
+                  <label class="button-text">{{'shutdown.shutdown-more'|translate}}</label>
+            </ion-col>
+            <ion-col class="button-col-box">
+                  <ion-buttons class="button-icon-box">
+                     <ion-button color="danger" (click)="shutdownPC(1000)" class="button">
+                        <img src="assets/svg/shutdown.svg" class="button-icon" />
+                     </ion-button>
+                     <label class="button-icon-label">xx</label>
+                  </ion-buttons>
+                  <label class="button-text">{{'shutdown.shutdown-cancel'|translate}}</label>
+               </ion-col>
+         </ion-row>
+      </ion-grid>
+   </div>
+
+   <div class="{{moreBoxClass}}">
+      <p class="more-header">{{'shutdown.other-header' | translate}}</p>
+      <p class="more-input">
+      <input #inputEle [(ngModel)]="inputMinutes" type="tel" pattern="[0-9]*" maxlength=3 oninput="value=value.replace(/[^\d]/g,'')">
+      <ion-button size="small" color="danger" (click)="moreOk()">{{'shutdown.alert-ok' | translate}}</ion-button>
+      <ion-button size="small" (click)="moreCancel()">{{'shutdown.alert-cancel' | translate}}</ion-button>
+      </p>
+   </div>
+
+</div>

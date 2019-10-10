@@ -1,0 +1,203 @@
+  ion-content{
+    --ion-background-color: #fff;
+  }
+  
+  .range-knob-handle {
+    width: 2px !important;
+    height: 2px !important;
+  }
+  
+  .header-title{
+    text-align:left;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 10px;
+    color: #222;
+  }
+  
+  .header-toolbar{
+    --border-width: 0 !important;
+  
+  }
+  .audiobar{
+    --border-width: 0 !important;
+  }
+  
+  .main-box{
+    width: 100%;
+    height: 100%;
+    /*background-image: linear-gradient(180deg, #fff 20%,#f1f1f1 80%);*/
+  
+  }
+  
+  .header-box{
+    margin-top: 0px;
+  }
+  .track-title{
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 0 15px;
+  }
+  
+  .track-artist{
+    font-size: 0.7rem;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.4);
+    margin-top: 5px;
+    padding: 0 15px;
+  }
+  
+  .track-line3{
+    text-align: center;
+    margin-top: 5px;
+  }
+  
+  .track-sampleRate{
+    text-transform:capitalize;
+    text-overflow: ellipsis;
+    font-size: 0.6rem;
+    color: #ffce00;
+    border: 1px solid #ffce00;
+    border-radius: 3px;
+    margin-right: 5px;
+    padding: 1px;
+  }
+  
+  .track-audioType{
+    text-transform:capitalize;
+    text-overflow: ellipsis;
+    font-size: 0.6rem;
+    color:#7ecfc0;
+    border: 1px solid #7ecfc0;
+    border-radius: 3px;
+    margin-right: 5px;
+    padding: 1px;
+  }
+  
+  .img-box{
+    overflow: hidden;
+    margin:0 auto;
+    text-align: center;
+    // width: calc(80vw + 0px);
+    // height: calc(80vw + 0px);
+    width: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .coverImg{
+    border-radius: 50%;
+    border: 10px solid #ddd;
+    width: 80vw;
+    height: 80vw;
+
+    /*box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
+  }
+  
+  .coverImgAnimation{
+    width: 80vw;
+    height: 80vw;
+    border-radius: 50%;
+    border: 10px solid #ddd;
+    animation: que 4s linear infinite;
+  }
+  
+  
+  .coverImgFixed{
+    width: 80vw;
+    height: 80vw;
+    border-radius: 50%;
+    border: 5px solid #ddd;
+    /*box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
+  }
+  
+  .footer-box{
+    text-align: center;
+    width: 100%;
+    bottom: 0;
+    position:fixed;
+    margin: 0 auto;
+    margin-bottom: 40px;
+  }
+  
+  .play-row{
+    width: 90%;
+    margin: 0 auto;
+  }
+  
+  .play-infinite{
+    font-size: 1.5rem;
+    color: #777;
+  }
+  .play-back{
+    font-size: 1.5rem;
+    color: #555;
+  }
+
+  
+  .play-play{
+    font-size: 1.8rem;
+    color:#fff;
+  }
+  .play-pause{
+    font-size: 1.8rem;
+    color: #fff;
+  }
+  .play-next{
+    font-size: 1.5rem;
+    color: #555;
+  }
+  .play-volume{
+    font-size: 1.6rem;
+    color: #777;
+  }
+  
+  .play-button{
+    height: 50px;
+    margin: 0 auto;
+  }
+  .playPause-img{
+    width: 40px;
+    height: 40px;
+  }
+
+  .audiobar-text{
+    font-size: 13px;
+    color: #555;
+    text-align: center;
+  }
+  
+  @keyframes que {
+    /*以百分比来规定改变发生的时间 也可以通过"from"和"to",等价于0% 和 100%*/
+    0%{
+        /*rotate(2D旋转) scale(放大或者缩小) translate(移动) skew(翻转)*/
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+ 
+@keyframes fade-in {  
+  0% {opacity: 0;}/*初始状态 透明度为0*/  
+  20% {opacity: 0;}/*过渡状态 透明度为0*/  
+  40% {opacity: 0.5;}/*过渡状态 透明度为0*/  
+  80% {opacity: 0.5;}  
+  100% {opacity: 1;}/*结束状态 透明度为1*/  
+}  
+@-webkit-keyframes fade-in {/*针对webkit内核*/  
+  0% {opacity: 0;}  
+  20% {opacity: 0;}  
+  40% {opacity: 0.5;}  
+  80% {opacity: 0.5;}  
+  100% {opacity: 1;}  
+}  
+.fadeIn {    
+  animation: fade-in;/*动画名称*/  
+  animation-duration: 1s;/*动画持续时间*/  
+  -webkit-animation:fade-in 1s;/*针对webkit内核*/  
+}  

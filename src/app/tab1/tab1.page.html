@@ -1,0 +1,103 @@
+<ion-header mode="ios">
+   <ion-toolbar class="header-toolbar">
+      <div class="header-title"><label class="header-title-1">{{'tab1.header' | translate}}</label>
+         <label class="header-title-2">{{tracks.length}}
+            {{'tracklist.tracks' | translate}}</label></div>
+      <ion-buttons slot="end">
+         <!-- <ion-button  [routerLink]="['/playing']" color="danger"> -->
+         <ion-button (click)="more()" color="danger">
+            <!-- <ion-icon name="ios-more"></ion-icon>  -->
+            <!-- <img src="assets/svg/playing.svg" /> -->
+            <!-- <ion-spinner name="dots" color="danger" paused="{{(playState != '3')}}"></ion-spinner> -->
+
+            <div id="header-playing-button" style="width: 25px; height: 25px">
+               <!-- <img *ngIf="(playState == '3')" src="assets/svg/playing-animated.svg" />
+               <img *ngIf="(playState != '3')" src="assets/svg/playing-fixed.svg" /> -->
+               <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100"
+                  enable-background="new 0 0 100 100" xml:space="preserve">
+                  <rect x="0" fill="red" width="8" height="50" transform="translate(0) rotate(180 8 50)">
+                     <animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30"
+                        repeatCount="indefinite" begin="0.1s" />
+                  </rect>
+                  <rect x="30" fill="red" width="8" height="80" transform="translate(0) rotate(180 35 50)">
+                     <animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30"
+                        repeatCount="indefinite" begin="0.3s" />
+                  </rect>
+                  <rect x="65" fill="red" width="8" height="60" transform="translate(0) rotate(180 65 50)">
+                     <animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30"
+                        repeatCount="indefinite" begin="0.5s" />
+                  </rect>
+                  <rect x="90" fill="red" width="8" height="70" transform="translate(0) rotate(180 90 50)">
+                     <animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30"
+                        repeatCount="indefinite" begin="0.1s" />
+                  </rect>
+               </svg>
+            </div>
+         </ion-button>
+      </ion-buttons>
+   </ion-toolbar>
+   <ion-nav></ion-nav>
+</ion-header>
+
+<ion-content>
+   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">
+      <ion-refresher-content></ion-refresher-content>
+   </ion-refresher>
+   
+   <ion-card mode="ios" id="search-card" (click)="more()">
+      <div class="card-img-box">
+         <img src="{{coverImg}}" class="card-img" />
+      </div>
+      <div class="card-text-box">
+         <div class="card-title">{{title}}</div>
+         <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
+         <p class="card-subtitle">
+            <span class="track-audioType">{{audioType}}</span>
+            <span class="track-sampleRate">{{nowTrack.sampleRate}}</span>{{nowTrack.artist}} - {{nowTrack.album}}
+         </p>
+         <div class="card-progress" id="card-progress">
+            <!-- <Progress value="{{audiobar}}" max="{{duration}}" ></Progress> -->
+         </div>
+         <div class="card-button">
+            <ion-buttons>
+               <ion-button (click)="playPrev($event)" color="danger" class="play-button play-button-1">
+                  <ion-icon name="skip-backward"></ion-icon>
+               </ion-button>
+               <ion-button *ngIf="(playState == '3')" (click)="playPause($event)" color="danger" class="play-button">
+                  <ion-icon name="pause"></ion-icon>
+               </ion-button>
+               <ion-button *ngIf="(playState != '3')" (click)="playPause($event)" color="danger" class="play-button">
+                  <ion-icon name="play"></ion-icon>
+               </ion-button>
+               <ion-button (click)="playNext($event)" color="danger" class="play-button">
+                  <ion-icon name="skip-forward"></ion-icon>
+               </ion-button>
+            </ion-buttons>
+         </div>
+      </div>
+   </ion-card>
+
+   <ion-list class="list-2" lines="none" id="il-track">
+      <ion-item *ngFor="let item of tracks,let i = index">
+         <div item-start class="track-seq" *ngIf="(showTrackSeq)" >
+            {{i+1}}
+         </div>
+         <ion-label>
+            <span class="track-title">{{item.trackTitle}}</span><br>
+            <div>
+               <span class="track-audioType">{{item.audioType}}</span>
+               <span class="track-sampleRate">{{item.sampleRate}}</span>
+               <span class="track-artist">{{item.artist}} - {{item.album}}</span>
+            </div>
+         </ion-label>
+         <ion-icon name="volume-high" *ngIf="item.isPlaying" color="warning" class="track-isPlaying"></ion-icon>
+         <ion-buttons slot="end" *ngIf="!item.isPlaying">
+            <ion-button (click)="playTrack(item);" color="danger">
+               <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon>
+            </ion-button>
+         </ion-buttons>
+      </ion-item>
+      <ion-item lines="none"></ion-item>
+   </ion-list>
+</ion-content>

@@ -1,0 +1,100 @@
+<ion-header mode="ios">
+  <ion-toolbar class="header-toolbar">
+      <div class="header-title">{{'tab4.header' | translate}}</div>
+      <ion-buttons slot="end">
+          <ion-button (click)="more($event)" color="danger">
+             <ion-icon name="ios-more"></ion-icon> 
+          </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-list class="list-1" >
+      <!-- <ion-item button  lines="none">
+        <ion-thumbnail item-start>
+            <img src="assets/icons/favicon.png" class="cover-img">
+        </ion-thumbnail>
+        <ion-label>
+            <span class="item-title">{{'tab4.lbl-url' | translate}}</span><br>
+            <div>
+               <span class="item-interval">{{interval}}{{'tab4.millisecond' | translate}}</span>
+               <span class="item-subtitle">{{url}}</span>
+            </div>
+         </ion-label>
+      </ion-item> -->
+      
+      <ion-item button lines="none" [routerLink]="['/about']">
+          <ion-avatar slot="start">
+              <img src="assets/icons/favicon.png">
+            </ion-avatar>
+        <ion-label class="mb-title">MuscBee Fly</ion-label>
+        <ion-note slot="end">{{version}}</ion-note>
+      </ion-item>
+
+      <ion-item lines="none"></ion-item>
+      <!-- <ion-item button lines="none" (click)="setConnection()">
+        <ion-label>{{'tab4.connection' | translate}}</ion-label>
+        <ion-note slot="end">{{url}}</ion-note>
+      </ion-item> -->
+      <ion-item button lines="none" (click)="setConnection()">
+        <ion-label>{{'tab4.refresh-interval' | translate}}</ion-label>
+        <ion-note slot="end">{{interval}}</ion-note>
+      </ion-item>
+      <ion-item button lines="none">
+        <!-- <ion-icon item-left name="globe" color="primary"></ion-icon> -->
+        <ion-label>{{'tab4.language' | translate}}</ion-label>
+        <ion-select placeholder="" [(ngModel)]="language" (ionChange)="setLanguage($event)" interface="popover">
+          <ion-select-option *ngFor="let item of languages" value="{{item.language}}">{{item.dis}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item lines="none">
+        <!-- <ion-icon item-left name="logo-ionic" color="primary"></ion-icon> -->
+        <ion-label>{{'tab4.animation' | translate}}</ion-label>
+        <ion-toggle [(ngModel)]="animation" (ionChange)="setAnimation($event)" color="danger"></ion-toggle>
+      </ion-item>
+      <ion-item lines="none">
+        <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
+        <ion-label>{{'tab4.autoDJ' | translate}}</ion-label>
+        <ion-toggle [(ngModel)]="autoDJ" (ionChange)="setAutoDJ($event)" color="danger"></ion-toggle>
+      </ion-item>
+      <ion-item lines="none">
+        <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
+        <ion-label>{{'tab4.show-track-seq' | translate}}</ion-label>
+        <ion-toggle [(ngModel)]="showTrackSeq" (ionChange)="setShowTrackSeq($event)" color="danger"></ion-toggle>
+      </ion-item>
+      <!-- <ion-item lines="none">
+        <ion-icon item-left name="volume-off" color="danger"></ion-icon>
+        <ion-label>{{'tab4.mute' | translate}}</ion-label>
+        <ion-toggle [(ngModel)]="mute" (ionChange)="setMute($event)" color="danger"></ion-toggle>
+      </ion-item> -->
+      <ion-item lines="none">
+        <ion-buttons >
+            <ion-button class="volume-button" (click)="setMute($event)" color="danger">
+                <ion-icon name="{{muteIcon}}"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-range disabled="{{mute}}" [(ngModel)]="volume" min="0" max="100" debounce="1000" color="danger" (ionChange)="setVolume($event)">
+        </ion-range>
+      </ion-item>
+
+      <ion-item lines="none">
+          <ion-label class="lbl-button">
+          <ion-button color="danger" (click)="exit()" expand="block" size="default" class="button">{{'tab4.exit' | translate}}</ion-button>
+          </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!--
+    <ion-list class="list-2" lines="inset" mode="ios">
+      <ion-item-divider>
+ 
+        <ion-label>{{'tab4.header2' | translate}} </ion-label>
+      </ion-item-divider>
+      <ion-item *ngFor="let lang of languages" (click)="setLanguage(lang.language);">
+        <ion-label>{{lang.dis}}</ion-label>
+        <ion-radio checked="{{lang.selected}}" value="{{lang.language}}"></ion-radio>
+      </ion-item>
+    </ion-list>
+  -->
+  
+</ion-content>

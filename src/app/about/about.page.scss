@@ -1,0 +1,37 @@
+ion-content{
+    // --ion-background-color: #eee;
+}
+
+ion-item{
+    // --background: #fff;
+}
+.header-toolbar{
+    --border-width: 0 !important;
+
+}
+
+.logo{
+    border-radius: 50%;
+    width: 100px;
+    box-shadow: 2px 2px 5px #ccc;
+}
+
+.logo-box{
+    margin: 0 auto;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.logo-title{
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    height: 18px;
+}
+
+.logo-subtitle{
+    text-align: center;
+    font-size: 0.7rem;
+    height: 10px;
+}
+

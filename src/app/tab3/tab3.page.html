@@ -1,0 +1,30 @@
+<ion-header mode="ios">
+  <ion-toolbar  class="header-toolbar">
+    <div class="header-title">{{'tab3.header' | translate}}</div>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()" color="danger">
+         <!-- <ion-icon name="ios-refresh-circle"></ion-icon>  -->
+         <img src="assets/svg/refresh.svg"/>
+      </ion-button>
+   </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">
+     <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-toolbar class="search-bar">
+      <ion-searchbar mode="ios" (ionChange)="handleSbInput($event)" (keyup)="sbKeyup($event)" id="sb-playlist" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
+   </ion-toolbar>
+
+  <ion-list class="list-1" lines="none" id="il-playlist">
+      <ion-item button *ngFor="let item of playlists" (click)="showTracks(item);">
+          <!-- <ion-icon name="list-box" item-start color="danger"></ion-icon> -->
+          <img src="assets/svg/playlist.svg" class="playlist-icon"/>
+          <ion-label class="item-title">{{item.name}}</ion-label>
+        </ion-item>
+  </ion-list>
+
+</ion-content>

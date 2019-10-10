@@ -1,0 +1,33 @@
+ion-item{
+    padding-right: 16px;
+}
+
+.header-toolbar{
+    --border-width: 0 !important;
+}
+
+.lbl-button{
+    margin-top: 15px;
+}
+
+.button{
+    --border-radius: 25px !important;
+}
+
+.logo{
+    border-radius: 50%;
+    width: 100px;
+    box-shadow: 2px 2px 5px #ccc;
+}
+
+.logo-box{
+    margin: 0 auto;
+    margin-top: 0px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.mb-input{
+    // width: 90%;
+    /*padding-right: 20px;*/
+}

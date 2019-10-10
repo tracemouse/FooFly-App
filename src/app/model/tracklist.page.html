@@ -1,0 +1,61 @@
+<ion-header mode="ios">
+  <ion-toolbar class="header-toolbar">
+      <ion-title>{{'tracklist.header' | translate}}</ion-title>
+      <ion-buttons slot="start">
+         <ion-button (click)="cancel(false)" color="danger">
+            <ion-icon name="ios-arrow-back"></ion-icon> 
+         </ion-button>
+      </ion-buttons>
+        <!--
+        <ion-buttons slot="start">
+            <ion-back-button>s</ion-back-button>
+        </ion-buttons>
+      -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+   <ion-card mode="ios">
+      <div class="card-img-box">
+         <img src="{{coverImg}}" class="card-img" />
+      </div>
+      <div class="card-text-box">
+         <div class="card-title">{{title}}</div>
+         <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
+         <p class="card-subtitle">
+               {{tracks.length}} {{'tracklist.tracks' | translate}}
+         </p>
+         <div class="card-subtitle">
+            <ion-button (click)="playTracks()" color="danger" size="small">
+               <ion-icon slot="start" name="ios-play"></ion-icon>
+               {{'common.playall' | translate}}
+            </ion-button>
+         </div>
+      </div>
+   </ion-card>
+
+    <ion-toolbar >
+      <ion-searchbar mode="ios" (ionChange)="handleSbInput1($event)" (keyup)="sbKeyup($event)" id="sb-track" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
+   </ion-toolbar>
+   <ion-list class="list-2" lines="none" id="il-track-12345">
+      <ion-item *ngFor="let item of showTracks,let i = index" lines="none">
+         <div item-start class="track-seq" *ngIf="(showTrackSeq)">{{(i + 1)}}</div>
+         <ion-label>
+            <span class="track-title">{{item.trackTitle}}</span><br>
+            <div>
+               <span class="track-audioType">{{item.audioType}}</span>
+               <span class="track-sampleRate">{{item.sampleRate}}</span>
+               <span class="track-artist">{{item.artist}} - {{item.album}}</span>
+            </div>
+         </ion-label>
+         <ion-icon name="volume-high" *ngIf="item.fileUrl == playFileUrl" color="warning" class="track-isPlaying"></ion-icon>
+         <ion-buttons item-end *ngIf="item.fileUrl != playFileUrl" >
+               <ion-button (click)="playTrack(item);" color="danger">
+                 <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon> 
+               </ion-button>
+         </ion-buttons>
+      </ion-item>
+      <ion-item lines="none"></ion-item>
+   </ion-list>
+</ion-content>

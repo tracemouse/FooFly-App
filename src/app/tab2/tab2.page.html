@@ -1,0 +1,100 @@
+<ion-header mode="ios" >
+  <ion-toolbar translucent class="header-toolbar">
+    <!--<ion-searchbar (click)="showSearchTrackPage()" id="sb_album" placeholder="{{'tab2.header-sb-placeholder' | translate}}"></ion-searchbar>
+    -->
+    <div class="header-title">{{'tab2.header' | translate}}</div>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()" color="danger">
+        <!-- <ion-icon name="ios-refresh-circle"></ion-icon>  -->
+        <img src="assets/svg/refresh.svg"/>
+    </ion-button>
+      <ion-button (click)="search()" color="danger">
+          <!-- <ion-icon name="ios-more"></ion-icon>  -->
+          <img src="assets/svg/search.svg"/>
+      </ion-button>
+   </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen overflow-scroll="false" delegate-handle="scrollerHandle" >
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div padding>
+        <ion-segment mode="ios" [(ngModel)]="sgLibrary" (ionChange)="segmentChanged($event)" (keyup)="sbKeyup($event)" color="danger" scrollable>
+          <ion-segment-button mode="ios" value="folder" checked layout="icon-start">
+            <ion-label>{{'tab2.st-folder' | translate}}</ion-label>
+            <!--<ion-icon name="ios-folder" class="sg_icon"></ion-icon>-->
+          </ion-segment-button>
+          <ion-segment-button mode="ios" value="album" layout="icon-start">
+            <ion-label>{{'tab2.st-album' | translate}}</ion-label>
+            <!--<ion-icon name="ios-albums" class="sg_icon"></ion-icon>-->
+          </ion-segment-button>
+          <ion-segment-button mode="ios" value="artist" layout="icon-start">
+            <ion-label>{{'tab2.st-artists' | translate}}</ion-label>
+            <!--<ion-icon name="ios-body" class="sg_icon"></ion-icon>-->
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div [ngSwitch]="sgLibrary">
+        <div *ngSwitchCase="'folder'" id="sg_folder">
+          <ion-toolbar>
+            <ion-searchbar mode="ios" (ionChange)="handleSbInput($event)" (keyup)="sbKeyup($event)" id="sb_folder" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
+          </ion-toolbar>
+          <ion-list id="il_folder" lines="none">
+            <ion-item button *ngFor="let item of folders" (click)="showTracksByFolder(item);">
+              <ion-thumbnail item-start>
+                <img src="{{item.artWork}}" class="cover-img">
+              </ion-thumbnail>
+              <ion-label>
+                <p class="item-title">{{item.name}}</p>
+                <p class="item-subtitle">
+                  <span class="track-audioType">{{item.type}}</span>
+                  <span class="track-sampleRate">{{item.sampleRate}}</span>{{item.count}} {{'tab2.tracks' | translate}}
+                </p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      
+        <div *ngSwitchCase="'album'">
+          <ion-toolbar>
+            <ion-searchbar mode="ios" (ionChange)="handleSbInput($event)" (keyup)="sbKeyup($event)" id="sb_album" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
+          </ion-toolbar>
+          <ion-list id="il_album" lines="none">
+            <ion-item button *ngFor="let item of albums" (click)="showTracksByAlbum(item);">
+              <ion-thumbnail item-start>
+                <img src="{{item.artWork}}" class="cover-img">
+              </ion-thumbnail>
+              <ion-label>
+                <p class="item-title">{{item.name}}</p>
+                <p class="item-subtitle">
+                  <span class="track-audioType">{{item.type}}</span>
+                  <span class="track-sampleRate">{{item.sampleRate}}</span>{{item.count}} {{'tab2.tracks' | translate}}
+                </p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <div *ngSwitchCase="'artist'">
+            <ion-toolbar>
+              <ion-searchbar mode="ios" (ionChange)="handleSbInput($event)" id="sb_artist" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
+            </ion-toolbar>
+          <ion-list id="il_artist" lines="none">
+            <ion-item button *ngFor="let item of artists" (click)="showTracksByArtist(item);">
+              <ion-thumbnail item-start>
+                <img src="{{item.artWork}}" class="cover-img">
+              </ion-thumbnail>
+              <ion-label>
+                <p class="item-title">{{item.name}}</p>
+                <p class="item-subtitle">{{item.count}} {{'tab2.tracks' | translate}}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+
+    </div>
+</ion-content>

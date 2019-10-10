@@ -1,0 +1,120 @@
+ion-content{
+    --ion-background-color: #fff;
+}
+
+.header-toolbar{
+    --border-width: 0 !important;
+
+}
+ 
+
+.track-seq{
+    /*width: 30px !important;*/
+    margin: 0 auto;
+    margin-right: 10px;
+    font-size: 0.6 rem;
+}
+
+.track-playbutton{
+    font-size: 1.3rem;
+    // margin-right: 10px !important;
+    margin: 0 auto; 
+}
+
+.track-title{
+    color: #333;
+    font-size: 1rem;
+    font-weight: 400;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.track-artist{
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.4);
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    overflow: hidden;
+}
+
+.track-audioType{
+    text-transform:capitalize;
+    text-overflow: ellipsis;
+    font-size: 0.6rem;
+    line-height: 0.9rem;
+    color: #ffce00;
+    border: 1px solid #ffce00;
+    border-radius: 3px;
+    margin: 0 auto;
+    margin-right: 5px;
+    padding: 1px;
+  }
+  
+  .track-sampleRate{
+    text-transform:capitalize;
+    text-overflow: ellipsis;
+    font-size: 0.6rem;
+    line-height: 0.9rem;
+    color:#7ecfc0;
+    border: 1px solid #7ecfc0;
+    border-radius: 3px;
+    margin: 0 auto;
+    margin-right: 5px;
+    padding: 1px;
+}
+
+.track-isPlaying{
+    margin-right: 10px !important;
+    margin: 0 auto; 
+}
+
+ion-card {
+    position: relative;
+    text-align: center;
+  }
+  
+  .card-img-box{
+    display:inline-block;
+    text-align: center;
+    width:110px;
+    vertical-align: middle;
+    margin: 10px 0;
+  
+    .card-img{
+      border-radius: 5%;
+      margin: 0 auto;
+      width: 90px;
+      height: 90px;
+    }
+  }
+  
+  .card-text-box{
+   display:inline-block; 
+   width:calc(100% - 110px);
+   vertical-align: middle;
+   padding: 5px 8px 5px 0;
+  
+   .card-title {
+    text-align: left;
+    font-size: 1rem;
+    // width: 100%;
+    font-weight: 500;
+    color: #333;
+    text-overflow: ellipsis;
+    white-space: normal; 
+    overflow: hidden;
+  }
+
+  .card-subtitle {
+    margin: 0;
+    margin-top: 5px;
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.4);
+    text-align: left;
+
+  }
+ 
+  
+  }
+
+ 

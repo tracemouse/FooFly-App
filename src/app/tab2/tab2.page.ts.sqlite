@@ -1,0 +1,316 @@
+import { Component } from '@angular/core';
+import { ModalController,LoadingController } from '@ionic/angular';
+
+import { MyDBService}  from "../my-db.service";
+import { MyHttpService} from "../my-http.service";
+import { TracklistPage } from "../model/tracklist.page";
+import { SearchPage } from "../model/search.page";
+
+@Component({
+  selector: 'app-tab2',
+  templateUrl: 'tab2.page.html',
+  styleUrls: ['tab2.page.scss']
+})
+export class Tab2Page {
+
+  sgLibrary:string = "folder";
+  folders: any = [];
+  albums: any = [];
+  artists: any = [];
+  refreshEvent:any;
+  loading:any;
+  cover = "assets/img/cover.jpg";
+
+  constructor(public myDBService: MyDBService,
+              public myHttpService: MyHttpService,
+              public modalController: ModalController,
+              public loadingController: LoadingController) {
+    // console.log("tab2");
+    // this.initLoading();
+  }
+
+ 
+  handleSbInput(event:any) {
+    
+    const query = event.target.value.toLowerCase().trim();
+    
+    requestAnimationFrame(() => {
+      var items:any;
+      if(this.sgLibrary == "folder"){
+        items = Array.from(document.querySelector('#il_folder').children);
+      }else if(this.sgLibrary == "album"){
+        items = Array.from(document.querySelector('#il_album').children);
+      }else if(this.sgLibrary == "artist"){
+        items = Array.from(document.querySelector('#il_artist').children);
+      }
+      items.forEach(item => {
+        const shouldShow = item.textContent.toLowerCase().indexOf(query) > -1;
+        item.style.display = shouldShow ? 'block' : 'none';
+      });
+    });
+  }
+  
+  ionViewDidLoad(){
+    console.log("ionViewDidLoad");
+    
+  }
+  
+  // ngOnInit(): void {
+  //   //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+  //   //Add 'implements OnInit' to the class.
+  //   console.log("ngOnInit");
+  //   this.sgLibrary = "";
+  //   this.refreshEvent = null;
+  //   this.getAllTracks();
+
+  // }
+
+  ionViewWillEnter(){
+    console.log("viewwillenter");
+    // this.initLoading();
+  }
+
+  ionViewDidEnter(){
+
+  }
+
+  async initLoading() {
+    this.loading = await this.loadingController.create({
+      duration: 60000,
+      message: 'Loading...',
+      translucent: true,
+      cssClass: 'custom-class custom-loading'
+    });
+    // return await this.loading.present();
+  }
+
+  async getAllTracks(){
+      // console.log(item);
+      await this.initLoading();
+      await this.loading.present();
+      var mydata = {"action":"librarySearch", "query":""};
+      var postStr = JSON.stringify(mydata);
+  
+      this.myHttpService.CallMusicBee(postStr).then(
+        data=>{
+            // console.log(data);
+            this.myDBService.clearLibTable().then(()=>{
+            this.saveAllTracks(data);
+          });    
+        }
+      ).finally(async () => {
+        if(this.refreshEvent != null){
+          this.refreshEvent.target.complete();
+        }
+      });
+  }
+
+  async saveAllTracks(tracks:any){
+    this.folders = [];
+    this.albums = [];
+    this.artists = [];
+
+    // console.log("total records:" + tracks.length);
+
+    // var i = 0;
+    // for(let track of tracks){
+    //   // console.log(track);
+    //   i++;
+    //   // console.log(i);
+    //   if(i < tracks.length){
+    //     this.myDBService.insertTrack(track);
+    //   }else{
+    //     await this.myDBService.insertTrack(track);
+    //   }
+    // }
+    await this.myDBService.insertTracks(tracks);
+
+    console.log("saved tracks into lib");
+    // await this.refreshFolder();
+    this.loading.dismiss();
+    this.sgLibrary = "folder";
+    
+    // this.myDBService.insertTracks(tracks).then().finally(
+    //   ()=>{
+    //     this.refreshEvent.target.complete();
+    //   }
+    // );
+    return;
+    // this.refreshEvent.target.complete();
+  }
+
+  async refreshFolder(){
+    console.log("folder start");
+    await this.myDBService.getFolders().then(data=>{
+      console.log("got folders from lib");
+      var rows = data.rows;
+      this.folders = [];
+      for(var i=0; i<rows.length; i++){
+        var folder = {'name':'','fileUrl':'','count':'','artWork':this.cover};
+        folder.name = rows[i].folder;
+        folder.fileUrl = rows[i].fileUrl;
+        folder.count = rows[i].count;
+        this.folders[i] = folder;
+      }
+      // console.log(this.folders);
+    });
+
+    this.refreshFolderCover();
+
+  }
+
+  async refreshFolderCover(){
+    //refresh cover image
+    var len = this.folders.length;
+    for(var i=0;i<len;i++){
+      var mydata = {"action":"getLibArtwork", "fileUrl":this.folders[i].fileUrl};
+      var postStr = JSON.stringify(mydata);
+      await this.myHttpService.CallMusicBee(postStr).then(
+        data=>{
+            this.pushFolderImg(i,data);
+        }
+      );
+    }
+  }
+
+  pushFolderImg(idx:any, img:any){
+    this.folders[idx].artWork = img;
+  }
+
+
+  async refreshAlbum(){
+    await this.myDBService.getAlbums().then(data=>{
+      var rows = data.rows;
+      this.albums = [];
+      for(var i=0; i<rows.length; i++){
+        var album = {'name':'','fileUrl':'','count':'','artWork':this.cover};
+        album.name = rows[i].album;
+        album.fileUrl = rows[i].fileUrl;
+        album.count = rows[i].count;
+        this.albums[i] = album;
+      }
+      // console.log(this.folders);
+    });
+
+    this.refreshAlbumCover();
+  }
+
+  async refreshAlbumCover(){
+    //refresh cover image
+    var len = this.albums.length;
+    for(var i=0;i<len;i++){
+      var mydata = {"action":"getLibArtwork", "fileUrl":this.albums[i].fileUrl};
+      var postStr = JSON.stringify(mydata);
+      await this.myHttpService.CallMusicBee(postStr).then(
+        data=>{
+            this.pushAlbumImg(i,data);
+        }
+      );
+    }
+  }
+
+  pushAlbumImg(idx:any, img:any){
+    this.albums[idx].artWork = img;
+  }
+
+
+  async refreshArtist(){
+    await this.myDBService.getArtists().then(data=>{
+      var rows = data.rows;
+      this.artists = [];
+      for(var i=0; i<rows.length; i++){
+        var artist = {'name':'','fileUrl':'','count':'','artWork':this.cover};
+        artist.name = rows[i].artist;
+        artist.fileUrl = "";
+        artist.count = rows[i].count;
+        this.artists[i] = artist;
+      }
+      // console.log(this.folders);
+    })
+  }
+
+  doRefresh(event:any){
+    // setTimeout(() => {
+    //   // console.log('Async operation has ended');
+    //   event.target.complete();
+    // }, 2000);
+    this.sgLibrary = "";
+    this.refreshEvent = event;
+    this.getAllTracks();
+
+  }
+
+  showTracksByFolder(folder:any){
+    this.myDBService.getTracksByFolder(folder.name).then(data=>{
+      // console.log(data);
+      var tracks = [];
+      for(var i=0; i< data.rows.length; i++){
+        tracks[i] = data.rows[i];
+      }
+      this.showTracksPage(tracks,folder);
+    });
+  }
+
+  showTracksByAlbum(album:any){
+    this.myDBService.getTracksByAlbum(album.name).then(data=>{
+      // console.log(data);
+      var tracks = [];
+      for(var i=0; i< data.rows.length; i++){
+        tracks[i] = data.rows[i];
+      }
+      this.showTracksPage(tracks,album);
+    });
+  }
+
+  showTracksByArtist(artist:any){
+    this.myDBService.getTracksByArtist(artist.name).then(data=>{
+      var tracks = [];
+      for(var i=0; i< data.rows.length; i++){
+        tracks[i] = data.rows[i];
+      }
+      this.showTracksPage(tracks,artist);
+    });
+  }
+
+  async showTracksPage(tracks: any, item:any) {
+    const modal = await this.modalController.create({
+      component: TracklistPage,
+      componentProps: {
+        'title':item.name,
+        'fileUrl': item.fileUrl,
+        'tracks': tracks
+      }
+    });
+    return await modal.present();
+  }
+
+  segmentChanged(event:any){
+
+    if(this.sgLibrary == "folder"){
+      if(this.folders.length == 0){  
+        this.refreshFolder();
+      }
+    }else if(this.sgLibrary == "album"){
+      if(this.albums.length == 0){  
+        this.refreshAlbum();
+      }
+    }else if(this.sgLibrary == "artist"){
+      if(this.artists.length == 0){  
+        this.refreshArtist();
+      }
+    }
+  }
+
+  
+  async search() {
+    const modal = await this.modalController.create({
+      component: SearchPage,
+      componentProps: {
+       
+      }
+    });
+    return await modal.present();
+  }
+
+
+}
