@@ -19,7 +19,10 @@ export class AppConfig {
   };
 
   public static version = "1.0.0";
-
+  public static env = "dev";
+  // public static env = "prd";
+  public static urlRoot = "/foofly/";
+ 
   public static global = {
     "ws_schema":"ws://",
     "http_schema": "http://",

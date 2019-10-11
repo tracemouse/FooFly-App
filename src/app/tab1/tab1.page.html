@@ -1,8 +1,11 @@
 <ion-header mode="ios">
    <ion-toolbar class="header-toolbar">
       <div class="header-title"><label class="header-title-1">{{'tab1.header' | translate}}</label>
-         <label class="header-title-2">{{tracks.length}}
-            {{'tracklist.tracks' | translate}}</label></div>
+         <!-- <label class="header-title-2">
+            {{tracks.length}}
+            {{'tracklist.tracks' | translate}}
+         </label> -->
+      </div>
       <ion-buttons slot="end">
          <!-- <ion-button  [routerLink]="['/playing']" color="danger"> -->
          <ion-button (click)="more()" color="danger">
@@ -50,11 +53,12 @@
          <img src="{{coverImg}}" class="card-img" />
       </div>
       <div class="card-text-box">
-         <div class="card-title">{{title}}</div>
+         <div class="card-title">{{nowTrack.track}}</div>
          <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
          <p class="card-subtitle">
-            <span class="track-audioType">{{audioType}}</span>
-            <span class="track-sampleRate">{{nowTrack.sampleRate}}</span>{{nowTrack.artist}} - {{nowTrack.album}}
+            <!-- <span class="track-audioType">{{audioType}}</span> -->
+            <!-- <span class="track-sampleRate">{{nowTrack.len}}</span> -->
+            {{nowTrack.artist}} - {{nowTrack.album}}
          </p>
          <div class="card-progress" id="card-progress">
             <!-- <Progress value="{{audiobar}}" max="{{duration}}" ></Progress> -->
@@ -64,10 +68,10 @@
                <ion-button (click)="playPrev($event)" color="danger" class="play-button play-button-1">
                   <ion-icon name="skip-backward"></ion-icon>
                </ion-button>
-               <ion-button *ngIf="(playState == '3')" (click)="playPause($event)" color="danger" class="play-button">
+               <ion-button *ngIf="(playState == '1')" (click)="playPause($event)" color="danger" class="play-button">
                   <ion-icon name="pause"></ion-icon>
                </ion-button>
-               <ion-button *ngIf="(playState != '3')" (click)="playPause($event)" color="danger" class="play-button">
+               <ion-button *ngIf="(playState != '1')" (click)="playPause($event)" color="danger" class="play-button">
                   <ion-icon name="play"></ion-icon>
                </ion-button>
                <ion-button (click)="playNext($event)" color="danger" class="play-button">
@@ -84,16 +88,17 @@
             {{i+1}}
          </div>
          <ion-label>
-            <span class="track-title">{{item.trackTitle}}</span><br>
+            <span class="track-title">{{item.track}}</span><br>
             <div>
-               <span class="track-audioType">{{item.audioType}}</span>
-               <span class="track-sampleRate">{{item.sampleRate}}</span>
+               <!-- <span class="track-audioType">{{item.audioType}}</span>
+               <span class="track-sampleRate">{{item.sampleRate}}</span> -->
+               <span class="track-sampleRate">{{item.len}}</span>
                <span class="track-artist">{{item.artist}} - {{item.album}}</span>
             </div>
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.isPlaying" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons slot="end" *ngIf="!item.isPlaying">
-            <ion-button (click)="playTrack(item);" color="danger">
+            <ion-button (click)="playTrack(i);" color="danger">
                <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon>
             </ion-button>
          </ion-buttons>

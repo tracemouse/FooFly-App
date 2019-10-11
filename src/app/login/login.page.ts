@@ -6,7 +6,7 @@ import { TranslateService }from "@ngx-translate/core";
 
 import { AppConfig } from '../app.config';
 import { MyDBService}  from "../my-db.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service"; 
 
 @Component({
   selector: 'app-login',
@@ -34,8 +34,8 @@ export class LoginPage implements OnInit {
               public alertController: AlertController,
               public myDBService: MyDBService,
               public activeRoute: ActivatedRoute,
-              public loadingController: LoadingController,
-              public wsService: WebsocketService) 
+              public myHttpService:MyHttpService,
+              public loadingController: LoadingController) 
   {
     this.activeRoute.queryParams.subscribe((params: Params) => {
       this.from = params['from'];
@@ -47,7 +47,7 @@ export class LoginPage implements OnInit {
 
   ionViewWillEnter(){
     //console.log("login enter");
- 
+
     this.inputIp = AppConfig.settings.ip;
     this.inputPort = AppConfig.settings.port;
     this.inputPassword = AppConfig.settings.password;
@@ -62,29 +62,26 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    var mydata = {"action":"getMB"};
-    this.wsService.callMB(mydata,null,true)
-    .subscribe(
-      res => {
-        // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
-        // console.log(res);
-        this.loginDisabled = false;
-        if(!res.isSucc){
-          return;
-        }
-        AppConfig.settings.ip = this.inputIp;
-        AppConfig.settings.port = this.inputPort;
-        AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
-        AppConfig.settings.versionPlugin = res.pluginVersion;
+    let url = "";
+    this.myHttpService.CallFoo(url).then(
+      res=>{
+       console.log(res); 
 
-        this.myDBService.saveSettingsData();
-        // this.navCtrl.navigateBack("");
-        this.navCtrl.navigateForward("/tabs/tab1");
-        
-      },error => {
+       this.loginDisabled = false;
+       AppConfig.settings.ip = this.inputIp;
+       AppConfig.settings.port = this.inputPort;
+       AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+
+       this.myDBService.saveSettingsData();
+       // this.navCtrl.navigateBack("");
+       this.navCtrl.navigateForward("/tabs/tab1");
+       
+      },
+      error=>{
         console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
       }
-      ); 
+    );
+
   }
   
   async initLoading() {
@@ -103,10 +100,10 @@ export class LoginPage implements OnInit {
     await this.loading.present();
 
     this.loginDisabled = true;
-    // var url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
-    var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
+    let url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
+    // var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
 
-    this.testMB(wsurl);
+    this.testMB(url);
   }
 
 
@@ -123,34 +120,28 @@ export class LoginPage implements OnInit {
   }
 
   async testMB(url:string){
-    
-    var mydata = {"action":"getMB"};
-    this.wsService.callMB(mydata,url,true)
-    .subscribe(
-      res => {
-        // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
-        // console.log(res);
-        this.loginDisabled = false;
-        this.loading.dismiss();
-        if(!res.isSucc){
-          return;
-        }
-        AppConfig.settings.ip = this.inputIp;
-        AppConfig.settings.port = this.inputPort;
-        AppConfig.settings.password = this.inputPassword;
-        AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
-        AppConfig.settings.versionPlugin = res.pluginVersion;
-        this.myDBService.saveSettingsData();
-        // this.navCtrl.navigateBack("");
-        // this.navCtrl.pop();
-        this.navCtrl.navigateForward("/tabs/tab1");
-        
-      },error => {
-        console.log('%c 请求处理失败 %c', 'color:red', 'url', url, 'err', error);
-        this.loading.dismiss();
-        this.presentConnError();
+
+    this.myHttpService.CallFoo(url).then(
+      res=>{
+       console.log(res); 
+
+       this.loginDisabled = false;
+       AppConfig.settings.ip = this.inputIp;
+       AppConfig.settings.port = this.inputPort;
+       AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+
+
+       this.myDBService.saveSettingsData();
+       // this.navCtrl.navigateBack("");
+       this.navCtrl.navigateForward("/tabs/tab1");
+       
+      },
+      error=>{
+        console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
       }
-      ); 
+    );
+    
+
   }
 
   async presentConnError() {

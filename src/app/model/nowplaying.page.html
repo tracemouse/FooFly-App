@@ -21,16 +21,16 @@
   </ion-toolbar> -->
 
    <div class="header-box">
-     <div class="track-title">{{nowTrack.trackTitle}}</div>
+     <div class="track-title">{{nowTrack.track}}</div>
      <div class="track-artist">{{nowTrack.artist}} - {{nowTrack.album}}</div>
-     <div class="track-line3">
+     <!-- <div class="track-line3">
        <span class="track-audioType">{{audioType}}</span>
        <span class="track-sampleRate">{{nowTrack.sampleRate}}</span>
-     </div>
+     </div> -->
    </div>
    
    <div id="nowplaying-coverImg" class="img-box">
-     <img *ngIf="(antimation == 'true')" src="{{coverImg}}" [(ngClass)]="{true: 'coverImgAnimation', false: 'coverImg'}[playState == '3']" />
+     <img *ngIf="(antimation == 'true')" src="{{coverImg}}" [(ngClass)]="{true: 'coverImgAnimation', false: 'coverImg'}[playState == '1']" />
      <img *ngIf="(antimation != 'true')" src="{{coverImg}}" class="coverImgFixed"/>
    </div>
  
@@ -68,8 +68,8 @@
           </div> -->
           <ion-buttons>
               <ion-button color="danger" (click)="playPause()" class="play-button">
-                <img *ngIf="(playState != '3')" src="assets/svg/play.svg" class="playPause-img"/>
-                <img *ngIf="(playState == '3')" src="assets/svg/pause.svg" class="playPause-img"/>
+                <img *ngIf="(playState != '1')" src="assets/svg/play.svg" class="playPause-img"/>
+                <img *ngIf="(playState == '1')" src="assets/svg/pause.svg" class="playPause-img"/>
               </ion-button>
             </ion-buttons>
         </ion-col>

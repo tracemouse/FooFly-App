@@ -7,7 +7,7 @@ import * as ProgressBar from "progressbar.js";
 // import { AppConfig} from "../app.config";
 // import { MyHttpService} from "../my-http.service";
 import { NowplayingPage } from "../model/nowplaying.page";
-import { WebsocketService} from "../websocket.service";
+import { MyHttpService} from "../my-http.service"; 
 import { AppConfig } from '../app.config';
 
 @Component({
@@ -16,6 +16,8 @@ import { AppConfig } from '../app.config';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+
+  timeout:any;
  
   tracks: any = [];
   nowTrack: any = {'trackTitle':'','artist':'','sampleRate':'','album':'','fileUrl':''};
@@ -37,10 +39,9 @@ export class Tab1Page {
   progressbar:any;
 
   constructor(
-              // public myHttpService: MyHttpService,
+              public myHttpService: MyHttpService,
               public navCtrl: NavController,
               public modalController: ModalController,
-              public wsService: WebsocketService,
               public router: Router,
               public activeRoute: ActivatedRoute) 
   { 
@@ -93,8 +94,6 @@ export class Tab1Page {
   }
 
   async doRefresh(event){
-    this.wsService.closeWSPlaying();
-    this.wsService.wsPlaying = null;
 
     this.ionViewWillEnter();
 
@@ -109,125 +108,75 @@ export class Tab1Page {
 
     this.nowFileUrl = "";
 
-    var mydata = {"action":"getNowPlayingList"};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
+    this.myHttpService.GetState().then(
+      (data:any)=>{
         // console.log(data);
-        if(!data.isSucc){
-          return;
+        this.tracks = data.playlist;
+        if(data.currentTrack != "?"){
+          this.nowTrack = data.playing;
         }
-        this.tracks = data;
-        var len = this.tracks.length;
-        for(var i=0; i<len; i++){
-          var fileUrl = this.tracks[i].fileUrl;
-          var index = fileUrl.lastIndexOf(".");
-          this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-        }
-      }
-    );
 
-    this.wsService.openWSPlaying();
-    this.wsService.obPlaying.subscribe(
-      (data)=>{
-        // console.log(data);
-        this.pushNowTrack(data);
-      }
-    );
+        this.playState = data.isPlaying;
+        this.coverImg = data.albumArt;
+        // var len = this.tracks.length;
+        // for(var i=0; i<len; i++){
+        //   var fileUrl = this.tracks[i].fileUrl;
+        //   var index = fileUrl.lastIndexOf(".");
+        //   this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
+        // }
+        setTimeout(
+          () => {
+            this.getState();
+          },
+          AppConfig.settings.interval
+        );
+    });
+
   }
  
+  private getState(){
+    this.myHttpService.GetState().then(
+      (data:any)=>{
+        // console.log(data);
+        this.pushTrack(data);
 
-  async getCoverImg(){
-    // var mydata = {"action":"getLibArtwork", "fileUrl":this.tracks[0].fileUrl};
-    // var mydata = {"action":"getArtwork"}
-
-    // this.wsService.callMB(mydata).subscribe(
-    //   data=>{
-    //       // console.log(data);
-    //       this.pushImg(data);
-    //   }
-    // );
-    var getTimestamp=new Date().getTime();
-    var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork?" + getTimestamp;
-    this.coverImg = imgUrl;
-
+        this.timeout = setTimeout(
+          () => {
+            this.getState();
+          },
+          AppConfig.settings.interval
+        );
+      }
+    );
   }
 
-  pushImg(img:any){
-    this.coverImg = img;
-  }
-  
-  // async getNowplaying(){
-  //   var mydata = {"action":"getNowPlaying"};
-  //   var postStr = JSON.stringify(mydata);
+  private pushTrack(data:any){
+    this.tracks = data.playlist;
+    if(data.currentTrack != "?"){
+      this.nowTrack = data.playing;
+      this.title = data.playing.track;
+    }
 
-  //   this.myHttpService.CallMusicBee(postStr).then(
-  //     (data)=>{
-  //         // console.log(data);
-  //         this.pushNowTrack(data);
-  //     }
-  //   );
-  //  }
+    this.playState = data.isPlaying;
+    this.coverImg = data.albumArt;
+    this.audiobar = data.trackpos;
+    this.duration = data.tracklen;
+    let perc = this.getPercent(this.audiobar, this.duration);
+    this.progressbar.set(perc);
 
-  pushNowTrack(data:any){
-    if(data.playState == "3"){
+    if(data.isPlaying == "1"){
       this.playingAnimateStart();
     }else{
       this.playingAnimateStop();
     }
-
-    this.duration = data.duration;
-    this.audiobar = data.playPosition;
-
-    let perc = this.getPercent(this.audiobar, this.duration);
-    this.progressbar.set(perc);
-
-    this.playFileUrl = "";
-
-    this.nowTrack = data.track;
-    this.title = this.nowTrack.trackTitle;
-    var index = this.nowTrack.fileUrl.lastIndexOf(".");
-    this.audioType = (this.nowTrack.fileUrl.substr(index+1)).toUpperCase();
-    this.playState = data.playState;
-    // console.log(this.nowTrack);
-    var idx = -1;
     var len = this.tracks.length;
-    for(var i=0; i < len; i++){
-      if(this.tracks[i].fileUrl == this.nowTrack.fileUrl){
-        idx = i;
+    for(var i=0; i<len; i++){
+      if(this.tracks[i].track == this.title){
         this.tracks[i]['isPlaying'] = true;
       }else{
         this.tracks[i]['isPlaying'] = false;
       }
     }
-
-    if(idx == -1){
-      var mydata = {"action":"getNowPlayingList"};
-      this.wsService.callMB(mydata).subscribe(
-        data=>{
-          // console.log(data);
-          this.tracks = data;
-          var len = this.tracks.length;
-          for(var i=0; i<len; i++){
-            var fileUrl = this.tracks[i].fileUrl;
-            var index = fileUrl.lastIndexOf(".");
-            this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-          }
-        }
-      );
-      return;
-    }
-
-    if(this.nowFileUrl != this.nowTrack.fileUrl){
-      this.nowFileUrl = this.nowTrack.fileUrl;
-
-      this.getCoverImg();
-    }
-
-    if(this.nowIdx != idx){
-      this.nowIdx = idx;
-    }
-    
-    // console.log(idx);
   }
 
   async more() {
@@ -236,6 +185,7 @@ export class Tab1Page {
     // this.navCtrl.navigateForward("/playing");
     // this.router.navigateByUrl("/playing");
     // this.router.navigate(['/playing']);
+    clearTimeout(this.timeout);
 
     const modal = await this.modalController.create({
         component: NowplayingPage,
@@ -243,19 +193,19 @@ export class Tab1Page {
         }
     });
 
-    modal.onDidDismiss().then(res=>{
-      if(!res.data.hasError){
-        this.wsService.openWSPlaying();
-        this.wsService.obPlaying.subscribe(
-          (data)=>{
-            // console.log(data);
-            this.pushNowTrack(data);
-          }
-        );
-      }else{
-        this.navCtrl.navigateForward("/login");
-      }
-    });
+    // modal.onDidDismiss().then(res=>{
+    //   if(!res.data.hasError){
+    //     this.wsService.openWSPlaying();
+    //     this.wsService.obPlaying.subscribe(
+    //       (data)=>{
+    //         // console.log(data);
+    //         this.pushNowTrack(data);
+    //       }
+    //     );
+    //   }else{
+    //     this.navCtrl.navigateForward("/login");
+    //   }
+    // });
     
     await modal.present().then((event)=>{
  
@@ -270,30 +220,27 @@ export class Tab1Page {
   }
 
   playTrack(track:any) {
-    this.playFileUrl = track.fileUrl;
-    var mydata = {"action":"playNow","fileUrl":this.playFileUrl};
-    this.wsService.sendWSPlaying(mydata);
+    // this.playFileUrl = track.fileUrl;
+    this.myHttpService.PlayTrack(track);
   }
 
   playNext(event){
     event.preventDefault(); 
     event.stopPropagation();
-    var mydata = {"action":"playNext"};
-    this.wsService.sendWSPlaying(mydata);
+
+    this.myHttpService.PlayNext();
   }
 
   playPrev(event){
     event.preventDefault(); 
     event.stopPropagation();
-    var mydata = {"action":"playPrev"};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.PlayPrev();
   }
 
   playPause(event){
     event.preventDefault(); 
     event.stopPropagation();
-    var mydata = {"action":"playPause"};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.PlayPause();
   }
 
   playingAnimateStop(){
