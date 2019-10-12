@@ -3,8 +3,8 @@ import { ModalController,LoadingController,NavController } from '@ionic/angular'
 
 import { AppConfig } from '../app.config';
 import { MyDBService}  from "../my-db.service";
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
+// import { WebsocketService} from "../websocket.service"; 
 import { TracklistPage } from "../model/tracklist.page";
 import { SearchPage } from "../model/search.page";
 
@@ -36,8 +36,8 @@ export class Tab2Page {
   cover = "assets/img/cover.jpg";
 
   constructor(public myDBService: MyDBService,
-              // public myHttpService: MyHttpService,
-              public wsService: WebsocketService,
+              public myHttpService: MyHttpService,
+              // public wsService: WebsocketService,
               public modalController: ModalController,
               public loadingController: LoadingController,
               public navCtrl: NavController) {
@@ -144,23 +144,23 @@ export class Tab2Page {
       await this.loading.present();
       var mydata = {"action":"librarySearch", "query":""};
   
-      this.wsService.callMB(mydata).subscribe(
+      // this.wsService.callMB(mydata).subscribe(
+      this.myHttpService.SwithPlaylist(1).then(
         data=>{
             // console.log(data);
             if(this.refreshEvent != null){
               this.refreshEvent.target.complete();
             }
             this.loading.dismiss();
-            if(!data.isSucc){
-              return;
-            }
+
             this.saveAllTracks(data);
         }
       );
   }
 
-  async saveAllTracks(tracks:any){
-    this.tracks = tracks;
+  async saveAllTracks(data:any){
+    this.tracks.concat(data.playlist);
+    console.log(this.tracks);
     this.folders = [];
     this.albums = [];
     this.artists = [];

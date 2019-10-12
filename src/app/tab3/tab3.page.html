@@ -20,7 +20,7 @@
    </ion-toolbar>
 
   <ion-list class="list-1" lines="none" id="il-playlist">
-      <ion-item button *ngFor="let item of playlists" (click)="showTracks(item);">
+      <ion-item button *ngFor="let item of playlists,let i = index" (click)="showTracks(i);">
           <!-- <ion-icon name="list-box" item-start color="danger"></ion-icon> -->
           <img src="assets/svg/playlist.svg" class="playlist-icon"/>
           <ion-label class="item-title">{{item.name}}</ion-label>

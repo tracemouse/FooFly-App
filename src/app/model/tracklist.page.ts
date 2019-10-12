@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
 import { AppConfig} from "../app.config";
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
+// import { WebsocketService} from "../websocket.service"; 
 
 @Component({
   selector: 'app-tracklist',
@@ -27,8 +27,7 @@ export class TracklistPage implements OnInit {
 
   constructor(public modalController: ModalController,
               public navParams: NavParams,
-              // public myHttpService: MyHttpService,
-              public wsService: WebsocketService) 
+              public myHttpService: MyHttpService) 
   { 
     navParams.get('title');
     navParams.get('fileUrl');
@@ -43,18 +42,17 @@ export class TracklistPage implements OnInit {
     this.showTracks = [...this.tracks];
     // console.log(this.tracks);
 
-    var len = this.tracks.length;
-    for(var i=0; i<len; i++){
-      var fileUrl = this.tracks[i].fileUrl;
-      var index = fileUrl.lastIndexOf(".");
+    let len = this.tracks.length;
+    for(let i=0; i<len; i++){
+      let fileUrl = this.tracks[i].fileUrl;
+      let index = fileUrl.lastIndexOf(".");
       this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
     }
     
     // console.log(this.tracks);
     this.coverImg = this.defaultImg;
-    if(this.fileUrl == null || this.fileUrl == "" ){
-      return;
-    }
+
+    this.coverImg = this.fileUrl;
 
     // var mydata = {"action":"getLibArtwork", "fileUrl":this.fileUrl,"pushData":""};
     // this.wsService.callMB(mydata,null,true).subscribe(
@@ -66,9 +64,10 @@ export class TracklistPage implements OnInit {
     //   }
     // );
 
-    var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-    imgUrl += "?fileUrl=" + encodeURI(this.fileUrl);
-    this.coverImg = imgUrl;
+    // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+    // imgUrl += "?fileUrl=" + encodeURI(this.fileUrl);
+    // this.coverImg = imgUrl;
+
 
   }
 
@@ -85,55 +84,13 @@ export class TracklistPage implements OnInit {
     });
   }
 
-  playTrack(track:any) {
-    var tracks = ""
-    this.playFileUrl = track.fileUrl;
-    tracks = tracks + track.fileUrl;
-    var mydata = {"action":"playTracks","tracks":tracks};
-    var postStr = JSON.stringify(mydata);
-
-    this.wsService.callMB(mydata,null,true).subscribe(
-      data=>{
-        // console.log(data);
-        // this.cancel(false);
-        if(!data.isSucc){
-          return;
-        }
-      },
-      err=>{
-        this.cancel(true);
-      }
-    );
+  playTrack(idx:any) {
+    this.myHttpService.PlayTrack(idx);
   }
 
   playTracks() {
-    var tracks = ""
-    var i = 0;
-    for(let track of this.tracks){
-      i++;
-      if (i == 1) {
-        tracks = tracks + track.fileUrl;
-      }else{
-        tracks = tracks + "*" + track.fileUrl;
-      }
-    }
-    
-    // console.log(tracks);
-    var mydata = {"action":"playTracks","tracks":tracks};
-    var postStr = JSON.stringify(mydata);
-
-    this.wsService.callMB(mydata,null,true).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-        this.cancel(false);
-      },
-      err=>{
-        this.cancel(true);
-      }
-    );
+    this.myHttpService.PlayTrack(0);
+    this.cancel(false);
   }
 
   handleSbInput(event:any) {

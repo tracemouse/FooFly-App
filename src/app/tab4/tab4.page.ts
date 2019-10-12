@@ -4,8 +4,8 @@ import { TranslateService }from "@ngx-translate/core";
 
 import { AppConfig} from "../app.config";
 import { MyDBService}  from "../my-db.service";
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
+// import { WebsocketService} from "../websocket.service"; 
 
 import { SettingPage } from "../model/setting.page";
 import { Tab4PopoverPage } from "../model/tab4-popover.page";
@@ -40,8 +40,7 @@ export class Tab4Page {
               public modalController: ModalController,
               public actionSheetController:ActionSheetController,
               public popoverController:PopoverController,
-              // public myHttpService: MyHttpService,
-              public wsService: WebsocketService,
+              public myHttpService: MyHttpService,
               public navCtrl: NavController) {
 
   }
@@ -60,17 +59,11 @@ export class Tab4Page {
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
     // console.log("tab4=" + JSON.stringify(AppConfig.settings));
 
-    var mydata = {"action":"getNowPlaying"};
-    this.wsService.callMB(mydata).subscribe(
-      (data:any) =>{
-          // console.log(data);
-          if(!data.isSucc){
-            return;
-          }
-          this.autoDJ = data.autoDjEnabled;
-          this.mute = data.mute;
-          this.volume = data.volume;
-          this.mbLoaded = true;
+    this.myHttpService.GetState().then(
+      (data:any)=>{
+        // console.log(data);
+        this.volume = data.volume;
+        this.mbLoaded = true;
       }
     );
 
@@ -112,7 +105,6 @@ export class Tab4Page {
         // AppConfig.settings.rootUrl = this.url;
         // AppConfig.settings.interval = this.interval;
         this.myDBService.saveSettingsData();
-        this.wsService.closeWSPlaying();
       }
      });
     await modal.present();
@@ -194,22 +186,6 @@ export class Tab4Page {
     this.myDBService.saveSettingsData();
   }
 
-  setAutoDJ(event:any){
-    if(!this.mbLoaded){
-      return;
-    }
-    var action = (this.autoDJ)?"startAutoDj":"endAutoDj";
-    var mydata = {"action":action};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-      }
-    ); 
-  }
-  
   setShowTrackSeq(event){
     AppConfig.settings.showTrackSeq = (this.showTrackSeq)?"true":"false";
     this.myDBService.saveSettingsData();
@@ -221,34 +197,26 @@ export class Tab4Page {
     }
     this.mute = (this.mute)?false:true;
     this.muteIcon = (!this.mute)?"volume-high":"volume-off";
-    var mydata = {"action":"setMute","mute":this.mute};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-      }
-    ); 
+   
+    if(this.mute){
+      this.myHttpService.SetVolume("0");
+    }else{
+      this.myHttpService.SetVolume(this.volume);
+    }
+
   }
 
   setVolume(event){
     if(!this.mbLoaded){
       return;
     }
-    var mydata = {"action":"setVolume","volume":this.volume};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-      }
-    ); 
+
+    this.myHttpService.SetVolume(this.volume);
+
   }
 
   exit(){
-    this.wsService.closeWSPlaying();
+
     this.navCtrl.navigateForward(["/login"],{
       queryParams:{
         from:'exit'

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ModalController,NavController,LoadingController} from '@ionic/angular';
 
 import { AppConfig } from '../app.config';
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
+// import { WebsocketService} from "../websocket.service"; 
 import { TracklistPage } from "../model/tracklist.page";
 
 import { rightEnterAnimation } from "../modal-transitions";
@@ -23,8 +23,7 @@ export class Tab3Page {
   public playlists = [];
 
   constructor(
-              // public myHttpService: MyHttpService,
-              public wsService: WebsocketService,
+              public myHttpService: MyHttpService,
               public modalController: ModalController,
               public navCtrl: NavController,
               public loadingController: LoadingController) {
@@ -35,20 +34,16 @@ export class Tab3Page {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    var mydata = {"action":"getPlaylist"};
-    this.wsService.callMB(mydata).subscribe(
+    this.myHttpService.GetState().then(
       data=>{
         // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
         this.pushData(data);
       }
     );
   }
 
   pushData(data:any){
-    this.playlists = data;
+    this.playlists = data.playlists;
   }
 
   ionViewWillEnter(){
@@ -77,22 +72,28 @@ export class Tab3Page {
   }
 
   async showTracks(item:any) {
-    await this.initLoading();
-    await this.loading.present();
+    // await this.initLoading();
+    // await this.loading.present();
 
     // console.log(item);
-    var mydata = {"action":"playlistTracklist","playlistUrl":item.playlistUrl};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
-        this.loading.dismiss();
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-        this.showTracksPage(data,item);
+    // var mydata = {"action":"playlistTracklist","playlistUrl":item.playlistUrl};
+    // this.wsService.callMB(mydata).subscribe(
+    //   data=>{
+    //     this.loading.dismiss();
+    //     // console.log(data);
+    //     if(!data.isSucc){
+    //       return;
+    //     }
+    //     this.showTracksPage(data,item);
+    //   }
+    // );
+
+    this.myHttpService.SwithPlaylist(item).then(
+      (data:any) => {
+        this.playlists[item]['albumArt'] = data.albumArt;
+        this.showTracksPage(data.playlist,this.playlists[item]);
       }
     );
-
   }
 
   async showTracksPage(tracks: any, item:any) {
@@ -102,7 +103,7 @@ export class Tab3Page {
       leaveAnimation: rightLeaveAnimation,
       componentProps: {
         'title':item.name,
-        'fileUrl': "",
+        'fileUrl': item.albumArt,
         'tracks': tracks
       }
     });
@@ -124,16 +125,12 @@ export class Tab3Page {
     await this.initLoading();
     await this.loading.present();
 
-    var mydata = {"action":"getPlaylist"};
-    this.wsService.callMB(mydata).subscribe(
+    this.myHttpService.GetState().then(
       data=>{
-        this.loading.dismiss();
-        event.target.complete();
         // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
         this.pushData(data);
+        event.target.complete();
+        this.loading.dismiss();
       }
     );
   }
@@ -151,13 +148,9 @@ export class Tab3Page {
   }
 
   refresh(){
-    var mydata = {"action":"getPlaylist"};
-    this.wsService.callMB(mydata).subscribe(
+    this.myHttpService.GetState().then(
       data=>{
         // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
         this.pushData(data);
       }
     );

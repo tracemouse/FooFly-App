@@ -38,6 +38,16 @@ export class AppConfig {
     {'dis':'English','language':'en'},
     {'dis':'简体中文','language':'zh'}
   ];
+
+  public static PlayBackOrder = {
+    'default':0,
+    'repeatPlalist':1,
+    'repeatTrack':2,
+    'shuffle':3,
+    'shuffleTrack':4,
+    'shufflePlaylist':5,
+    'shuffleFolder':6
+  };
   
   // public static languages = {
   //   'en':'English',

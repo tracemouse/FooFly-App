@@ -19,63 +19,27 @@ export class MyHttpService {
    }
 
 
-  public CallMusicBee(postdata:any){
-    if(AppConfig.settings.rootUrl.endsWith("/")){
-      this.url = AppConfig.settings.rootUrl + AppConfig.settings.jsonrpc;
-    }else{
-      this.url = AppConfig.settings.rootUrl + "/" + AppConfig.settings.jsonrpc;
-    }
+//   public CallMusicBeeWithErr(postdata:any){
+//     if(AppConfig.settings.rootUrl.endsWith("/")){
+//       this.url = AppConfig.settings.rootUrl + AppConfig.settings.jsonrpc;
+//     }else{
+//       this.url = AppConfig.settings.rootUrl + "/" + AppConfig.settings.jsonrpc;
+//     }
      
-   return new Promise((resolve, reject) => {
-    this.http.post(this.url, postdata).pipe(timeout(AppConfig.settings.timeout * 60 * 1000))
-    .subscribe(
-      res => {
-        // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
-        resolve(res);
-      }
-      ,error => {
-        console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
-        console.log("call mb failed. " + postdata);
+//    return new Promise((resolve, reject) => {
+//     this.http.post(this.url, postdata).pipe(timeout(AppConfig.settings.timeout * 60 * 1000))
+//     .subscribe(
+//       res => {
+//         // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
+//         resolve(res);
+//       }
+//       ,error => {
+//         console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
 //         reject(error);
-        // this.navCtrl.navigateForward("/login");
-        this.navCtrl.navigateBack("/login");
-      }
-      )
-    });
-  }
-
-  public CallMusicBeeWithErr(postdata:any){
-    if(AppConfig.settings.rootUrl.endsWith("/")){
-      this.url = AppConfig.settings.rootUrl + AppConfig.settings.jsonrpc;
-    }else{
-      this.url = AppConfig.settings.rootUrl + "/" + AppConfig.settings.jsonrpc;
-    }
-     
-   return new Promise((resolve, reject) => {
-    this.http.post(this.url, postdata).pipe(timeout(AppConfig.settings.timeout * 60 * 1000))
-    .subscribe(
-      res => {
-        // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
-        resolve(res);
-      }
-      ,error => {
-        console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
-        reject(error);
-      }
-      )
-    });
-  }
-
-  public CallMusicBeHttp(postdata:any){
-    if(AppConfig.settings.rootUrl.endsWith("/")){
-      this.url = AppConfig.settings.rootUrl + AppConfig.settings.jsonrpc;
-    }else{
-      this.url = AppConfig.settings.rootUrl + "/" + AppConfig.settings.jsonrpc;
-    }
-     
-   return this.http.post(this.url, postdata).pipe(timeout(AppConfig.settings.timeout * 60 * 1000));
-  }
-
+//       }
+//       )
+//     });
+//   }
   
   public CallFoo(url:string){
     // if (r)	requestStr += '&cmd='+r;
@@ -99,7 +63,7 @@ export class MyHttpService {
       .subscribe(
         res => {
           // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
-          res = res.replace(/\'/g,'"');
+          // res = res.replace(/\'0\'/g,'"0"');
           let json = JSON.parse(res);
           resolve(json);
         }
@@ -137,6 +101,31 @@ export class MyHttpService {
 
   public PlayTrack(idx:any){
     let url = "cmd=Start&param1=" + idx;
+    return this.CallFoo(url);
+  }
+
+  public SetVolume(volume:any){
+    let url = "cmd=Volume&param1=" + volume;
+    return this.CallFoo(url);
+  }
+
+  public SetRepeat(idx:any){
+    let url = "cmd=PlaybackOrder&param1=" + idx;
+    return this.CallFoo(url);
+  }
+
+  public SwithPlaylist(idx:any){
+    let url = "cmd=SwitchPlaylist&param1=" + idx;
+    return this.CallFoo(url);
+  }
+
+  public FocusOnPlaying(){
+    let url = "cmd=FocusOnPlaying&param3=NoResponse";
+    return this.CallFoo(url);
+  }
+
+  public GoPage(idx:any){
+    let url = "cmd=p&param1=" + idx;
     return this.CallFoo(url);
   }
 }

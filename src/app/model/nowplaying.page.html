@@ -23,10 +23,10 @@
    <div class="header-box">
      <div class="track-title">{{nowTrack.track}}</div>
      <div class="track-artist">{{nowTrack.artist}} - {{nowTrack.album}}</div>
-     <!-- <div class="track-line3">
+     <div class="track-line3">
        <span class="track-audioType">{{audioType}}</span>
        <span class="track-sampleRate">{{nowTrack.sampleRate}}</span>
-     </div> -->
+     </div>
    </div>
    
    <div id="nowplaying-coverImg" class="img-box">
@@ -46,9 +46,13 @@
         <ion-col>
           <ion-buttons>
             <ion-button color="danger" (click)="setRepeat()" class="play-button">
-              <ion-icon *ngIf="(repeat == 1)" name="ios-sync" class="play-infinite" ></ion-icon>
-              <ion-icon *ngIf="(repeat == 0)" name="ios-infinite" class="play-infinite"></ion-icon>
-              <ion-icon *ngIf="(repeat == 2)" name="ios-infinite" class="play-infinite"></ion-icon>
+              <ion-icon *ngIf="(repeat == PlaybackOrder.default)" name="swap" class="play-infinite"></ion-icon>
+              <ion-icon *ngIf="(repeat == PlaybackOrder.repeatPlalist)" name="repeat" class="play-infinite" ></ion-icon>
+              <ion-icon *ngIf="(repeat == PlaybackOrder.repeatTrack)" name="git-commit" class="play-infinite"></ion-icon>
+              <ion-icon *ngIf="(repeat == PlaybackOrder.shuffle)" name="shuffle" class="play-infinite"></ion-icon>
+              <ion-icon *ngIf="(repeat == PlaybackOrder.shuffleTrack)" name="options" class="play-infinite"></ion-icon>
+              <ion-icon *ngIf="(repeat == PlaybackOrder.shufflePlaylist)" name="git-branch" class="play-infinite"></ion-icon>
+              <ion-icon *ngIf="(repeat == PlaybackOrder.shuffleFolder)" name="paper" class="play-infinite"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-col>
@@ -82,9 +86,9 @@
         </ion-col>
         <ion-col>
           <ion-buttons>
-            <ion-button color="danger" (click)="setShuffle()" class="play-button">
-              <ion-icon *ngIf="(!shuffle)" name="ios-menu" class="play-volume"></ion-icon>
-              <ion-icon *ngIf="(shuffle)" name="shuffle" class="play-volume"></ion-icon>
+            <ion-button color="danger" (click)="setVolume()" class="play-button">
+              <ion-icon *ngIf="(volume != '0')" name="volume-high" class="play-volume"></ion-icon>
+              <ion-icon *ngIf="(volume == '0')" name="volume-off" class="play-volume"></ion-icon>
             </ion-button>
           </ion-buttons>
           <!--<ion-icon name="volume-off"></ion-icon>-->

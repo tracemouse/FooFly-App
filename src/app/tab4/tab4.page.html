@@ -1,11 +1,11 @@
 <ion-header mode="ios">
   <ion-toolbar class="header-toolbar">
       <div class="header-title">{{'tab4.header' | translate}}</div>
-      <ion-buttons slot="end">
+      <!-- <ion-buttons slot="end">
           <ion-button (click)="more($event)" color="danger">
              <ion-icon name="ios-more"></ion-icon> 
           </ion-button>
-      </ion-buttons>
+      </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -27,7 +27,7 @@
           <ion-avatar slot="start">
               <img src="assets/icons/favicon.png">
             </ion-avatar>
-        <ion-label class="mb-title">MuscBee Fly</ion-label>
+        <ion-label class="mb-title">Foo Fly</ion-label>
         <ion-note slot="end">{{version}}</ion-note>
       </ion-item>
 
@@ -52,11 +52,10 @@
         <ion-label>{{'tab4.animation' | translate}}</ion-label>
         <ion-toggle [(ngModel)]="animation" (ionChange)="setAnimation($event)" color="danger"></ion-toggle>
       </ion-item>
-      <ion-item lines="none">
-        <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
+      <!-- <ion-item lines="none">
         <ion-label>{{'tab4.autoDJ' | translate}}</ion-label>
         <ion-toggle [(ngModel)]="autoDJ" (ionChange)="setAutoDJ($event)" color="danger"></ion-toggle>
-      </ion-item>
+      </ion-item> -->
       <ion-item lines="none">
         <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
         <ion-label>{{'tab4.show-track-seq' | translate}}</ion-label>

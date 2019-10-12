@@ -42,7 +42,7 @@
       <ion-item *ngFor="let item of showTracks,let i = index" lines="none">
          <div item-start class="track-seq" *ngIf="(showTrackSeq)">{{(i + 1)}}</div>
          <ion-label>
-            <span class="track-title">{{item.trackTitle}}</span><br>
+            <span class="track-title">{{item.track}}</span><br>
             <div>
                <span class="track-audioType">{{item.audioType}}</span>
                <span class="track-sampleRate">{{item.sampleRate}}</span>
@@ -51,7 +51,7 @@
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.fileUrl == playFileUrl" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons item-end *ngIf="item.fileUrl != playFileUrl" >
-               <ion-button (click)="playTrack(item);" color="danger">
+               <ion-button (click)="playTrack(i);" color="danger">
                  <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon> 
                </ion-button>
          </ion-buttons>

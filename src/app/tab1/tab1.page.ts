@@ -79,7 +79,7 @@ export class Tab1Page {
 
   ionViewWillLeave(){
   //  console.log("tab1 will leave");
-    // clearInterval(this.interval);
+    clearInterval(this.timeout);
   }
 
   ngOnDestroy(){
@@ -108,29 +108,31 @@ export class Tab1Page {
 
     this.nowFileUrl = "";
 
-    this.myHttpService.GetState().then(
-      (data:any)=>{
-        // console.log(data);
-        this.tracks = data.playlist;
-        if(data.currentTrack != "?"){
-          this.nowTrack = data.playing;
-        }
+    this.myHttpService.FocusOnPlaying();
+    this.getState();
+    // this.myHttpService.GetState().then(
+    //   (data:any)=>{
+    //     // console.log(data);
+    //     this.tracks = data.playlist;
+    //     if(data.currentTrack != "?"){
+    //       this.nowTrack = data.playing;
+    //     }
 
-        this.playState = data.isPlaying;
-        this.coverImg = data.albumArt;
-        // var len = this.tracks.length;
-        // for(var i=0; i<len; i++){
-        //   var fileUrl = this.tracks[i].fileUrl;
-        //   var index = fileUrl.lastIndexOf(".");
-        //   this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-        // }
-        setTimeout(
-          () => {
-            this.getState();
-          },
-          AppConfig.settings.interval
-        );
-    });
+    //     this.playState = data.isPlaying;
+    //     this.coverImg = data.albumArt;
+    //     // var len = this.tracks.length;
+    //     // for(var i=0; i<len; i++){
+    //     //   var fileUrl = this.tracks[i].fileUrl;
+    //     //   var index = fileUrl.lastIndexOf(".");
+    //     //   this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
+    //     // }
+    //     setTimeout(
+    //       () => {
+    //         this.getState();
+    //       },
+    //       AppConfig.settings.interval
+    //     );
+    // });
 
   }
  
@@ -176,6 +178,10 @@ export class Tab1Page {
       }else{
         this.tracks[i]['isPlaying'] = false;
       }
+
+      let fileUrl = this.tracks[i].fileUrl;
+      let index = fileUrl.lastIndexOf(".");
+      this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
     }
   }
 
@@ -193,19 +199,13 @@ export class Tab1Page {
         }
     });
 
-    // modal.onDidDismiss().then(res=>{
-    //   if(!res.data.hasError){
-    //     this.wsService.openWSPlaying();
-    //     this.wsService.obPlaying.subscribe(
-    //       (data)=>{
-    //         // console.log(data);
-    //         this.pushNowTrack(data);
-    //       }
-    //     );
-    //   }else{
-    //     this.navCtrl.navigateForward("/login");
-    //   }
-    // });
+    modal.onDidDismiss().then(res=>{
+      if(!res.data.hasError){
+        this.getState();
+      }else{
+        this.navCtrl.navigateForward("/login");
+      }
+    });
     
     await modal.present().then((event)=>{
  
@@ -219,9 +219,9 @@ export class Tab1Page {
     return;
   }
 
-  playTrack(track:any) {
+  playTrack(idx:any) {
     // this.playFileUrl = track.fileUrl;
-    this.myHttpService.PlayTrack(track);
+    this.myHttpService.PlayTrack(idx);
   }
 
   playNext(event){
