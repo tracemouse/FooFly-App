@@ -125,7 +125,7 @@ export class MyHttpService {
   }
 
   public GoPage(idx:any){
-    let url = "cmd=p&param1=" + idx;
+    let url = "cmd=P&param1=" + idx;
     return this.CallFoo(url);
   }
 }

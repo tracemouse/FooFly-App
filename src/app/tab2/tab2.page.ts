@@ -35,6 +35,10 @@ export class Tab2Page {
   refreshEvent:any;
   cover = "assets/img/cover.jpg";
 
+  playlistIdx = 1;
+  totalTracks = 0;
+  totalPages = 0;
+
   constructor(public myDBService: MyDBService,
               public myHttpService: MyHttpService,
               // public wsService: WebsocketService,
@@ -140,34 +144,60 @@ export class Tab2Page {
 
   async getAllTracks(){
       // console.log(item);
+
       await this.initLoading();
       await this.loading.present();
-      var mydata = {"action":"librarySearch", "query":""};
-  
-      // this.wsService.callMB(mydata).subscribe(
-      this.myHttpService.SwithPlaylist(1).then(
-        data=>{
-            // console.log(data);
-            if(this.refreshEvent != null){
-              this.refreshEvent.target.complete();
-            }
-            this.loading.dismiss();
 
-            this.saveAllTracks(data);
+      // this.wsService.callMB(mydata).subscribe(
+      this.myHttpService.SwithPlaylist(this.playlistIdx).then(
+        (data:any) =>{
+            console.log(data);
+            this.totalTracks = parseInt(data.playlists[this.playlistIdx].count);
+            this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
+            console.log("total tracks=" + this.totalTracks);
+            console.log("total pages=" + this.totalPages);
+
+            this.getPage(1);
         }
       );
   }
 
+  async getPage(idx:any){
+    if(idx > this.totalPages){
+      if(this.refreshEvent != null){
+        this.refreshEvent.target.complete();
+      }
+      this.loading.dismiss();
+      this.sgLibrary = "folder";
+      return;
+    }
+
+    this.myHttpService.GoPage(idx).then(
+      data=>{
+
+          this.saveAllTracks(data);
+          this.getPage(idx + 1);
+      }
+    );
+  }
+
   async saveAllTracks(data:any){
-    this.tracks.concat(data.playlist);
-    console.log(this.tracks);
+
+    let len = data.playlist.length;
+    for(let i=0; i<len;i++){
+      let fileUrl = data.playlist[i].fileUrl;
+      let arr = fileUrl.split("\\");
+      data.playlist[i]['folder'] = arr[arr.length - 2];
+    }
+    this.tracks = this.tracks.concat(data.playlist);
+ 
     this.folders = [];
     this.albums = [];
     this.artists = [];
 
     // await this.refreshFolder();
     // this.refreshFolder();
-    this.sgLibrary = "folder";
+
     
     // this.myDBService.insertTracks(tracks).then().finally(
     //   ()=>{
@@ -204,9 +234,10 @@ export class Tab2Page {
           folder.type = fileUrl.substr(index+1).toUpperCase();
           folder.sampleRate = sampleRate;
 
-          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-          folder.artWork = imgUrl;
+          //var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          //imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          //folder.artWork = imgUrl;
+          folder.artWork = this.cover;
 
           this.folders.push(folder);
         }
@@ -227,9 +258,10 @@ export class Tab2Page {
       var index = fileUrl.lastIndexOf(".");
       folder.type = fileUrl.substr(index+1).toUpperCase();
       folder.sampleRate = sampleRate;
-      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-      folder.artWork = imgUrl;
+      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      // folder.artWork = imgUrl;
+      folder.artWork = this.cover;
       this.folders.push(folder);
     }
 
@@ -246,7 +278,7 @@ export class Tab2Page {
     for(var i=0;i<len;i++){
       var pushdata = {"idx":i,"type":"folder"};
       var mydata = {"action":"getLibArtwork", "fileUrl":this.folders[i].fileUrl,"pushData":JSON.stringify(pushdata)};
-      this.wsService.sendJsonrpc(mydata);
+      // this.wsService.sendJsonrpc(mydata);
     }
   }
 
@@ -288,9 +320,10 @@ export class Tab2Page {
           album.type = fileUrl.substr(index+1).toUpperCase();
           album.sampleRate = sampleRate;
 
-          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-          album.artWork = imgUrl;
+          // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          // album.artWork = imgUrl;
+          album.artWork = this.cover;
 
           this.albums.push(album);
         }
@@ -311,9 +344,10 @@ export class Tab2Page {
       var index = fileUrl.lastIndexOf(".");
       album.type = fileUrl.substr(index+1).toUpperCase();
       album.sampleRate = sampleRate;
-      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-      album.artWork = imgUrl;
+      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      // album.artWork = imgUrl;
+      album.artWork = this.cover;
       this.albums.push(album);
     }
 
@@ -326,7 +360,7 @@ export class Tab2Page {
     for(var i=0;i<len;i++){
       var pushdata = {"idx":i,"type":"album"};
       var mydata = {"action":"getLibArtwork", "fileUrl":this.albums[i].fileUrl,"pushData":JSON.stringify(pushdata)};
-      this.wsService.sendJsonrpc(mydata);
+      // this.wsService.sendJsonrpc(mydata);
     }
   }
 
@@ -364,9 +398,10 @@ export class Tab2Page {
           artist.count = count;
           artist.start = start;
 
-          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-          artist.artWork = imgUrl;
+          // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          // artist.artWork = imgUrl;
+          artist.artWork = this.cover;
 
           this.artists.push(artist);
         }
@@ -383,9 +418,10 @@ export class Tab2Page {
       artist.fileUrl = fileUrl;
       artist.count = count;
       artist.start = start;
-      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-      artist.artWork = imgUrl;
+      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      // artist.artWork = imgUrl;
+      artist.artWork = this.cover;
       this.artists.push(artist);
     }
 
@@ -398,7 +434,7 @@ export class Tab2Page {
     for(var i=0;i<len;i++){
       var pushdata = {"idx":i,"type":"artist"};
       var mydata = {"action":"getLibArtwork", "fileUrl":this.artists[i].fileUrl,"pushData":JSON.stringify(pushdata)};
-      this.wsService.sendJsonrpc(mydata);
+      // this.wsService.sendJsonrpc(mydata);
     }
   }
 

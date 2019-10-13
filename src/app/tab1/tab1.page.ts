@@ -78,7 +78,7 @@ export class Tab1Page {
   }
 
   ionViewWillLeave(){
-  //  console.log("tab1 will leave");
+   console.log("tab1 will leave");
     clearInterval(this.timeout);
   }
 
