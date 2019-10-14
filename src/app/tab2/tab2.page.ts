@@ -173,11 +173,11 @@ export class Tab2Page {
 
           this.myHttpService.SwithPlaylist(this.playlistIdx).then(
             (data:any) =>{
-                console.log(data);
+                // console.log(data);
                 this.totalTracks = parseInt(data.playlists[this.playlistIdx].count);
                 this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
-                console.log("total tracks=" + this.totalTracks);
-                console.log("total pages=" + this.totalPages);
+                // console.log("total tracks=" + this.totalTracks);
+                // console.log("total pages=" + this.totalPages);
     
                 this.getPage(1);
             }
@@ -188,7 +188,7 @@ export class Tab2Page {
 
   async getPage(idx:any){
     if(idx > this.totalPages){
-      console.log(this.tracks);
+      // console.log(this.tracks);
       if(this.refreshEvent != null){
         this.refreshEvent.target.complete();
       }

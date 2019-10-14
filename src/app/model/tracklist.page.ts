@@ -165,6 +165,9 @@ export class TracklistPage implements OnInit {
       (data:any)=>{
         let len = data.playlist.length;
         for(let i=0; i<len;i++){
+          let fileUrl = data.playlist[i].fileUrl;
+          let index = fileUrl.lastIndexOf(".");
+          data.playlist[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
           data.playlist[i]['idx'] = i + (this.page - 1) * parseInt(data.playlistItemsPerPage);
         }
         this.tracks = this.tracks.concat(data.playlist);
