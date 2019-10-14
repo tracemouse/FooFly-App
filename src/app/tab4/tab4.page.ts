@@ -9,7 +9,7 @@ import { MyHttpService} from "../my-http.service";
 
 import { SettingPage } from "../model/setting.page";
 import { Tab4PopoverPage } from "../model/tab4-popover.page";
-import { ShutdownPage } from "../model/shutdown.page";
+// import { ShutdownPage } from "../model/shutdown.page";
 
 import { rightEnterAnimation } from "../modal-transitions";
 import { rightLeaveAnimation } from "../modal-transitions";
@@ -34,6 +34,9 @@ export class Tab4Page {
   mbLoaded = false;
   muteIcon = "volume-high";
   showTrackSeq = false;
+  playlists:any = [];
+  musicLib = "";
+
 
   constructor(private translateService: TranslateService,
               private myDBService: MyDBService,
@@ -55,6 +58,7 @@ export class Tab4Page {
     this.url = AppConfig.settings.rootUrl;
     this.interval = AppConfig.settings.interval;
     this.language = AppConfig.settings.language;
+    this.musicLib = AppConfig.settings.musicLib;
     this.animation = (AppConfig.settings.animation == "true")?true:false;
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
     // console.log("tab4=" + JSON.stringify(AppConfig.settings));
@@ -64,6 +68,12 @@ export class Tab4Page {
         // console.log(data);
         this.volume = data.volume;
         this.mbLoaded = true;
+        this.playlists = data.playlists;
+        if(AppConfig.settings.musicLib == ""){
+          this.musicLib = data.playlists[0].name;
+          AppConfig.settings.musicLib = this.musicLib;
+          this.myDBService.saveSettingsData();
+        }
       }
     );
 
@@ -77,13 +87,24 @@ export class Tab4Page {
   async setLanguage(event:any){
     // console.log(this.language);
     // console.log(event.target.value);
-    var language = event.target.value;
+    let language = event.target.value;
     if(language == AppConfig.settings.language){
       return;
     }
     AppConfig.settings.language = language;
     this.myDBService.saveSettingsData();
     this.translateService.use(language);
+  }
+
+  async setMusicLib(event:any){
+    // console.log(this.language);
+    // console.log(event.target.value);
+    let musicLib = event.target.value;
+    if(musicLib == AppConfig.settings.musicLib){
+      return;
+    }
+    AppConfig.settings.musicLib = musicLib;
+    this.myDBService.saveSettingsData();
   }
 
   async setConnection(){

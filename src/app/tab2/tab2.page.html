@@ -2,7 +2,10 @@
   <ion-toolbar translucent class="header-toolbar">
     <!--<ion-searchbar (click)="showSearchTrackPage()" id="sb_album" placeholder="{{'tab2.header-sb-placeholder' | translate}}"></ion-searchbar>
     -->
-    <div class="header-title">{{'tab2.header' | translate}}</div>
+    <div class="header-title">
+        <label class="header-title-1">{{'tab2.header' | translate}}</label>
+        <label class="header-title-2">{{musicLib}}</label>
+    </div>
     <ion-buttons slot="end">
       <ion-button (click)="refresh()" color="danger">
         <!-- <ion-icon name="ios-refresh-circle"></ion-icon>  -->
@@ -45,9 +48,9 @@
           </ion-toolbar>
           <ion-list id="il_folder" lines="none">
             <ion-item button *ngFor="let item of folders" (click)="showTracksByFolder(item);">
-              <ion-thumbnail item-start>
+              <!-- <ion-thumbnail item-start>
                 <img src="{{item.artWork}}" class="cover-img">
-              </ion-thumbnail>
+              </ion-thumbnail> -->
               <ion-label>
                 <p class="item-title">{{item.name}}</p>
                 <p class="item-subtitle">
@@ -65,9 +68,9 @@
           </ion-toolbar>
           <ion-list id="il_album" lines="none">
             <ion-item button *ngFor="let item of albums" (click)="showTracksByAlbum(item);">
-              <ion-thumbnail item-start>
+              <!-- <ion-thumbnail item-start>
                 <img src="{{item.artWork}}" class="cover-img">
-              </ion-thumbnail>
+              </ion-thumbnail> -->
               <ion-label>
                 <p class="item-title">{{item.name}}</p>
                 <p class="item-subtitle">
@@ -85,9 +88,9 @@
             </ion-toolbar>
           <ion-list id="il_artist" lines="none">
             <ion-item button *ngFor="let item of artists" (click)="showTracksByArtist(item);">
-              <ion-thumbnail item-start>
+              <!-- <ion-thumbnail item-start>
                 <img src="{{item.artWork}}" class="cover-img">
-              </ion-thumbnail>
+              </ion-thumbnail> -->
               <ion-label>
                 <p class="item-title">{{item.name}}</p>
                 <p class="item-subtitle">{{item.count}} {{'tab2.tracks' | translate}}</p>

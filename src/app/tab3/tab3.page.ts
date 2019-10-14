@@ -71,7 +71,7 @@ export class Tab3Page {
     // return await this.loading.present();
   }
 
-  async showTracks(item:any) {
+  async showTracks(idx:any) {
     // await this.initLoading();
     // await this.loading.present();
 
@@ -88,23 +88,37 @@ export class Tab3Page {
     //   }
     // );
 
-    this.myHttpService.SwithPlaylist(item).then(
+    this.myHttpService.SwithPlaylist(idx).then(
       (data:any) => {
-        this.playlists[item]['albumArt'] = data.albumArt;
-        this.showTracksPage(data.playlist,this.playlists[item]);
+        this.playlists[idx]['albumArt'] = data.albumArt;
+        let len = data.playlist.length;
+        for(let i=0; i<len;i++){
+          data.playlist[i]['idx'] = i;
+        }
+        let totalTracks = data.playlists[idx].count;
+        let totalPages = Math.ceil(totalTracks / parseInt(data.playlistItemsPerPage));
+        this.showTracksPage(data.playlist,this.playlists[idx],idx,totalTracks,totalPages);
       }
     );
   }
 
-  async showTracksPage(tracks: any, item:any) {
+  async showTracksPage(tracks: any, item:any, idx:any,totalTracks:any,totalPages:any) {
+    var input = {
+      'from' : 'tab3',
+      'title': item.name,
+      'fileUrl': item.albumArt,
+      'tracks': tracks,
+      'playlistIdx': idx,
+      'totalTracks': totalTracks,
+      'totalPages': totalPages,
+    };
+
     const modal = await this.modalController.create({
       component: TracklistPage,
       enterAnimation: rightEnterAnimation,
       leaveAnimation: rightLeaveAnimation,
       componentProps: {
-        'title':item.name,
-        'fileUrl': item.albumArt,
-        'tracks': tracks
+        'input': input
       }
     });
 

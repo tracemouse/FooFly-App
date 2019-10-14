@@ -15,7 +15,8 @@ export class AppConfig {
     "interval": 1000,
     "animation": "true",
     "timeout": 0.2,
-    "showTrackSeq": "true"
+    "showTrackSeq": "true",
+    "musicLib":""
   };
 
   public static version = "1.0.0";

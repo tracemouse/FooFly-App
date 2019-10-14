@@ -1,10 +1,11 @@
 <ion-header mode="ios">
    <ion-toolbar class="header-toolbar">
-      <div class="header-title"><label class="header-title-1">{{'tab1.header' | translate}}</label>
-         <!-- <label class="header-title-2">
-            {{tracks.length}}
+      <div class="header-title">
+         <label class="header-title-1">{{'tab1.header' | translate}}</label>
+         <label class="header-title-2">
+            {{totalTracks}}
             {{'tracklist.tracks' | translate}}
-         </label> -->
+         </label>
       </div>
       <ion-buttons slot="end">
          <!-- <ion-button  [routerLink]="['/playing']" color="danger"> -->
@@ -44,7 +45,7 @@
 </ion-header>
 
 <ion-content>
-   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">
+   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="0" pullMax="10">
       <ion-refresher-content></ion-refresher-content>
    </ion-refresher>
    
@@ -85,7 +86,7 @@
    <ion-list class="list-2" lines="none" id="il-track">
       <ion-item *ngFor="let item of tracks,let i = index">
          <div item-start class="track-seq" *ngIf="(showTrackSeq)" >
-            {{i+1}}
+            {{(item.idx +1)}}
          </div>
          <ion-label>
             <span class="track-title">{{item.track}}</span><br>
@@ -97,11 +98,19 @@
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.isPlaying" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons slot="end" *ngIf="!item.isPlaying">
-            <ion-button (click)="playTrack(i);" color="danger">
+            <ion-button (click)="playTrack(item.idx);" color="danger">
                <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon>
             </ion-button>
          </ion-buttons>
       </ion-item>
       <ion-item lines="none"></ion-item>
    </ion-list>
+
+   <ion-infinite-scroll #IonInfiniteScroll threshold="100px" (ionInfinite)="loadMore($event)">
+         <ion-infinite-scroll-content
+           loadingSpinner="bubbles" 
+           immediate-check="false" 
+           loadingText="">
+         </ion-infinite-scroll-content>
+   </ion-infinite-scroll>
 </ion-content>

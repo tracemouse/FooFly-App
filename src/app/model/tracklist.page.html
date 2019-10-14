@@ -17,21 +17,21 @@
 <ion-content>
 
    <ion-card mode="ios">
-      <div class="card-img-box">
+      <!-- <div class="card-img-box">
          <img src="{{coverImg}}" class="card-img" />
-      </div>
+      </div> -->
       <div class="card-text-box">
          <div class="card-title">{{title}}</div>
          <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
          <p class="card-subtitle">
-               {{tracks.length}} {{'tracklist.tracks' | translate}}
+               {{totalTracks}} {{'tracklist.tracks' | translate}}
          </p>
-         <div class="card-subtitle">
+         <!-- <div class="card-subtitle">
             <ion-button (click)="playTracks()" color="danger" size="small">
                <ion-icon slot="start" name="ios-play"></ion-icon>
                {{'common.playall' | translate}}
             </ion-button>
-         </div>
+         </div> -->
       </div>
    </ion-card>
 
@@ -51,11 +51,19 @@
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.fileUrl == playFileUrl" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons item-end *ngIf="item.fileUrl != playFileUrl" >
-               <ion-button (click)="playTrack(i);" color="danger">
+               <ion-button (click)="playTrack(item.idx);" color="danger">
                  <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon> 
                </ion-button>
          </ion-buttons>
       </ion-item>
       <ion-item lines="none"></ion-item>
    </ion-list>
+
+   <ion-infinite-scroll #IonInfiniteScroll threshold="100px" (ionInfinite)="loadMore($event)">
+         <ion-infinite-scroll-content
+           loadingSpinner="bubbles" 
+           immediate-check="false" 
+           loadingText="">
+         </ion-infinite-scroll-content>
+   </ion-infinite-scroll>
 </ion-content>

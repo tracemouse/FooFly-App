@@ -97,7 +97,9 @@ ion-card {
   
   .card-text-box{
    display:inline-block; 
-   width:calc(100% - 110px);
+  //  width:calc(100% - 110px);
+   width: 100%;
+   margin-left: 10px;
    vertical-align: middle;
    padding: 5px 8px 5px 0;
   

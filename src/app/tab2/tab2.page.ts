@@ -35,9 +35,10 @@ export class Tab2Page {
   refreshEvent:any;
   cover = "assets/img/cover.jpg";
 
-  playlistIdx = 1;
+  playlistIdx = 0;
   totalTracks = 0;
   totalPages = 0;
+  musicLib = "";
 
   constructor(public myDBService: MyDBService,
               public myHttpService: MyHttpService,
@@ -81,11 +82,14 @@ export class Tab2Page {
     // console.log("ngOnInit");
     this.sgLibrary = "";
     this.refreshEvent = null;
-    this.getAllTracks();
+    // this.getAllTracks();
 
   }
 
   ionViewWillEnter(){
+    if(this.musicLib != AppConfig.settings.musicLib){
+      this.refresh();
+    }
   }
 
   ionViewDidEnter(){
@@ -148,22 +152,43 @@ export class Tab2Page {
       await this.initLoading();
       await this.loading.present();
 
-      // this.wsService.callMB(mydata).subscribe(
-      this.myHttpService.SwithPlaylist(this.playlistIdx).then(
+      this.myHttpService.GetState().then(
         (data:any) =>{
-            console.log(data);
-            this.totalTracks = parseInt(data.playlists[this.playlistIdx].count);
-            this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
-            console.log("total tracks=" + this.totalTracks);
-            console.log("total pages=" + this.totalPages);
+          this.musicLib = AppConfig.settings.musicLib;
+          let len = data.playlists.length;
+          var findFG = false;
+          for(let i=0; i<len; i++){
+            if(this.musicLib == data.playlists[i].name){
+              this.playlistIdx = i;
+              findFG = true;
+              break;
+            }
+          }
+          if(!findFG){
+            this.playlistIdx = 0;
+            AppConfig.settings.musicLib = data.playlists[this.playlistIdx].name;
+            this.musicLib = AppConfig.settings.musicLib;
+            this.myDBService.saveSettingsData();
+          }
 
-            this.getPage(1);
+          this.myHttpService.SwithPlaylist(this.playlistIdx).then(
+            (data:any) =>{
+                console.log(data);
+                this.totalTracks = parseInt(data.playlists[this.playlistIdx].count);
+                this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
+                console.log("total tracks=" + this.totalTracks);
+                console.log("total pages=" + this.totalPages);
+    
+                this.getPage(1);
+            }
+          );
         }
       );
   }
 
   async getPage(idx:any){
     if(idx > this.totalPages){
+      console.log(this.tracks);
       if(this.refreshEvent != null){
         this.refreshEvent.target.complete();
       }
@@ -174,20 +199,20 @@ export class Tab2Page {
 
     this.myHttpService.GoPage(idx).then(
       data=>{
-
-          this.saveAllTracks(data);
+          this.saveAllTracks(data,idx);
           this.getPage(idx + 1);
       }
     );
   }
 
-  async saveAllTracks(data:any){
+  async saveAllTracks(data:any,pageIdx:any){
 
     let len = data.playlist.length;
     for(let i=0; i<len;i++){
       let fileUrl = data.playlist[i].fileUrl;
       let arr = fileUrl.split("\\");
       data.playlist[i]['folder'] = arr[arr.length - 2];
+      data.playlist[i]['idx'] = i + (pageIdx - 1) * parseInt(data.playlistItemsPerPage);
     }
     this.tracks = this.tracks.concat(data.playlist);
  
@@ -463,7 +488,7 @@ export class Tab2Page {
     if(folder!=null){
       var tracks = this.tracksByfolder.slice(folder.start, folder.start + folder.count);
     }
-        
+
     this.showTracksPage(tracks,folder);
   }
 
@@ -486,14 +511,22 @@ export class Tab2Page {
   }
 
   async showTracksPage(tracks: any, item:any) {
+    var input = {
+      'from' : 'tab2',
+      'title': item.name,
+      'fileUrl': item.fileUrl,
+      'tracks': tracks,
+      'playlistIdx': this.playlistIdx,
+      'totalTracks': tracks.length,
+      'totalPages': 1
+    };
+
     const modal = await this.modalController.create({
       component: TracklistPage,
       enterAnimation: rightEnterAnimation,
       leaveAnimation: rightLeaveAnimation,
       componentProps: {
-        'title':item.name,
-        'fileUrl': item.fileUrl,
-        'tracks': tracks
+        'input':input
       }
     });
 

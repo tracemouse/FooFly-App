@@ -11,7 +11,7 @@ import { AppConfig} from "../app.config";
   styleUrls: ['./nowplaying.page.scss'],
 })
 export class NowplayingPage {
-  timeout:any;
+  interval:any;
 
   nowTrack: any = {'trackTitle':'','artist':'','sampleRate':'44.1 KHz','album':'','fileUrl':''};
   nowIdx = -1;
@@ -51,9 +51,9 @@ export class NowplayingPage {
   }
  
   ionViewWillEnter(){
-    console.log("now enter");
+    // console.log("now enter");
     
-    this.getState();
+    this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
   
     this.antimation = AppConfig.settings.animation;
   }
@@ -67,14 +67,13 @@ export class NowplayingPage {
         if(data.currentTrack != "?"){
           this.nowTrack = data.playing;
           this.pushNowTrack(data);
+        }else{
+          this.title = "";
+          this.audioType = "";
+          this.nowTrack = {};
+          this.playState = "0";
         }
 
-        this.timeout = setTimeout(
-          () => {
-            this.getState();
-          },
-          AppConfig.settings.interval
-        );
       }
     );
   }
@@ -86,7 +85,7 @@ export class NowplayingPage {
   }
 
   pushNowTrack(data:any){
-    console.log(data);
+    // console.log(data);
     this.playFileUrl = "";
 
     this.nowTrack = data.playing;
@@ -117,7 +116,7 @@ export class NowplayingPage {
   }
 
   cancel(error:any) {
-    clearTimeout(this.timeout);
+    clearInterval(this.interval);
 
     this.modalController.dismiss({
         // result: 'modal_cancel'

@@ -17,7 +17,7 @@ import { AppConfig } from '../app.config';
 })
 export class Tab1Page {
 
-  timeout:any;
+  interval:any;
  
   tracks: any = [];
   nowTrack: any = {'trackTitle':'','artist':'','sampleRate':'','album':'','fileUrl':''};
@@ -31,6 +31,12 @@ export class Tab1Page {
   duration=100;
   audiobar=0;
   nav:any;
+  totalTracks = 0;
+  currentPlaylist = 0;
+  minPage = 1;
+  maxPage = 1;
+  totalPages = 1;
+  currentPage = 1;
 
   indefinite = "0";
 
@@ -78,8 +84,8 @@ export class Tab1Page {
   }
 
   ionViewWillLeave(){
-   console.log("tab1 will leave");
-    clearInterval(this.timeout);
+ 
+    clearInterval(this.interval);
   }
 
   ngOnDestroy(){
@@ -95,44 +101,91 @@ export class Tab1Page {
 
   async doRefresh(event){
 
-    this.ionViewWillEnter();
+    // this.ionViewWillEnter();
 
-    event.target.complete();
+    if(this.minPage == 1){
+      event.target.complete();
+      return;
+    }else{
+      this.minPage = this.minPage - 1;
+      this.myHttpService.GoPage(this.minPage).then(
+        (data:any)=>{
+          this.currentPage = parseInt(data.currentPage);
+          this.currentPage = (this.currentPage ==0)?1:this.currentPage;
+          // let len = data.playlist.length;
+          // for(let i=0; i<len;i++){
+          //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+          // }
+          // this.tracks = data.playlist.concat(this.tracks);
+          this.tracks = this.formatPlaylist(data).concat(this.tracks);
+          event.target.complete();
+        }
+      )
+
+    }
+  }
+
+  async loadMore(event:any){
+
+    if(this.maxPage == this.totalPages){
+      event.target.complete();
+      return;
+    }else{
+      this.maxPage = this.maxPage + 1;
+      this.myHttpService.GoPage(this.maxPage).then(
+        (data:any)=>{
+          this.currentPage = parseInt(data.currentPage);
+          this.currentPage = (this.currentPage ==0)?1:this.currentPage;
+          // let len = data.playlist.length;
+          // for(let i=0; i<len;i++){
+          //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+          // }
+          // this.tracks = this.tracks.concat(data.playlist);
+          this.tracks = this.tracks.concat(this.formatPlaylist(data));
+          event.target.complete();
+        }
+      )
+
+    }
   }
   
   ionViewWillEnter(){
     // console.log("tab1 view will enter");
     // console.log(this.playingSvgantimate);
+    clearInterval(this.interval);
 
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
 
     this.nowFileUrl = "";
 
-    this.myHttpService.FocusOnPlaying();
-    this.getState();
-    // this.myHttpService.GetState().then(
-    //   (data:any)=>{
-    //     // console.log(data);
-    //     this.tracks = data.playlist;
-    //     if(data.currentTrack != "?"){
-    //       this.nowTrack = data.playing;
-    //     }
+    this.myHttpService.FocusOnPlaying().then(
+      (data:any)=>{
+        let idx = parseInt(data.currentPlaylist);
+        this.currentPlaylist = idx;
+        this.totalTracks = data.playlists[idx].count;
+        this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
+        this.currentPage = parseInt(data.currentPage);
+        this.currentPage = (this.currentPage ==0)?1:this.currentPage;
+        this.minPage = this.currentPage;
+        this.maxPage = this.currentPage;
 
-    //     this.playState = data.isPlaying;
-    //     this.coverImg = data.albumArt;
-    //     // var len = this.tracks.length;
-    //     // for(var i=0; i<len; i++){
-    //     //   var fileUrl = this.tracks[i].fileUrl;
-    //     //   var index = fileUrl.lastIndexOf(".");
-    //     //   this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-    //     // }
-    //     setTimeout(
-    //       () => {
-    //         this.getState();
-    //       },
-    //       AppConfig.settings.interval
-    //     );
-    // });
+        if(data.currentTrack != "?"){
+          this.title = data.playing.track;
+          this.nowTrack = data.playing;
+        }else{
+          this.title = "";
+          this.nowTrack = {};
+        }
+        // let len = data.playlist.length;
+        // for(let i=0; i<len;i++){
+        //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+        // }
+        // this.tracks = data.playlist;
+        this.tracks = this.formatPlaylist(data);
+      }
+    );
+
+    this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
 
   }
  
@@ -141,22 +194,47 @@ export class Tab1Page {
       (data:any)=>{
         // console.log(data);
         this.pushTrack(data);
-
-        this.timeout = setTimeout(
-          () => {
-            this.getState();
-          },
-          AppConfig.settings.interval
-        );
       }
     );
   }
 
   private pushTrack(data:any){
-    this.tracks = data.playlist;
+    if(parseInt(data.currentPlaylist) != this.currentPlaylist){
+      this.ionViewWillEnter();
+      return;
+    }
+    data.currentPage = (data.currentPage == "0")?"1":data.currentPage;
+    // this.tracks = data.playlist;
+    if( this.currentPage != parseInt(data.currentPage)){
+      this.currentPage = parseInt(data.currentPage);
+      if(this.currentPage > this.maxPage){
+        this.maxPage = this.currentPage;
+        // let len = data.playlist.length;
+        // for(let i=0; i<len;i++){
+        //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+        // }
+        // this.tracks = this.tracks.concat(data.playlist);
+        this.tracks = this.tracks.concat(this.formatPlaylist(data));
+      }
+    }
+
     if(data.currentTrack != "?"){
-      this.nowTrack = data.playing;
-      this.title = data.playing.track;
+      if(this.title != data.playing.track){
+        this.nowTrack = data.playing;
+        this.title = data.playing.track;
+        let len = this.tracks.length;
+        for(let i=0; i<len; i++){
+          if(this.tracks[i].track == this.title){
+            this.tracks[i]['isPlaying'] = true;
+          }else{
+            this.tracks[i]['isPlaying'] = false;
+          }
+        }
+      }
+    }else{
+      this.nowTrack = "";
+      this.title = "";
+      return;
     }
 
     this.playState = data.isPlaying;
@@ -171,18 +249,38 @@ export class Tab1Page {
     }else{
       this.playingAnimateStop();
     }
-    var len = this.tracks.length;
-    for(var i=0; i<len; i++){
-      if(this.tracks[i].track == this.title){
-        this.tracks[i]['isPlaying'] = true;
+    // let len = this.tracks.length;
+    // for(let i=0; i<len; i++){
+    //   if(this.tracks[i].track == this.title){
+    //     this.tracks[i]['isPlaying'] = true;
+    //   }else{
+    //     this.tracks[i]['isPlaying'] = false;
+    //   }
+
+    //   let fileUrl = this.tracks[i].fileUrl;
+    //   let index = fileUrl.lastIndexOf(".");
+    //   this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
+    // }
+  }
+
+  formatPlaylist(data:any){
+    let tracks = data.playlist;
+    let len = tracks.length;
+    for(let i=0; i<len; i++){
+      data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+
+      if(tracks[i].track == this.title){
+        tracks[i]['isPlaying'] = true;
       }else{
-        this.tracks[i]['isPlaying'] = false;
+        tracks[i]['isPlaying'] = false;
       }
 
-      let fileUrl = this.tracks[i].fileUrl;
+      let fileUrl = tracks[i].fileUrl;
       let index = fileUrl.lastIndexOf(".");
-      this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
+      tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
     }
+
+    return tracks;
   }
 
   async more() {
@@ -191,7 +289,7 @@ export class Tab1Page {
     // this.navCtrl.navigateForward("/playing");
     // this.router.navigateByUrl("/playing");
     // this.router.navigate(['/playing']);
-    clearTimeout(this.timeout);
+    clearInterval(this.interval);
 
     const modal = await this.modalController.create({
         component: NowplayingPage,
@@ -201,7 +299,7 @@ export class Tab1Page {
 
     modal.onDidDismiss().then(res=>{
       if(!res.data.hasError){
-        this.getState();
+        this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
       }else{
         this.navCtrl.navigateForward("/login");
       }

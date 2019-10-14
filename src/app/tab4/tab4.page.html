@@ -47,6 +47,13 @@
           <ion-select-option *ngFor="let item of languages" value="{{item.language}}">{{item.dis}}</ion-select-option>
         </ion-select>
       </ion-item>
+      <ion-item button lines="none">
+        <!-- <ion-icon item-left name="globe" color="primary"></ion-icon> -->
+        <ion-label>{{'tab2.header' | translate}}</ion-label>
+        <ion-select placeholder="" [(ngModel)]="musicLib" (ionChange)="setMusicLib($event)" interface="popover">
+          <ion-select-option *ngFor="let item of playlists" value="{{item.name}}">{{item.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
       <ion-item lines="none">
         <!-- <ion-icon item-left name="logo-ionic" color="primary"></ion-icon> -->
         <ion-label>{{'tab4.animation' | translate}}</ion-label>

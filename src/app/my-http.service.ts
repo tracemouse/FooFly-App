@@ -64,6 +64,11 @@ export class MyHttpService {
         res => {
           // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
           // res = res.replace(/\'0\'/g,'"0"');
+          if(res == null || res.length == 1)  {
+            resolve({});
+            return;
+          }
+
           let json = JSON.parse(res);
           resolve(json);
         }
@@ -120,7 +125,8 @@ export class MyHttpService {
   }
 
   public FocusOnPlaying(){
-    let url = "cmd=FocusOnPlaying&param3=NoResponse";
+    // let url = "cmd=FocusOnPlaying&param3=NoResponse";
+    let url = "cmd=FocusOnPlaying";
     return this.CallFoo(url);
   }
 
