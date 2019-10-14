@@ -41,14 +41,6 @@
          </ion-button>
       </ion-buttons>
    </ion-toolbar>
-   <ion-nav></ion-nav>
-</ion-header>
-
-<ion-content>
-   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="0" pullMax="10">
-      <ion-refresher-content></ion-refresher-content>
-   </ion-refresher>
-   
    <ion-card mode="ios" id="search-card" (click)="more()">
       <div class="card-img-box">
          <img src="{{coverImg}}" class="card-img" />
@@ -82,10 +74,18 @@
          </div>
       </div>
    </ion-card>
+</ion-header>
+
+<ion-content>
+   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="0" pullMax="10">
+      <ion-refresher-content></ion-refresher-content>
+   </ion-refresher>
+   
+   
 
    <ion-list class="list-2" lines="none" id="il-track">
-      <ion-item *ngFor="let item of tracks,let i = index">
-         <div item-start class="track-seq" *ngIf="(showTrackSeq)" >
+      <ion-item *ngFor="let item of tracks,let i = index" id="track-{{item.idx}}">
+         <div item-start class="track-seq" *ngIf="(showTrackSeq)">
             {{(item.idx +1)}}
          </div>
          <ion-label>

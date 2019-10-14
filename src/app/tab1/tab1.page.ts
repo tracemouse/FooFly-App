@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ModalController,NavController } from '@ionic/angular';
+import { Component,ViewChild } from '@angular/core';
+import { ModalController,NavController,IonContent } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import * as ProgressBar from "progressbar.js";
@@ -16,7 +16,8 @@ import { AppConfig } from '../app.config';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
-
+  @ViewChild(IonContent,{read: IonContent, static:false}) ionContent:IonContent;
+  
   interval:any;
  
   tracks: any = [];
@@ -96,8 +97,9 @@ export class Tab1Page {
 
   ionViewDidLoad(){
   //  console.log("tab1 did load");
-
   }
+
+
 
   async doRefresh(event){
 
@@ -226,6 +228,7 @@ export class Tab1Page {
         for(let i=0; i<len; i++){
           if(this.tracks[i].track == this.title){
             this.tracks[i]['isPlaying'] = true;
+            this.locatePlayingTrack(this.tracks[i].idx);
           }else{
             this.tracks[i]['isPlaying'] = false;
           }
@@ -261,6 +264,18 @@ export class Tab1Page {
     //   let index = fileUrl.lastIndexOf(".");
     //   this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
     // }
+  }
+
+  locatePlayingTrack(idx:any){
+    let obj = document.getElementById("track-" + idx);
+    if(!obj) return;
+    
+    let offset = obj.offsetTop;
+    console.log("offset=" + offset);
+    // this.ionContent.scrollToBottom(obj.off)
+    // this.ionContent.scrollToTop(offset);
+    // this.ionContent.scr
+ 
   }
 
   formatPlaylist(data:any){
