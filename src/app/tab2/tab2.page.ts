@@ -518,7 +518,8 @@ export class Tab2Page {
       'tracks': tracks,
       'playlistIdx': this.playlistIdx,
       'totalTracks': tracks.length,
-      'totalPages': 1
+      'totalPages': 1,
+      'type': this.sgLibrary
     };
 
     const modal = await this.modalController.create({

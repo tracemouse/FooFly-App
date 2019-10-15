@@ -111,6 +111,7 @@ export class Tab3Page {
       'playlistIdx': idx,
       'totalTracks': totalTracks,
       'totalPages': totalPages,
+      'type': 'playlist'
     };
 
     const modal = await this.modalController.create({

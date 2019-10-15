@@ -21,6 +21,10 @@ export class TracklistPage implements OnInit {
   playlistIdx: any;
   showTracks: any = [];
   defaultImg = "assets/img/cover.jpg";
+  folderImg = "assets/img/folder.jpg";
+  albumImg = "assets/img/album.jpg";
+  artistImg = "assets/img/artist.jpg";
+  playlistImg = "assets/img/playlist.jpg";
   coverImg :string;
   playFileUrl = "";
   showTrackSeq = false;
@@ -59,7 +63,23 @@ export class TracklistPage implements OnInit {
     
     // console.log(this.tracks);
     this.coverImg = this.defaultImg;
-    this.coverImg = this.fileUrl;
+    // this.coverImg = this.fileUrl;
+    console.log(this.input.type);
+    switch(this.input.type){
+      case 'folder':
+          this.coverImg = this.folderImg;
+          break;
+      case 'album':
+          this.coverImg = this.albumImg;
+          break;
+      case 'artist':
+          this.coverImg = this.artistImg;
+          break;
+      case 'playlist':
+          this.coverImg = this.playlistImg;
+          break;
+    }
+    
 
     // var mydata = {"action":"getLibArtwork", "fileUrl":this.fileUrl,"pushData":""};
     // this.wsService.callMB(mydata,null,true).subscribe(
