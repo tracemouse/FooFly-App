@@ -82,6 +82,14 @@ export class Tab1Page {
 
     this.progressbar.set(0);
 
+
+  }
+
+  test(e:any){
+    // console.log(event);
+    // console.log("scroll to =" + event.target.scrollTop);
+    // console.log(this.ionContent);
+    // console.log(e);
   }
 
   ionViewWillLeave(){
@@ -273,7 +281,9 @@ export class Tab1Page {
     let offset = obj.offsetTop;
     console.log("offset=" + offset);
     // this.ionContent.scrollToBottom(obj.off)
-    // this.ionContent.scrollToTop(offset);
+    // this.ionContent.scrollToBottom(obj.offsetTop);
+    // window.scrollTo(0,offset);
+    this.ionContent.scrollToPoint(0,offset,500);
     // this.ionContent.scr
  
   }

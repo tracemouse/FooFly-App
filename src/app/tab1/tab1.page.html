@@ -76,7 +76,7 @@
    </ion-card>
 </ion-header>
 
-<ion-content>
+<ion-content delegate-handle="dashboard" (ionScrollEnd)="test($event);">
    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="0" pullMax="10">
       <ion-refresher-content></ion-refresher-content>
    </ion-refresher>
