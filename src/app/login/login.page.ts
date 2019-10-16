@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController,AlertController,LoadingController  } from '@ionic/angular';
+import { NavController, AlertController, LoadingController } from '@ionic/angular';
 import { ActivatedRoute, Params } from '@angular/router';
-import { TranslateService }from "@ngx-translate/core";
+import { TranslateService } from "@ngx-translate/core";
 // import { timeout } from 'rxjs/operators';
 
 import { AppConfig } from '../app.config';
-import { MyDBService}  from "../my-db.service";
-import { MyHttpService} from "../my-http.service"; 
+import { MyDBService } from "../my-db.service";
+import { MyHttpService } from "../my-http.service";
 
 @Component({
   selector: 'app-login',
@@ -21,22 +21,21 @@ export class LoginPage implements OnInit {
 
   loginDisabled = false;
 
-  public from:string;
+  public from: string;
 
-  loading:any;
+  loading: any;
   // loadingDuration = AppConfig.settings.timeout * 60 * 1000;
   loadingDuration = 60 * 1000;
 
-  bandIps = ["localhost","musicbeefly.tracemouse.top","musicbee-fly.tracemouse.top","musicbee.tracemouse.top"];
+  bandIps = ["localhost", "musicbeefly.tracemouse.top", "musicbee-fly.tracemouse.top", "musicbee.tracemouse.top"];
 
   constructor(public navCtrl: NavController,
-              public translateService: TranslateService,
-              public alertController: AlertController,
-              public myDBService: MyDBService,
-              public activeRoute: ActivatedRoute,
-              public myHttpService:MyHttpService,
-              public loadingController: LoadingController) 
-  {
+    public translateService: TranslateService,
+    public alertController: AlertController,
+    public myDBService: MyDBService,
+    public activeRoute: ActivatedRoute,
+    public myHttpService: MyHttpService,
+    public loadingController: LoadingController) {
     this.activeRoute.queryParams.subscribe((params: Params) => {
       this.from = params['from'];
     });
@@ -45,45 +44,50 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     //console.log("login enter");
 
     this.inputIp = AppConfig.settings.ip;
     this.inputPort = AppConfig.settings.port;
     this.inputPassword = AppConfig.settings.password;
 
-    if(this.bandIps.indexOf(this.inputIp) >= 0){
+    if (this.bandIps.indexOf(this.inputIp) >= 0) {
       this.inputIp = "";
       this.inputPort = "";
     }
 
     // console.log(this.from);
-    if("exit" == this.from){
+    if ("exit" == this.from) {
       return;
     }
 
     let url = "";
-    this.myHttpService.CallFoo(url).then(
-      res=>{
-       console.log(res); 
+    this.myHttpService.http.get(url).subscribe(
+      res => {
+        console.log(res);
 
-       this.loginDisabled = false;
-       AppConfig.settings.ip = this.inputIp;
-       AppConfig.settings.port = this.inputPort;
-       AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+        this.loginDisabled = false;
+        AppConfig.settings.ip = this.inputIp;
+        AppConfig.settings.port = this.inputPort;
+        AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
 
-       this.myDBService.saveSettingsData();
-       // this.navCtrl.navigateBack("");
-       this.navCtrl.navigateForward("/tabs/tab1");
-       
+        this.myDBService.saveSettingsData();
+        // this.navCtrl.navigateBack("");
+        if (AppConfig.env == "dev") {
+          this.navCtrl.navigateForward("/tabs/tab1");
+        } else {
+          location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
+        }
+
       },
-      error=>{
+      error => {
         console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
+
       }
     );
 
   }
-  
+
   async initLoading() {
     this.loading = await this.loadingController.create({
       duration: this.loadingDuration,
@@ -95,58 +99,79 @@ export class LoginPage implements OnInit {
   }
 
   async logIn() {
- 
-    await this.initLoading();
-    await this.loading.present();
 
-    this.loginDisabled = true;
+    // await this.initLoading();
+    // await this.loading.present();
+
+    // this.loginDisabled = true;
     let url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
     // var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
 
-    this.testMB(url);
+    this.testConn(url);
   }
 
 
-  getIp(ip:any){
+  getIp(ip: any) {
     this.inputIp = ip.value;
   }
 
-  getPort(port:any){
+  getPort(port: any) {
     this.inputPort = port.value;
   }
 
-  getPassword(password:any){
+  getPassword(password: any) {
     this.inputPassword = password.value;
   }
 
-  async testMB(url:string){
+  async testConn(url: string) {
+    url = url + AppConfig.urlRoot + "assets/test.js"
 
-    this.myHttpService.CallFoo(url).then(
-      res=>{
-       console.log(res); 
+    var testConn = document.getElementById("testConn");
 
-       this.loginDisabled = false;
-       AppConfig.settings.ip = this.inputIp;
-       AppConfig.settings.port = this.inputPort;
-       AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+    console.log(testConn);
+
+    testConn.onload = testConn.onloadeddata = function (event) {
+      console.log("loaded");
+      console.log(event);
+    };
+
+    testConn.setAttribute("src",url);
+
+    return;
 
 
-       this.myDBService.saveSettingsData();
-       // this.navCtrl.navigateBack("");
-       this.navCtrl.navigateForward("/tabs/tab1");
-       
+    // this.myHttpService.CallFoo(url).then(
+    // this.myHttpService.http.get(url).subscribe(
+      this.myHttpService.http.jsonp(url,'callback').subscribe(
+      res => {
+        console.log(res);
+        this.loginDisabled = false;
+        this.loading.dismiss();
+        AppConfig.settings.ip = this.inputIp;
+        AppConfig.settings.port = this.inputPort;
+        AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+
+        this.myDBService.saveSettingsData();
+        // this.navCtrl.navigateBack("");
+        if (AppConfig.env == "dev") {
+          this.navCtrl.navigateForward("/tabs/tab1");
+        } else {
+          location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
+        }
       },
-      error=>{
+      error => {
         console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
+        this.loginDisabled = false;
+        this.loading.dismiss();
       }
     );
-    
+
 
   }
 
   async presentConnError() {
     var message;
-    await this.translateService.get("message").subscribe(res=>{
+    await this.translateService.get("message").subscribe(res => {
       message = res;
     })
     const alert = await this.alertController.create({
@@ -156,9 +181,9 @@ export class LoginPage implements OnInit {
       buttons: [message.ok]
     });
 
-    alert.onDidDismiss().then(res=>{
+    alert.onDidDismiss().then(res => {
       this.loginDisabled = false;
-     });
+    });
 
     await alert.present();
   }

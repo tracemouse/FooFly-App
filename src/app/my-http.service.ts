@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient  } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 import { AppConfig } from './app.config';
 import { timeout } from 'rxjs/operators';
@@ -13,33 +13,10 @@ export class MyHttpService {
   // private url = "http://192.168.1.102:9999/jsonrpc";
   private url = "";
 
-  constructor(private http:HttpClient,
+  constructor(public http:HttpClient,
               public navCtrl: NavController) {
 
    }
-
-
-//   public CallMusicBeeWithErr(postdata:any){
-//     if(AppConfig.settings.rootUrl.endsWith("/")){
-//       this.url = AppConfig.settings.rootUrl + AppConfig.settings.jsonrpc;
-//     }else{
-//       this.url = AppConfig.settings.rootUrl + "/" + AppConfig.settings.jsonrpc;
-//     }
-     
-//    return new Promise((resolve, reject) => {
-//     this.http.post(this.url, postdata).pipe(timeout(AppConfig.settings.timeout * 60 * 1000))
-//     .subscribe(
-//       res => {
-//         // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
-//         resolve(res);
-//       }
-//       ,error => {
-//         console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
-//         reject(error);
-//       }
-//       )
-//     });
-//   }
   
   public CallFoo(url:string){
     // if (r)	requestStr += '&cmd='+r;
@@ -49,7 +26,8 @@ export class MyHttpService {
 
     if(!url.startsWith("http")){
       url = "?" + url;
-      url = (AppConfig.env == "dev")?(AppConfig.urlRoot + url):("/" + url);
+      // url = (AppConfig.env == "dev")?(AppConfig.urlRoot + url):("/" + url);
+      url = AppConfig.urlRoot + url;
       let randrom = "random=" + Math.random();
       url = (url.endsWith("?"))?(url + randrom):(url + "&" + randrom);
     }else{

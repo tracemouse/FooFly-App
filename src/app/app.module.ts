@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 
 import { TranslateModule, TranslateLoader,TranslateService }from '@ngx-translate/core';
 import { TranslateHttpLoader }from '@ngx-translate/http-loader';
-import { HttpClientModule, HttpClient }from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule, HttpClient }from '@angular/common/http';
 import {HashLocationStrategy , LocationStrategy} from '@angular/common';
 
 import { SQLite } from '@ionic-native/sqlite/ngx';
@@ -46,6 +46,7 @@ export function HttpLoaderFactory(http: HttpClient) {
             }), 
             AppRoutingModule,
             HttpClientModule,
+            HttpClientJsonpModule,
             FormsModule,
             TranslateModule.forRoot({
                 loader:{
