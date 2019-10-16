@@ -7,6 +7,8 @@ import { TranslateService } from "@ngx-translate/core";
 import { AppConfig } from '../app.config';
 import { MyDBService } from "../my-db.service";
 import { MyHttpService } from "../my-http.service";
+import { $ } from 'protractor';
+import { ConsoleReporter } from 'jasmine';
 
 @Component({
   selector: 'app-login',
@@ -100,10 +102,10 @@ export class LoginPage implements OnInit {
 
   async logIn() {
 
-    // await this.initLoading();
-    // await this.loading.present();
+    await this.initLoading();
+    await this.loading.present();
 
-    // this.loginDisabled = true;
+    this.loginDisabled = true;
     let url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
     // var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
 
@@ -124,28 +126,51 @@ export class LoginPage implements OnInit {
   }
 
   async testConn(url: string) {
-    url = url + AppConfig.urlRoot + "assets/test.js"
-
-    var testConn = document.getElementById("testConn");
-
-    console.log(testConn);
-
-    testConn.onload = testConn.onloadeddata = function (event) {
-      console.log("loaded");
-      console.log(event);
-    };
-
-    testConn.setAttribute("src",url);
-
-    return;
-
+    url = url + AppConfig.urlRoot + "assets/version.js"
+    var script = document.createElement('script');
+    script.onload = function(this){
+        
+    }
+    script.addEventListener('load',this.scriptLoaded,false);
+    script.onerror = function(){
+      console.log("error");
+    }
+    script.setAttribute('src', url);
+    document.getElementsByTagName('head')[0].appendChild(script);
 
     // this.myHttpService.CallFoo(url).then(
     // this.myHttpService.http.get(url).subscribe(
-      this.myHttpService.http.jsonp(url,'callback').subscribe(
-      res => {
-        console.log(res);
-        this.loginDisabled = false;
+    //   this.myHttpService.http.jsonp(url,'callback').subscribe(
+    //   res => {
+    //     console.log(res);
+    //     this.loginDisabled = false;
+    //     this.loading.dismiss();
+    //     AppConfig.settings.ip = this.inputIp;
+    //     AppConfig.settings.port = this.inputPort;
+    //     AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+
+    //     this.myDBService.saveSettingsData();
+    //     // this.navCtrl.navigateBack("");
+    //     if (AppConfig.env == "dev") {
+    //       this.navCtrl.navigateForward("/tabs/tab1");
+    //     } else {
+    //       location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
+    //     }
+    //   },
+    //   error => {
+    //     console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
+    //     this.loginDisabled = false;
+    //     this.loading.dismiss();
+    //   }
+    // );
+
+
+  }
+
+  scriptLoaded(){
+    console.log("loaded");
+    console.log(this);
+    this.loginDisabled = false;
         this.loading.dismiss();
         AppConfig.settings.ip = this.inputIp;
         AppConfig.settings.port = this.inputPort;
@@ -158,15 +183,6 @@ export class LoginPage implements OnInit {
         } else {
           location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
         }
-      },
-      error => {
-        console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
-        this.loginDisabled = false;
-        this.loading.dismiss();
-      }
-    );
-
-
   }
 
   async presentConnError() {
