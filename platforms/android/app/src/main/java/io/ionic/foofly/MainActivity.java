@@ -17,7 +17,7 @@
        under the License.
  */
 
-package io.ionic.musicbeefly;
+package io.ionic.foofly;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
