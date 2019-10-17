@@ -31,7 +31,7 @@
     <description>Foobar2000 remote control app.</description>
     <author email="tracemouse@163.com" href="#">tracemouse</author>
     <content src="index.html" />
-    <access origin="*" />
+    <access origin="http://ip*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

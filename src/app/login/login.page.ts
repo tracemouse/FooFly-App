@@ -64,7 +64,23 @@ export class LoginPage implements OnInit {
     // await this.initLoading();
     // await this.loading.present();
 
-    this.testConn(AppConfig.settings.rootUrl);
+    // this.testConn(AppConfig.settings.rootUrl);
+
+    let url = AppConfig.settings.rootUrl + AppConfig.urlRoot + "assets/version.js"
+    var script = document.createElement('script');
+    script.setAttribute("id","testConnScript");
+    script.onload = function(e){
+        document.getElementById("testConnScript").remove();
+        let checkbox = document.getElementById("connCheckbox");
+        checkbox.setAttribute("conn","true");
+        var btn:any = checkbox.shadowRoot.lastElementChild;
+        btn.click();
+    }
+    // script.addEventListener('load',this.scriptLoaded,false);
+    script.onerror = function(){
+    }
+    script.setAttribute('src', url);
+    document.getElementsByTagName('head')[0].appendChild(script);
 
     // let url = "";
     // this.myHttpService.http.get(url).subscribe(
@@ -105,8 +121,8 @@ export class LoginPage implements OnInit {
 
   async logIn() {
 
-    await this.initLoading();
-    await this.loading.present();
+    // await this.initLoading();
+    // await this.loading.present();
 
     AppConfig.settings.ip = this.inputIp;
     AppConfig.settings.port = this.inputPort;
@@ -190,7 +206,7 @@ export class LoginPage implements OnInit {
     var result = event.srcElement.getAttribute("conn");
     // console.log("result="+result);
     this.loginDisabled = false;
-    if(this.loading != null)  this.loading.dismiss();
+    // if(this.loading != null)  this.loading.dismiss();
 
     if(result == "true") {
       //foobar is living

@@ -2,7 +2,7 @@
 
 platform :ios, '9.0'
 
-target 'MusicBee Fly' do
-	project 'MusicBee Fly.xcodeproj'
+target 'D:\Project\GitHub\FooFly-App\platforms\ios\Foo Fly' do
+	project 'D:\Project\GitHub\FooFly-App\platforms\ios\Foo Fly.xcodeproj'
 
 end
