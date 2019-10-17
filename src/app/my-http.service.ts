@@ -57,7 +57,8 @@ export class MyHttpService {
         ,error => {
           console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
           reject(error);
-          this.presentError(error);
+          // this.presentError(error);
+          this.exit();
         }
         )
       });

@@ -27,7 +27,7 @@ export class LoginPage implements OnInit {
   // loadingDuration = AppConfig.settings.timeout * 60 * 1000;
   loadingDuration = 60 * 1000;
 
-  bandIps = [];
+  bandIps = ['foofly.tracemouse.top'];
 
   constructor(public navCtrl: NavController,
     public translateService: TranslateService,
