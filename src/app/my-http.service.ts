@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient  } from '@angular/common/http';
-import { NavController } from '@ionic/angular';
+import { NavController,ToastController } from '@ionic/angular';
 import { AppConfig } from './app.config';
 import { timeout } from 'rxjs/operators';
+import { TranslateService }from "@ngx-translate/core";
+import { ThrowStmt } from '@angular/compiler';
 
 
 @Injectable({
@@ -14,6 +16,8 @@ export class MyHttpService {
   private url = "";
 
   constructor(public http:HttpClient,
+              public toastController: ToastController,
+              public translateService: TranslateService,
               public navCtrl: NavController) {
 
    }
@@ -53,6 +57,7 @@ export class MyHttpService {
         ,error => {
           console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
           reject(error);
+          this.presentError(error);
         }
         )
       });
@@ -111,6 +116,64 @@ export class MyHttpService {
   public GoPage(idx:any){
     let url = "cmd=P&param1=" + idx;
     return this.CallFoo(url);
+  }
+
+  async presentError(event:any){
+
+    var message;
+    await this.translateService.get("message").subscribe(res=>{
+      message = res;
+    })
+
+    const toast = await this.toastController.create({
+      header: message['err-conn-fail'],
+      message: message['err-conn-fail-msg1'],
+      duration: 1000,
+      position: 'bottom',
+      color: 'warning',
+      keyboardClose: true,
+      mode:'ios',
+      buttons: [
+        {
+          side: 'start',
+          icon: 'alert',
+          text: '',
+          handler: () => {
+          }
+        },
+        {
+          side: 'end',
+          icon: 'close',
+          text: '',
+          handler: () => {
+            toast.dismiss();
+            // this.navCtrl.navigateBack("/login");
+            this.exit();
+          }
+        }
+      ]
+    });
+    toast.onDidDismiss().then(
+      data=>{
+        this.exit();
+      }
+    );
+
+    toast.present();
+  }
+
+  exit(){
+
+    if(AppConfig.env == "dev"){
+      this.navCtrl.navigateForward(["/login"],{
+        queryParams:{
+          from:'exit'
+        }
+      });
+    }else{
+      let url = AppConfig.urlOffical + "index.html#/login?from=exit"
+      location.href = url;
+    }
   }
 }
 

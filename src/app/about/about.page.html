@@ -19,7 +19,8 @@
         <img src="assets/img/cover.jpg" class="logo"/>
     </div>
     <p class="logo-title">Foo Fly</p>
-    <p class="logo-subtitle">{{'tab4.versionApp' | translate}} : {{versionApp}} / {{'tab4.versionPlugin' | translate}} : {{versionPlugin}}</p>
+    <!-- <p class="logo-subtitle">{{'tab4.versionApp' | translate}} : {{versionApp}} / {{'tab4.versionPlugin' | translate}} : {{versionPlugin}}</p> -->
+    <p class="logo-subtitle">Version : {{versionApp}} </p>
     <p class="logo-subtitle">{{'tab4.author' | translate}} : <a href="mailto:">tracemouse</a></p>
 
     <ion-list lines="none">
@@ -28,7 +29,7 @@
         <ion-label>{{'tab4.lbl-update' | translate}}</ion-label>
         <ion-spinner slot="end" name="lines-small" *ngIf="reading"></ion-spinner>
       </ion-item>
-      <ion-item button href="https://github.com/tracemouse/MusicBeeFly" target="_blank">
+      <ion-item button href="https://github.com/tracemouse/FooFly" target="_blank">
         <ion-label>{{'tab4.lbl-help' | translate}}</ion-label>
       </ion-item>
     </ion-list>

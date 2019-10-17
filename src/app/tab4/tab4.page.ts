@@ -238,11 +238,16 @@ export class Tab4Page {
 
   exit(){
 
-    this.navCtrl.navigateForward(["/login"],{
-      queryParams:{
-        from:'exit'
-      }
-    });
+    if(AppConfig.env == "dev"){
+      this.navCtrl.navigateForward(["/login"],{
+        queryParams:{
+          from:'exit'
+        }
+      });
+    }else{
+      let url = AppConfig.urlOffical + "index.html#/login?from=exit"
+      location.href = url;
+    }
   }
 }
 

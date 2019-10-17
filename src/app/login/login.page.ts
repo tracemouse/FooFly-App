@@ -7,8 +7,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { AppConfig } from '../app.config';
 import { MyDBService } from "../my-db.service";
 import { MyHttpService } from "../my-http.service";
-import { $ } from 'protractor';
-import { ConsoleReporter } from 'jasmine';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +27,7 @@ export class LoginPage implements OnInit {
   // loadingDuration = AppConfig.settings.timeout * 60 * 1000;
   loadingDuration = 60 * 1000;
 
-  bandIps = ["localhost", "musicbeefly.tracemouse.top", "musicbee-fly.tracemouse.top", "musicbee.tracemouse.top"];
+  bandIps = [];
 
   constructor(public navCtrl: NavController,
     public translateService: TranslateService,
@@ -46,7 +44,7 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     //console.log("login enter");
 
     this.inputIp = AppConfig.settings.ip;
@@ -63,30 +61,35 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    let url = "";
-    this.myHttpService.http.get(url).subscribe(
-      res => {
-        console.log(res);
+    // await this.initLoading();
+    // await this.loading.present();
 
-        this.loginDisabled = false;
-        AppConfig.settings.ip = this.inputIp;
-        AppConfig.settings.port = this.inputPort;
-        AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+    this.testConn(AppConfig.settings.rootUrl);
 
-        this.myDBService.saveSettingsData();
-        // this.navCtrl.navigateBack("");
-        if (AppConfig.env == "dev") {
-          this.navCtrl.navigateForward("/tabs/tab1");
-        } else {
-          location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
-        }
+    // let url = "";
+    // this.myHttpService.http.get(url).subscribe(
+    //   res => {
+    //     console.log(res);
 
-      },
-      error => {
-        console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
+    //     this.loginDisabled = false;
+    //     AppConfig.settings.ip = this.inputIp;
+    //     AppConfig.settings.port = this.inputPort;
+    //     AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
 
-      }
-    );
+    //     this.myDBService.saveSettingsData();
+    //     // this.navCtrl.navigateBack("");
+    //     if (AppConfig.env == "dev") {
+    //       this.navCtrl.navigateForward("/tabs/tab1");
+    //     } else {
+    //       location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
+    //     }
+
+    //   },
+    //   error => {
+    //     console.log('%c 请求处理失败 %c', 'color:red', 'err', error);
+
+    //   }
+    // );
 
   }
 
@@ -105,6 +108,12 @@ export class LoginPage implements OnInit {
     await this.initLoading();
     await this.loading.present();
 
+    AppConfig.settings.ip = this.inputIp;
+    AppConfig.settings.port = this.inputPort;
+    AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+
+    this.myDBService.saveSettingsData();
+  
     this.loginDisabled = true;
     let url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
     // var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
@@ -126,14 +135,24 @@ export class LoginPage implements OnInit {
   }
 
   async testConn(url: string) {
+
     url = url + AppConfig.urlRoot + "assets/version.js"
     var script = document.createElement('script');
-    script.onload = function(this){
-        
+    script.setAttribute("id","testConnScript");
+    script.onload = function(e){
+        document.getElementById("testConnScript").remove();
+        let checkbox = document.getElementById("connCheckbox");
+        checkbox.setAttribute("conn","true");
+        var btn:any = checkbox.shadowRoot.lastElementChild;
+        btn.click();
     }
-    script.addEventListener('load',this.scriptLoaded,false);
+    // script.addEventListener('load',this.scriptLoaded,false);
     script.onerror = function(){
-      console.log("error");
+      document.getElementById("testConnScript").remove();
+      let checkbox = document.getElementById("connCheckbox");
+      checkbox.setAttribute("conn","false");
+      var btn:any = checkbox.shadowRoot.lastElementChild;
+      btn.click();   
     }
     script.setAttribute('src', url);
     document.getElementsByTagName('head')[0].appendChild(script);
@@ -167,22 +186,24 @@ export class LoginPage implements OnInit {
 
   }
 
-  scriptLoaded(){
-    console.log("loaded");
-    console.log(this);
+  connChanged(event:any){
+    var result = event.srcElement.getAttribute("conn");
+    // console.log("result="+result);
     this.loginDisabled = false;
-        this.loading.dismiss();
-        AppConfig.settings.ip = this.inputIp;
-        AppConfig.settings.port = this.inputPort;
-        AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+    if(this.loading != null)  this.loading.dismiss();
 
-        this.myDBService.saveSettingsData();
-        // this.navCtrl.navigateBack("");
-        if (AppConfig.env == "dev") {
-          this.navCtrl.navigateForward("/tabs/tab1");
-        } else {
-          location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
-        }
+    if(result == "true") {
+      //foobar is living
+      if (AppConfig.env == "dev") {
+        this.navCtrl.navigateForward("/tabs/tab1");
+      } else {
+        location.href = AppConfig.settings.rootUrl + "/foofly/index.html#/tabs/tab1";
+      }
+    }else{
+      //foobar is closed
+      this.presentConnError();
+    }
+
   }
 
   async presentConnError() {

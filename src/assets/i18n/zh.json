@@ -34,7 +34,7 @@
         "header": "设置",
         "header1": "连接设置：",
         "header2": "语言设置：",
-        "lbl-url": "MusicBee",
+        "lbl-url": "Foo Fly",
         "language": "语言(Language)",
         "animation": "专辑封面动画",
         "autoDJ": "自动DJ",
@@ -82,12 +82,12 @@
     },
     "setting": {
         "header": "连接设置",
-        "lbl-url": "MusicBee Url",
+        "lbl-url": "Foobar2000 Httpcontrol Url",
         "lbl-interval": "刷新间隔(毫秒)",
         "save": "保存"
     },
     "login": {
-        "header": "MusicBee",
+        "header": "Foo Fly",
         "button-text": "登录",
         "password-placeholder":""
     },
@@ -104,9 +104,9 @@
         "info-update-msg4": "检测到App有新版本，点确认之后将会为您更新App",
         "info-update-msg5": "检测到App有新版本，请手动下载最新版本并更新",
         "info-update-msg6": "检测到Plugin有新版本，请手动下载最新版本并更新",
-        "err-conn-fail": "无法连接到MusicBee",
-        "err-conn-inv-password":"密码不正确，被MusicBee拒绝连接",
-        "err-conn-fail-msg": "请检查MusicBee首选项里面的插件页面中的musicbee web插件的设置",
+        "err-conn-fail": "无法连接到Foobar2000 Httpcontrol",
+        "err-conn-inv-password":"密码不正确，被Foobar2000 Httpcontrol拒绝连接",
+        "err-conn-fail-msg": "请检查Foobar2000是否开启和IP、端口是否正确",
         "err-conn-fail-msg1": "可能是因为socket连接被断开了，请点击右边的关闭按钮重试",
         "err-update-fail": "获取版本信息失败，请稍后再试"
 

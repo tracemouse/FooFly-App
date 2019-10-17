@@ -38,37 +38,45 @@ export class AboutPage implements OnInit {
   async checkUpdate(){
 
     this.reading = true;
-    var url = "http://musicbee-fly.tracemouse.top/docs/version.json";
+    var url = "http://foofly.tracemouse.top/docs/version.json";
     this.httpClient.get(url).subscribe(
       (version:any) =>{
         this.reading = false;
         console.log(version);
         var versionApp = version.app;
         var versionPlugin = version.plugin;
-        if(this.versionApp == versionApp && this.versionPlugin == versionPlugin){
+        if(this.versionApp == versionApp){
           this.presentAlert(this.message.info,'',this.message['info-update-msg1'],this.message.ok);
           return;
-        }
-        if(this.versionApp == versionApp && this.versionPlugin != versionPlugin){
-          this.presentAlert(this.message.info,'',this.message['info-update-msg6'],this.message.ok);
+        }else{
+          this.presentAlert(this.message.info,'',this.message['info-update-msg5'],this.message.ok);
           return;
         }
-        if(this.versionApp != versionApp && this.versionPlugin == versionPlugin){
-          if(window.location.hostname == this.officalSite){
-            this.presentAlert(this.message.info,'',this.message['info-update-msg4'],this.message.ok,this.reload);
-          }else{
-            this.presentAlert(this.message.info,'',this.message['info-update-msg5'],this.message.ok);
-          }
-          return;
-        }
-        if(this.versionApp != versionApp && this.versionPlugin != versionPlugin){
-          if(window.location.hostname == this.officalSite){
-            this.presentAlert(this.message.info,'',this.message['info-update-msg3'],this.message.ok,this.reload);
-          }else{
-            this.presentAlert(this.message.info,'',this.message['info-update-msg2'],this.message.ok);
-          }
-          return;
-        }
+
+        // if(this.versionApp == versionApp && this.versionPlugin == versionPlugin){
+        //   this.presentAlert(this.message.info,'',this.message['info-update-msg1'],this.message.ok);
+        //   return;
+        // }
+        // if(this.versionApp == versionApp && this.versionPlugin != versionPlugin){
+        //   this.presentAlert(this.message.info,'',this.message['info-update-msg6'],this.message.ok);
+        //   return;
+        // }
+        // if(this.versionApp != versionApp && this.versionPlugin == versionPlugin){
+        //   if(window.location.hostname == this.officalSite){
+        //     this.presentAlert(this.message.info,'',this.message['info-update-msg4'],this.message.ok,this.reload);
+        //   }else{
+        //     this.presentAlert(this.message.info,'',this.message['info-update-msg5'],this.message.ok);
+        //   }
+        //   return;
+        // }
+        // if(this.versionApp != versionApp && this.versionPlugin != versionPlugin){
+        //   if(window.location.hostname == this.officalSite){
+        //     this.presentAlert(this.message.info,'',this.message['info-update-msg3'],this.message.ok,this.reload);
+        //   }else{
+        //     this.presentAlert(this.message.info,'',this.message['info-update-msg2'],this.message.ok);
+        //   }
+        //   return;
+        // }
       },
       error=>{
         this.reading = false;

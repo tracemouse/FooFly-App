@@ -35,7 +35,7 @@
         "header": "設置",
         "header1": "連接設置：",
         "header2": "語言設置：",
-        "lbl-url": "MusicBee",
+        "lbl-url": "Foo Fly",
         "language": "語言(Language)",
         "animation": "專輯封面動畫",
         "autoDJ": "自動DJ",
@@ -83,12 +83,12 @@
     },
     "setting": {
         "header": "連接設置",
-        "lbl-url": "MusicBee Url",
+        "lbl-url": "Foobar2000 Httpcontrol Url",
         "lbl-interval": "刷新間隔(毫秒)",
         "save": "保存"
     },
     "login": {
-        "header": "MusicBee",
+        "header": "Foo Fly",
         "button-text": "登錄",
         "password-placeholder":"如未設置密碼請留空"
     },
@@ -105,9 +105,9 @@
         "info-update-msg4": "檢測到App有新版本，點確認之後將會為您更新App",
         "info-update-msg5": "檢測到App有新版本，請手動下載最新版本並更新",
         "info-update-msg6": "檢測到Plugin有新版本，請手動下載最新版本並更新",
-        "err-conn-fail": "無法連接到MusicBee",
-        "err-conn-inv-password":"密碼不正確，被MusicBee拒絕連接.",
-        "err-conn-fail-msg": "請檢查MusicBee首選項裏面的插件頁面中的musicbee web插件的設置.",
+        "err-conn-fail": "無法連接到Foobar2000 Httpcontrol",
+        "err-conn-inv-password":"密碼不正確，被Foobar2000 httpcontrol拒絕連接.",
+        "err-conn-fail-msg": "請檢查Foobar2000是否開啟和IP、端口是否正確.",
         "err-conn-fail-msg1": "可能是因為socket連接被斷開了，請點擊右邊的關閉按鈕重試.",
         "err-update-fail": "獲取版本信息失敗，請稍後再試"    }
 }

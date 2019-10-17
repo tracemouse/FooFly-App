@@ -1,6 +1,12 @@
 
 export class AppConfig {
 
+  public static version = "1.0.0";
+  // public static env = "dev";
+  public static env = "prd";
+  public static urlRoot = "/foofly/";
+  public static urlOffical = "http://foofly.tracemouse.top/";
+
   public static settings = {
     "versionPlugin":"",
     "versionMB":"",
@@ -19,10 +25,6 @@ export class AppConfig {
     "musicLib":""
   };
 
-  public static version = "1.0.0";
-  public static env = "dev";
-  // public static env = "prd";
-  public static urlRoot = "/foofly/";
  
   public static global = {
     "ws_schema":"ws://",
