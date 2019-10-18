@@ -27,11 +27,11 @@ export class MyHttpService {
     // if (p)	requestStr += '&param1='+p;
     // if (p2)	requestStr += '&param2='+p2;
     // if (p3)	requestStr += '&param3='+p3;
-
+    let platform = AppConfig.settings.platform;
     if(!url.startsWith("http")){
       url = AppConfig.fooflyRoot + "?" + url;
       // url = (AppConfig.env == "dev")?url: (AppConfig.settings.rootUrl + url);
-      if(AppConfig.settings.platform == "cordova"){
+      if(platform == "cordova"){
         url = AppConfig.settings.rootUrl + url;
       }
       let randrom = "random=" + Math.random();
