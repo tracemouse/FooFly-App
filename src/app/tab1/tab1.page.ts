@@ -204,6 +204,9 @@ export class Tab1Page {
       (data:any)=>{
         // console.log(data);
         this.pushTrack(data);
+      },
+      (error)=>{
+        clearInterval(this.interval);
       }
     );
   }
@@ -232,6 +235,8 @@ export class Tab1Page {
       if(this.title != data.playing.track){
         this.nowTrack = data.playing;
         this.title = data.playing.track;
+        let message = data.playing.artist + "-" + data.playing.album;
+        this.myHttpService.presentTrackToast(this.title,message);
         let len = this.tracks.length;
         for(let i=0; i<len; i++){
           if(this.tracks[i].track == this.title){

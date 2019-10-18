@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ModalController,ActionSheetController,NavController,PopoverController  } from '@ionic/angular';
-import { TranslateService }from "@ngx-translate/core";
+import { ModalController, ActionSheetController, NavController, PopoverController } from '@ionic/angular';
+import { TranslateService } from "@ngx-translate/core";
 
-import { AppConfig} from "../app.config";
-import { MyDBService}  from "../my-db.service";
-import { MyHttpService} from "../my-http.service";
+import { AppConfig } from "../app.config";
+import { MyDBService } from "../my-db.service";
+import { MyHttpService } from "../my-http.service";
 // import { WebsocketService} from "../websocket.service"; 
 
 import { SettingPage } from "../model/setting.page";
@@ -34,17 +34,17 @@ export class Tab4Page {
   mbLoaded = false;
   muteIcon = "volume-high";
   showTrackSeq = false;
-  playlists:any = [];
+  playlists: any = [];
   musicLib = "";
 
 
   constructor(private translateService: TranslateService,
-              private myDBService: MyDBService,
-              public modalController: ModalController,
-              public actionSheetController:ActionSheetController,
-              public popoverController:PopoverController,
-              public myHttpService: MyHttpService,
-              public navCtrl: NavController) {
+    private myDBService: MyDBService,
+    public modalController: ModalController,
+    public actionSheetController: ActionSheetController,
+    public popoverController: PopoverController,
+    public myHttpService: MyHttpService,
+    public navCtrl: NavController) {
 
   }
 
@@ -53,23 +53,23 @@ export class Tab4Page {
     //Add 'implements OnInit' to the class.
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
 
     this.url = AppConfig.settings.rootUrl;
     this.interval = AppConfig.settings.interval;
     this.language = AppConfig.settings.language;
     this.musicLib = AppConfig.settings.musicLib;
-    this.animation = (AppConfig.settings.animation == "true")?true:false;
-    this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
+    this.animation = (AppConfig.settings.animation == "true") ? true : false;
+    this.showTrackSeq = (AppConfig.settings.showTrackSeq == "true") ? true : false;
     // console.log("tab4=" + JSON.stringify(AppConfig.settings));
 
     this.myHttpService.GetState().then(
-      (data:any)=>{
+      (data: any) => {
         // console.log(data);
         this.volume = data.volume;
         this.mbLoaded = true;
         this.playlists = data.playlists;
-        if(AppConfig.settings.musicLib == ""){
+        if (AppConfig.settings.musicLib == "") {
           this.musicLib = data.playlists[0].name;
           AppConfig.settings.musicLib = this.musicLib;
           this.myDBService.saveSettingsData();
@@ -79,16 +79,16 @@ export class Tab4Page {
 
   }
 
-  ionViewWillLeave(){
-   this.myDBService.saveSettingsData();
+  ionViewWillLeave() {
+    this.myDBService.saveSettingsData();
   }
 
 
-  async setLanguage(event:any){
+  async setLanguage(event: any) {
     // console.log(this.language);
     // console.log(event.target.value);
     let language = event.target.value;
-    if(language == AppConfig.settings.language){
+    if (language == AppConfig.settings.language) {
       return;
     }
     AppConfig.settings.language = language;
@@ -96,43 +96,43 @@ export class Tab4Page {
     this.translateService.use(language);
   }
 
-  async setMusicLib(event:any){
+  async setMusicLib(event: any) {
     // console.log(this.language);
     // console.log(event.target.value);
     let musicLib = event.target.value;
-    if(musicLib == AppConfig.settings.musicLib){
+    if (musicLib == AppConfig.settings.musicLib) {
       return;
     }
     AppConfig.settings.musicLib = musicLib;
     this.myDBService.saveSettingsData();
   }
 
-  async setConnection(){
+  async setConnection() {
     this.myDBService.saveSettingsData();
     const modal = await this.modalController.create({
       component: SettingPage,
       enterAnimation: rightEnterAnimation,
       leaveAnimation: rightLeaveAnimation,
       componentProps: {
-        'url':this.url,
+        'url': this.url,
         'interval': this.interval,
 
       }
     });
-    modal.onDidDismiss().then(res=>{
-      if(res.data.save){
+    modal.onDidDismiss().then(res => {
+      if (res.data.save) {
         this.url = AppConfig.settings.rootUrl;
         this.interval = AppConfig.settings.interval;
         // AppConfig.settings.rootUrl = this.url;
         // AppConfig.settings.interval = this.interval;
         this.myDBService.saveSettingsData();
       }
-     });
+    });
     await modal.present();
     return;
   }
 
-  async more(ev:any){
+  async more(ev: any) {
 
     const popover = await this.popoverController.create({
       component: Tab4PopoverPage,
@@ -202,33 +202,33 @@ export class Tab4Page {
   //   await actionSheet.present();
   // }
 
-  setAnimation(event:any){
-    AppConfig.settings.animation = (this.animation)?"true":"false";
+  setAnimation(event: any) {
+    AppConfig.settings.animation = (this.animation) ? "true" : "false";
     this.myDBService.saveSettingsData();
   }
 
-  setShowTrackSeq(event){
-    AppConfig.settings.showTrackSeq = (this.showTrackSeq)?"true":"false";
+  setShowTrackSeq(event) {
+    AppConfig.settings.showTrackSeq = (this.showTrackSeq) ? "true" : "false";
     this.myDBService.saveSettingsData();
   }
 
-  setMute(event:any){
-    if(!this.mbLoaded){
+  setMute(event: any) {
+    if (!this.mbLoaded) {
       return;
     }
-    this.mute = (this.mute)?false:true;
-    this.muteIcon = (!this.mute)?"volume-high":"volume-off";
-   
-    if(this.mute){
+    this.mute = (this.mute) ? false : true;
+    this.muteIcon = (!this.mute) ? "volume-high" : "volume-off";
+
+    if (this.mute) {
       this.myHttpService.SetVolume("0");
-    }else{
+    } else {
       this.myHttpService.SetVolume(this.volume);
     }
 
   }
 
-  setVolume(event){
-    if(!this.mbLoaded){
+  setVolume(event) {
+    if (!this.mbLoaded) {
       return;
     }
 
@@ -236,18 +236,13 @@ export class Tab4Page {
 
   }
 
-  exit(){
+  exit() {
 
-    if(AppConfig.env == "dev"){
-      this.navCtrl.navigateForward(["/login"],{
-        queryParams:{
-          from:'exit'
-        }
-      });
-    }else{
-      let url = AppConfig.urlOffical + "index.html#/login?from=exit"
-      location.href = url;
-    }
+    this.navCtrl.navigateForward(["/login"], {
+      queryParams: {
+        from: 'exit'
+      }
+    });
   }
 }
 

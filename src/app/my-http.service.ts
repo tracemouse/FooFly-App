@@ -29,13 +29,15 @@ export class MyHttpService {
     // if (p3)	requestStr += '&param3='+p3;
 
     if(!url.startsWith("http")){
-      url = "?" + url;
-      // url = (AppConfig.env == "dev")?(AppConfig.urlRoot + url):("/" + url);
-      url = AppConfig.urlRoot + url;
+      url = AppConfig.fooflyRoot + "?" + url;
+      // url = (AppConfig.env == "dev")?url: (AppConfig.settings.rootUrl + url);
+      if(AppConfig.settings.platform == "cordova"){
+        url = AppConfig.settings.rootUrl + url;
+      }
       let randrom = "random=" + Math.random();
       url = (url.endsWith("?"))?(url + randrom):(url + "&" + randrom);
     }else{
-      url = url + AppConfig.urlRoot;
+      url = url + AppConfig.fooflyRoot;
     }
     // console.log(url);
     // return this.http.get(url,{'responseType': 'text'}).pipe(timeout(AppConfig.settings.timeout * 60 * 1000));
@@ -165,16 +167,34 @@ export class MyHttpService {
 
   exit(){
 
-    if(AppConfig.env == "dev"){
-      this.navCtrl.navigateForward(["/login"],{
-        queryParams:{
-          from:'exit'
+    this.navCtrl.navigateForward(["/login"], {
+      queryParams: {
+        from: 'exit'
+      }
+    });
+  }
+
+  public async presentTrackToast(header,message) {
+    const toast = await this.toastController.create({
+      header: header,
+      message: message,
+      duration: 3000,
+      position: 'top',
+      color: "danger",
+      keyboardClose: true,
+      mode:'ios',
+      buttons: [
+        {
+          side: 'end',
+          icon: 'musical-note',
+          text: '',
+          handler: () => {
+            this.navCtrl.navigateForward('/tabs/tab1');
+          }
         }
-      });
-    }else{
-      let url = AppConfig.urlOffical + "index.html#/login?from=exit"
-      location.href = url;
-    }
+      ]
+    });
+    toast.present();
   }
 }
 

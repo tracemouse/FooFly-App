@@ -73,7 +73,9 @@ export class NowplayingPage {
           this.nowTrack = {};
           this.playState = "0";
         }
-
+      },
+      (error)=>{
+        clearInterval(this.interval);
       }
     );
   }
@@ -89,7 +91,12 @@ export class NowplayingPage {
     this.playFileUrl = "";
 
     this.nowTrack = data.playing;
-    this.title = this.nowTrack.track;
+
+    if(this.title != this.nowTrack.track){
+      this.title = this.nowTrack.track;
+      let message = data.playing.artist + "-" + data.playing.album;
+      this.myHttpService.presentTrackToast(this.title,message);
+    }
 
     // this.audioType = this.nowTrack.codec;
     let fileUrl = this.nowTrack.fileUrl;
@@ -108,10 +115,6 @@ export class NowplayingPage {
     // console.log(this.duration);
     // console.log(this.audiobar);
 
-    // if(this.nowFileUrl != this.nowTrack.fileUrl){
-    //   this.nowFileUrl = this.nowTrack.fileUrl;
-    //   this.getCoverImg();
-    // }
     this.coverImg = data.albumArt;
   }
 

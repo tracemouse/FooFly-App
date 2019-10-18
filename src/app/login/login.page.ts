@@ -61,11 +61,22 @@ export class LoginPage implements OnInit {
       return;
     }
 
+    this.myHttpService.GetState().then(
+      (data:any)=>{
+        this.loginDisabled = false;
+        this.navCtrl.navigateForward("/tabs/tab1");
+      },
+      (error) =>{
+        this.loginDisabled = false;
+      }
+    );
+
     // await this.initLoading();
     // await this.loading.present();
 
     // this.testConn(AppConfig.settings.rootUrl);
 
+    /*
     let url = AppConfig.settings.rootUrl + AppConfig.urlRoot + "assets/version.js"
     var script = document.createElement('script');
     script.setAttribute("id","testConnScript");
@@ -81,6 +92,7 @@ export class LoginPage implements OnInit {
     }
     script.setAttribute('src', url);
     document.getElementsByTagName('head')[0].appendChild(script);
+    */
 
     // let url = "";
     // this.myHttpService.http.get(url).subscribe(
@@ -131,10 +143,11 @@ export class LoginPage implements OnInit {
     this.myDBService.saveSettingsData();
   
     this.loginDisabled = true;
-    let url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
+    // let url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
     // var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
 
-    this.testConn(url);
+    // this.testConn(url);
+    this.testHttp();
   }
 
 
@@ -150,9 +163,28 @@ export class LoginPage implements OnInit {
     this.inputPassword = password.value;
   }
 
+  async testHttp(){
+    await this.initLoading();
+    await this.loading.present();
+
+    this.myHttpService.GetState().then(
+      (data:any)=>{
+        this.loginDisabled = false;
+        this.loading.dismiss();
+        this.navCtrl.navigateForward("/tabs/tab1");
+      },
+      (error) =>{
+        this.loginDisabled = false;
+        this.loading.dismiss();
+        this.presentConnError();
+      }
+    );
+
+  }
+
   async testConn(url: string) {
 
-    url = url + AppConfig.urlRoot + "assets/version.js"
+    url = url + AppConfig.fooflyRoot + "assets/version.js"
     var script = document.createElement('script');
     script.setAttribute("id","testConnScript");
     script.onload = function(e){
