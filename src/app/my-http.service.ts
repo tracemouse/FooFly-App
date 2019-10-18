@@ -53,8 +53,13 @@ export class MyHttpService {
             return;
           }
 
-          let json = JSON.parse(res);
-          resolve(json);
+          try{
+            let json = JSON.parse(res);
+            resolve(json);
+          }catch(e){
+            console.log("failed to convert json, str=" + res);
+            reject(e);
+          }
         }
         ,error => {
           console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
