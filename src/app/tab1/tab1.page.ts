@@ -4,8 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import * as ProgressBar from "progressbar.js";
 
-// import { AppConfig} from "../app.config";
-// import { MyHttpService} from "../my-http.service";
 import { NowplayingPage } from "../model/nowplaying.page";
 import { MyHttpService} from "../my-http.service"; 
 import { AppConfig } from '../app.config';
@@ -254,7 +252,7 @@ export class Tab1Page {
     }
 
     this.playState = data.isPlaying;
-    this.coverImg = data.albumArt;
+    this.coverImg = AppConfig.settings.rootUrl + data.albumArt;
     this.audiobar = data.trackpos;
     this.duration = data.tracklen;
     let perc = this.getPercent(this.audiobar, this.duration);
@@ -284,7 +282,7 @@ export class Tab1Page {
     if(!obj) return;
     
     let offset = obj.offsetTop;
-    console.log("offset=" + offset);
+    // console.log("offset=" + offset);
     // this.ionContent.scrollToBottom(obj.off)
     // this.ionContent.scrollToBottom(obj.offsetTop);
     // window.scrollTo(0,offset);

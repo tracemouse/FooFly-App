@@ -64,7 +64,7 @@ export class TracklistPage implements OnInit {
     // console.log(this.tracks);
     this.coverImg = this.defaultImg;
     // this.coverImg = this.fileUrl;
-    console.log(this.input.type);
+    // console.log(this.input.type);
     switch(this.input.type){
       case 'folder':
           this.coverImg = this.folderImg;

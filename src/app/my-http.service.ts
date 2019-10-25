@@ -30,10 +30,10 @@ export class MyHttpService {
     let platform = AppConfig.settings.platform;
     if(!url.startsWith("http")){
       url = AppConfig.fooflyRoot + "?" + url;
-      // url = (AppConfig.env == "dev")?url: (AppConfig.settings.rootUrl + url);
-      if(platform == "cordova"){
-        url = AppConfig.settings.rootUrl + url;
-      }
+      url = (AppConfig.env == "dev")?url: (AppConfig.settings.rootUrl + url);
+      // if(platform == "cordova"){
+      //   url = AppConfig.settings.rootUrl + url;
+      // }
       let randrom = "random=" + Math.random();
       url = (url.endsWith("?"))?(url + randrom):(url + "&" + randrom);
     }else{
@@ -126,6 +126,16 @@ export class MyHttpService {
     return this.CallFoo(url);
   }
 
+  public CloseScreen(){
+    let url = "cmd=closeScreen";
+    return this.CallFoo(url);
+  }
+
+  public shudown(minutes:any){
+    let url = "cmd=shutdown&param1="+minutes;
+    return this.CallFoo(url);
+  }
+
   async presentError(event:any){
 
     var message;
@@ -195,6 +205,28 @@ export class MyHttpService {
           text: '',
           handler: () => {
             this.navCtrl.navigateForward('/tabs/tab1');
+          }
+        }
+      ]
+    });
+    toast.present();
+  }
+
+  async presentToast(header,message) {
+    const toast = await this.toastController.create({
+      header: header,
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+      color: "primary",
+      keyboardClose: true,
+      mode:'ios',
+      buttons: [
+        {
+          side: 'end',
+          icon: 'checkmark-circle-outline',
+          text: '',
+          handler: () => {
           }
         }
       ]
