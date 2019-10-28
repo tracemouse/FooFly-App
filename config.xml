@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.foofly" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Foo Fly</name>
+    <name>Foofly</name>
     <description>Foobar2000 remote control app.</description>
     <author email="tracemouse@163.com" href="#">tracemouse</author>
     <content src="index.html" />

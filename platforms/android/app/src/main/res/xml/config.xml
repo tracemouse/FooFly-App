@@ -27,7 +27,7 @@
     <feature name="Keyboard">
         <param name="android-package" onload="true" value="io.ionic.keyboard.IonicKeyboard" />
     </feature>
-    <name>Foo Fly</name>
+    <name>Foofly</name>
     <description>Foobar2000 remote control app.</description>
     <author email="tracemouse@163.com" href="#">tracemouse</author>
     <content src="index.html" />
