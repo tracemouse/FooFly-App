@@ -66,17 +66,22 @@ export class TracklistPage implements OnInit {
     // this.coverImg = this.fileUrl;
     // console.log(this.input.type);
     switch(this.input.type){
-      case 'folder':
-          this.coverImg = this.folderImg;
-          break;
-      case 'album':
-          this.coverImg = this.albumImg;
-          break;
-      case 'artist':
-          this.coverImg = this.artistImg;
-          break;
+      // case 'folder':
+      //     this.coverImg = this.folderImg;
+      //     break;
+      // case 'album':
+      //     this.coverImg = this.albumImg;
+      //     break;
+      // case 'artist':
+      //     this.coverImg = this.artistImg;
+      //     break;
       case 'playlist':
           this.coverImg = this.playlistImg;
+          break;
+      default:
+          let imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          imgUrl += "?fileUrl=" + encodeURI(this.fileUrl);
+          this.coverImg = imgUrl;
           break;
     }
     

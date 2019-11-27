@@ -12,32 +12,31 @@
         </ion-buttons>
       -->
   </ion-toolbar>
+  <ion-card mode="ios">
+   <div class="card-img-box">
+      <img src="{{coverImg}}" class="card-img" />
+   </div>
+   <div class="card-text-box">
+      <div class="card-title">{{title}}</div>
+      <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
+      <p class="card-subtitle">
+            {{totalTracks}} {{'tracklist.tracks' | translate}}
+      </p>
+      <!-- <div class="card-subtitle">
+         <ion-button (click)="playTracks()" color="danger" size="small">
+            <ion-icon slot="start" name="ios-play"></ion-icon>
+            {{'common.playall' | translate}}
+         </ion-button>
+      </div> -->
+   </div>
+</ion-card>
+
+ <ion-toolbar >
+   <ion-searchbar mode="ios" (ionChange)="handleSbInput1($event)" (keyup)="sbKeyup($event)" id="sb-track" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
+</ion-toolbar>
 </ion-header>
 
 <ion-content>
-
-   <ion-card mode="ios">
-      <div class="card-img-box">
-         <img src="{{coverImg}}" class="card-img" />
-      </div>
-      <div class="card-text-box">
-         <div class="card-title">{{title}}</div>
-         <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
-         <p class="card-subtitle">
-               {{totalTracks}} {{'tracklist.tracks' | translate}}
-         </p>
-         <!-- <div class="card-subtitle">
-            <ion-button (click)="playTracks()" color="danger" size="small">
-               <ion-icon slot="start" name="ios-play"></ion-icon>
-               {{'common.playall' | translate}}
-            </ion-button>
-         </div> -->
-      </div>
-   </ion-card>
-
-    <ion-toolbar >
-      <ion-searchbar mode="ios" (ionChange)="handleSbInput1($event)" (keyup)="sbKeyup($event)" id="sb-track" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
-   </ion-toolbar>
    <ion-list class="list-2" lines="none" id="il-track-12345">
       <ion-item *ngFor="let item of showTracks,let i = index" lines="none">
          <div item-start class="track-seq" *ngIf="(showTrackSeq)">{{(i + 1)}}</div>

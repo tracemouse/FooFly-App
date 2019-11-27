@@ -66,7 +66,7 @@ export class Tab2Page {
       }
       items.forEach(item => {
         const shouldShow = item.textContent.toLowerCase().indexOf(query) > -1;
-        item.style.display = shouldShow ? 'block' : 'none';
+        item.style.display = shouldShow ? 'inline-block' : 'none';
       });
     });
   }
@@ -241,6 +241,7 @@ export class Tab2Page {
     // console.log(this.tracks[0]);
 
     var name = "";
+    var artist = "";
     var count = 0;
     var fileUrl = "";
     var start = 0;
@@ -250,7 +251,7 @@ export class Tab2Page {
       var track = this.tracksByfolder[i];
       if(track.folder != name){
         if(name != ""){
-          var folder = {'name':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
+          var folder = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
           folder.name = name;
           folder.fileUrl = fileUrl;
           folder.count = count;
@@ -259,11 +260,10 @@ export class Tab2Page {
           folder.type = fileUrl.substr(index+1).toUpperCase();
           folder.sampleRate = sampleRate;
 
-          //var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          //imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-          //folder.artWork = imgUrl;
-          folder.artWork = this.cover;
-
+          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          folder.artWork = imgUrl;
+          folder.artist = artist;
           this.folders.push(folder);
         }
         name = track.folder;
@@ -271,11 +271,12 @@ export class Tab2Page {
         start = i;
         fileUrl = track.fileUrl;
         sampleRate = track.sampleRate;
+        artist = track.artist;
       }
       count ++;
     }
     if(name != ""){
-      var folder = {'name':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
+      var folder = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
       folder.name = name;
       folder.fileUrl = fileUrl;
       folder.count = count;
@@ -283,10 +284,10 @@ export class Tab2Page {
       var index = fileUrl.lastIndexOf(".");
       folder.type = fileUrl.substr(index+1).toUpperCase();
       folder.sampleRate = sampleRate;
-      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-      // folder.artWork = imgUrl;
-      folder.artWork = this.cover;
+      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      folder.artWork = imgUrl;
+      folder.artist = artist;
       this.folders.push(folder);
     }
 
@@ -327,6 +328,7 @@ export class Tab2Page {
     this.albums = [];
 
     var name = "";
+    var artist = "";
     var count = 0;
     var fileUrl = "";
     var start = 0;
@@ -336,7 +338,7 @@ export class Tab2Page {
       var track = this.tracksByAlbum[i];
       if(track.album != name){
         if(name != ""){
-          var album = {'name':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
+          var album = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
           album.name = name;
           album.fileUrl = fileUrl;
           album.count = count;
@@ -345,11 +347,10 @@ export class Tab2Page {
           album.type = fileUrl.substr(index+1).toUpperCase();
           album.sampleRate = sampleRate;
 
-          // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-          // album.artWork = imgUrl;
-          album.artWork = this.cover;
-
+          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          album.artWork = imgUrl;
+          album.artist = artist;
           this.albums.push(album);
         }
         name = track.album;
@@ -357,11 +358,12 @@ export class Tab2Page {
         start = i;
         sampleRate = track.sampleRate;
         fileUrl = track.fileUrl;
+        artist = track.artist;
       }
       count ++;
     }
     if(name != ""){
-      var album = {'name':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
+      var album = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
       album.name = name;
       album.fileUrl = fileUrl;
       album.count = count;
@@ -369,10 +371,11 @@ export class Tab2Page {
       var index = fileUrl.lastIndexOf(".");
       album.type = fileUrl.substr(index+1).toUpperCase();
       album.sampleRate = sampleRate;
-      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-      // album.artWork = imgUrl;
+      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      album.artWork = imgUrl;
       album.artWork = this.cover;
+      album.artist = artist;
       this.albums.push(album);
     }
 
@@ -417,16 +420,15 @@ export class Tab2Page {
       var track = this.tracksByArtist[i];
       if(track.artist != name){
         if(name != ""){
-          var artist = {'name':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
+          var artist = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
           artist.name = name;
           artist.fileUrl = fileUrl;
           artist.count = count;
           artist.start = start;
 
-          // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-          // artist.artWork = imgUrl;
-          artist.artWork = this.cover;
+          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          artist.artWork = imgUrl;
 
           this.artists.push(artist);
         }
@@ -438,15 +440,14 @@ export class Tab2Page {
       count ++;
     }
     if(name != ""){
-      var artist = {'name':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
+      var artist = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
       artist.name = name;
       artist.fileUrl = fileUrl;
       artist.count = count;
       artist.start = start;
-      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      // imgUrl += "?fileUrl=" + encodeURI(fileUrl);
-      // artist.artWork = imgUrl;
-      artist.artWork = this.cover;
+      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      artist.artWork = imgUrl;
       this.artists.push(artist);
     }
 
@@ -541,6 +542,9 @@ export class Tab2Page {
   }
 
   segmentChanged(event:any){
+    let obj = document.getElementById("sb_input");
+    obj.setAttribute("value","");
+
     if(this.sgLibrary == "folder"){
       if(this.tracksByfolder.length > 0){
         return;
