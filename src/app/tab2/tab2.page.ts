@@ -263,7 +263,7 @@ export class Tab2Page {
           folder.sampleRate = sampleRate;
 
           var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
           folder.artWork = imgUrl;
           folder.artist = artist;
           this.folders.push(folder);
@@ -287,7 +287,7 @@ export class Tab2Page {
       folder.type = fileUrl.substr(index+1).toUpperCase();
       folder.sampleRate = sampleRate;
       var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
       folder.artWork = imgUrl;
       folder.artist = artist;
       this.folders.push(folder);
@@ -350,7 +350,7 @@ export class Tab2Page {
           album.sampleRate = sampleRate;
 
           var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
           album.artWork = imgUrl;
           album.artist = artist;
           this.albums.push(album);
@@ -374,9 +374,8 @@ export class Tab2Page {
       album.type = fileUrl.substr(index+1).toUpperCase();
       album.sampleRate = sampleRate;
       var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
       album.artWork = imgUrl;
-      album.artWork = this.cover;
       album.artist = artist;
       this.albums.push(album);
     }
@@ -429,7 +428,7 @@ export class Tab2Page {
           artist.start = start;
 
           var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+          imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
           artist.artWork = imgUrl;
 
           this.artists.push(artist);
@@ -448,7 +447,7 @@ export class Tab2Page {
       artist.count = count;
       artist.start = start;
       var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURI(fileUrl);
+      imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
       artist.artWork = imgUrl;
       this.artists.push(artist);
     }

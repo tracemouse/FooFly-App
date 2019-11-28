@@ -149,7 +149,7 @@ export class MyHttpService {
   }
 
   public createPlaylist(playlist:any){
-    playlist = encodeURI(playlist);
+    playlist = encodeURIComponent(playlist);
     // let url = "cmd=CreatePlaylist&param1=" + playlist + "&param3=NoResponse";
     let url = "cmd=CreatePlaylist&param1=" + playlist;
     return this.CallFoo(url);
@@ -161,7 +161,7 @@ export class MyHttpService {
   }
 
   public addTracksToPlaylist(file:any){
-    let fileUrl = encodeURI(file);
+    let fileUrl = encodeURIComponent(file);
     // let url = "cmd=Browse&param1=" + fileUrl + "&param3=js/browser.json";
     let url = "cmd=Browse&param1=" + fileUrl;
     return this.CallFoo(url);

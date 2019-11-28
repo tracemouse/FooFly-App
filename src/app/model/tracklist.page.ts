@@ -82,7 +82,7 @@ export class TracklistPage implements OnInit {
           break;
       default:
           let imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURI(this.fileUrl);
+          imgUrl += "?fileUrl=" + encodeURIComponent(this.fileUrl);
           this.coverImg = imgUrl;
           break;
     }
