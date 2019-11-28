@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController,NavController,LoadingController} from '@ionic/angular';
+import { TranslateService }from "@ngx-translate/core";
 
 import { AppConfig } from '../app.config';
 import { MyHttpService} from "../my-http.service";
@@ -15,7 +16,7 @@ import { rightLeaveAnimation } from "../modal-transitions";
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
-
+  i18n:any;
   // loadingDuration = 3 * 1000;
   loadingDuration = AppConfig.settings.timeout * 60 * 1000;
   loading:any;
@@ -24,6 +25,7 @@ export class Tab3Page {
 
   constructor(
               public myHttpService: MyHttpService,
+              public translateService:TranslateService,
               public modalController: ModalController,
               public navCtrl: NavController,
               public loadingController: LoadingController) {
@@ -103,9 +105,14 @@ export class Tab3Page {
   }
 
   async showTracksPage(tracks: any, item:any, idx:any,totalTracks:any,totalPages:any) {
+    this.translateService.get("tab3").subscribe(res=>{
+      this.i18n = res;
+    });
+    let headerTitle = this.i18n['header'];
     var input = {
       'from' : 'tab3',
       'title': item.name,
+      'headerTitle':headerTitle,
       'fileUrl': item.albumArt,
       'tracks': tracks,
       'playlistIdx': idx,

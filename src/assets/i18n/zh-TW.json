@@ -23,9 +23,9 @@
     "tab2": {
         "header": "曲庫",
         "header-sb-placeholder": "音樂庫中查找",
-        "st-folder": "按文件夾",
-        "st-album": "按專輯",
-        "st-artists": "按演出者",
+        "st-folder": "文件夾",
+        "st-album": "專輯",
+        "st-artists": "演出者",
         "tracks": "首歌"
     },
     "tab3": {

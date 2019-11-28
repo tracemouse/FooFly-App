@@ -1,6 +1,6 @@
 <ion-header mode="ios">
   <ion-toolbar class="header-toolbar">
-      <ion-title>{{'tracklist.header' | translate}}</ion-title>
+   <ion-title class="header-title">{{headerTitle}}</ion-title>
       <ion-buttons slot="start">
          <ion-button (click)="cancel(false)" color="danger">
             <ion-icon name="ios-arrow-back"></ion-icon> 
@@ -22,12 +22,12 @@
       <p class="card-subtitle">
             {{totalTracks}} {{'tracklist.tracks' | translate}}
       </p>
-      <!-- <div class="card-subtitle">
+      <div class="card-subtitle">
          <ion-button (click)="playTracks()" color="danger" size="small">
             <ion-icon slot="start" name="ios-play"></ion-icon>
             {{'common.playall' | translate}}
          </ion-button>
-      </div> -->
+      </div>
    </div>
 </ion-card>
 
@@ -50,7 +50,7 @@
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.fileUrl == playFileUrl" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons item-end *ngIf="item.fileUrl != playFileUrl" >
-               <ion-button (click)="playTrack(item.idx);" color="danger">
+               <ion-button (click)="playTrack(item);" color="danger">
                  <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon> 
                </ion-button>
          </ion-buttons>

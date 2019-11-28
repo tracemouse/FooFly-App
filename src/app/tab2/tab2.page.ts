@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController,LoadingController,NavController } from '@ionic/angular';
+import { TranslateService }from "@ngx-translate/core";
 
 import { AppConfig } from '../app.config';
 import { MyDBService}  from "../my-db.service";
@@ -18,7 +19,7 @@ import { rightLeaveAnimation } from "../modal-transitions";
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
-
+  i18n:any;
   loading:any;
   // loadingDuration = 3 * 1000;
   loadingDuration = AppConfig.settings.timeout * 60 * 1000;
@@ -42,6 +43,7 @@ export class Tab2Page {
 
   constructor(public myDBService: MyDBService,
               public myHttpService: MyHttpService,
+              public translateService:TranslateService,
               // public wsService: WebsocketService,
               public modalController: ModalController,
               public loadingController: LoadingController,
@@ -61,7 +63,7 @@ export class Tab2Page {
         items = Array.from(document.querySelector('#il_folder').children);
       }else if(this.sgLibrary == "album"){
         items = Array.from(document.querySelector('#il_album').children);
-      }else if(this.sgLibrary == "artist"){
+      }else if(this.sgLibrary == "artists"){
         items = Array.from(document.querySelector('#il_artist').children);
       }
       items.forEach(item => {
@@ -512,9 +514,15 @@ export class Tab2Page {
   }
 
   async showTracksPage(tracks: any, item:any) {
+    this.translateService.get("tab2").subscribe(res=>{
+      this.i18n = res;
+    });
+    let i18key = "st-" + this.sgLibrary;
+    let headerTitle = this.i18n[i18key];
     var input = {
       'from' : 'tab2',
       'title': item.name,
+      'headerTitle': headerTitle,
       'fileUrl': item.fileUrl,
       'tracks': tracks,
       'playlistIdx': this.playlistIdx,
@@ -555,7 +563,7 @@ export class Tab2Page {
         return;
       }
       this.refreshAlbum();
-    }else if(this.sgLibrary == "artist"){
+    }else if(this.sgLibrary == "artists"){
       if(this.tracksByArtist.length > 0){
         return;
       }
@@ -565,12 +573,16 @@ export class Tab2Page {
 
   
   async search() {
+    let input = {
+      'playlistIdx': this.playlistIdx,
+      'tracks': this.tracks
+    };
     const modal = await this.modalController.create({
       component: SearchPage,
       enterAnimation: rightEnterAnimation,
       leaveAnimation: rightLeaveAnimation,
       componentProps: {
-       
+        'input':input
       }
     });
 

@@ -22,9 +22,9 @@
     "tab2": {
         "header": "曲库",
         "header-sb-placeholder": "音乐库中查找",
-        "st-folder": "按文件夹",
-        "st-album": "按专辑",
-        "st-artists": "按演出者",
+        "st-folder": "文件夹",
+        "st-album": "专辑",
+        "st-artists": "演出者",
         "tracks": "首歌"
     },
     "tab3": {

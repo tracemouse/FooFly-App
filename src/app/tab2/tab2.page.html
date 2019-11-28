@@ -12,11 +12,11 @@
         <!-- <img src="assets/svg/refresh.svg"/> -->
         <svg t="1567300353460" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="36803" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22"><defs><style type="text/css"></style></defs><path d="M827.5 830.3c-176.1 173.8-459.6 171.8-633.3-4.4-173.7-176.2-171.7-460 4.4-633.7 176.1-173.8 459.6-171.8 633.3 4.4 173.6 176.1 171.7 459.9-4.4 633.7zM513.1 276c-36.4 0-70.7 8.5-101.4 23.3l15.2-36.1-43.5-18.3-54.8 130.4 5.5 2.3-1.2 3.9 37.3 11.3 1.9 0.8 0.1-0.2 16.2 4.9v4.8c1.1-1.3 2.4-2.5 3.6-3.7l76.3 23.2 13.7-45.1-43.6-13.2c22.4-11.4 47.6-18.1 74.5-18.1 91.2 0 165.1 74 165.1 165.2 0 91.2-73.9 165.2-165.1 165.2-83.1 0-151.6-61.5-163.2-141.4h-70.6C291 654 391.2 746.8 513.1 746.8c129.9 0 235.2-105.4 235.2-235.4C748.3 381.3 643 276 513.1 276z" fill="#ef4b4b" p-id="36804"></path></svg>
     </ion-button>
-      <!-- <ion-button (click)="search()" color="danger"> -->
+      <ion-button (click)="search()" color="danger">
           <!-- <ion-icon name="ios-more"></ion-icon>  -->
           <!-- <img src="assets/svg/search.svg"/> -->
-          <!-- <svg t="1567299795568" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22412" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22"><defs><style type="text/css"></style></defs><path d="M907.4 906.4c-29 29-76 29-105 0L657.7 761.7c-57.6 38.4-126.8 60.9-201.3 60.9-200.5 0-363.1-162.6-363.1-363.2S255.9 96.2 456.5 96.2s363.2 162.6 363.2 363.2c0 72.4-21.2 139.9-57.7 196.5l145.5 145.5c28.9 29 28.9 76-0.1 105zM456.4 231C330.3 231 228 333.3 228 459.4c0 126.1 102.3 228.4 228.4 228.4s228.4-102.3 228.4-228.4C684.9 333.3 582.6 231 456.4 231z m118.1 379.4c-1.4 2.1-3.5 3.6-6.2 4.2-5.5 1.3-11.1-2.2-12.3-7.7-1.2-5.2 1.7-10.3 6.7-12 59-46.5 80.8-126.4 53.6-196.1-0.7-1.4-1-2.9-1-4.5 0-5.7 4.6-10.3 10.3-10.3 4.2 0 7.8 2.5 9.4 6.1h0.1c30.7 78.3 6.1 168.4-60.6 220.3z" fill="#ef4b4b" p-id="22413"></path></svg> -->
-      <!-- </ion-button> -->
+          <svg t="1567299795568" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="22412" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22"><defs><style type="text/css"></style></defs><path d="M907.4 906.4c-29 29-76 29-105 0L657.7 761.7c-57.6 38.4-126.8 60.9-201.3 60.9-200.5 0-363.1-162.6-363.1-363.2S255.9 96.2 456.5 96.2s363.2 162.6 363.2 363.2c0 72.4-21.2 139.9-57.7 196.5l145.5 145.5c28.9 29 28.9 76-0.1 105zM456.4 231C330.3 231 228 333.3 228 459.4c0 126.1 102.3 228.4 228.4 228.4s228.4-102.3 228.4-228.4C684.9 333.3 582.6 231 456.4 231z m118.1 379.4c-1.4 2.1-3.5 3.6-6.2 4.2-5.5 1.3-11.1-2.2-12.3-7.7-1.2-5.2 1.7-10.3 6.7-12 59-46.5 80.8-126.4 53.6-196.1-0.7-1.4-1-2.9-1-4.5 0-5.7 4.6-10.3 10.3-10.3 4.2 0 7.8 2.5 9.4 6.1h0.1c30.7 78.3 6.1 168.4-60.6 220.3z" fill="#ef4b4b" p-id="22413"></path></svg>
+      </ion-button>
    </ion-buttons>
   </ion-toolbar>
   <div padding class="header-sg">
@@ -29,7 +29,7 @@
         <ion-label>{{'tab2.st-album' | translate}}</ion-label>
         <!--<ion-icon name="ios-albums" class="sg_icon"></ion-icon>-->
       </ion-segment-button>
-      <ion-segment-button mode="ios" value="artist" layout="icon-start">
+      <ion-segment-button mode="ios" value="artists" layout="icon-start">
         <ion-label>{{'tab2.st-artists' | translate}}</ion-label>
         <!--<ion-icon name="ios-body" class="sg_icon"></ion-icon>-->
       </ion-segment-button>
@@ -85,7 +85,7 @@
           </ul>
         </div>
 
-        <div *ngSwitchCase="'artist'">
+        <div *ngSwitchCase="'artists'">
           <ul class="item-ul" id="il_artist">
             <li class="item-li" *ngFor="let item of artists" (click)="showTracksByArtist(item);">
               <div class="item-li-box">

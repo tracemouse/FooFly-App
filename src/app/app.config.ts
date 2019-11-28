@@ -22,7 +22,8 @@ export class AppConfig {
     "animation": "true",
     "timeout": 0.2,
     "showTrackSeq": "true",
-    "musicLib":""
+    "musicLib":"",
+    "wkPlaylist":"Foofly"
   };
 
  

@@ -136,6 +136,129 @@ export class MyHttpService {
     return this.CallFoo(url);
   }
 
+  public async clearPlaylist(palylistIdx:any){
+    await this.SwithPlaylist(palylistIdx).then(
+      async (data) =>{
+        let url = "cmd=EmptyPlaylist&param3=NoResponse";
+        await this.CallFoo(url).then(
+          (data)=>{
+            // console.log("deleted");
+          }
+        );
+      });
+  }
+
+  public createPlaylist(playlist:any){
+    playlist = encodeURI(playlist);
+    // let url = "cmd=CreatePlaylist&param1=" + playlist + "&param3=NoResponse";
+    let url = "cmd=CreatePlaylist&param1=" + playlist;
+    return this.CallFoo(url);
+  }
+
+  public removePlaylist(idx:any){
+    let url = "cmd=RemovePlaylist&param1=" + idx + "&param3=NoResponse";
+    return this.CallFoo(url);
+  }
+
+  public addTracksToPlaylist(file:any){
+    let fileUrl = encodeURI(file);
+    // let url = "cmd=Browse&param1=" + fileUrl + "&param3=js/browser.json";
+    let url = "cmd=Browse&param1=" + fileUrl;
+    return this.CallFoo(url);
+  }
+
+  public async addAndPlay(playlistIdx:any,track:any){
+    this.SwithPlaylist(playlistIdx).then(
+      (data:any) =>{
+        let idx = 0;
+        try{
+          idx = parseInt(data.playlists[playlistIdx].count);
+        }catch(ex){
+
+        }
+        this.addTracksToPlaylist(track.fileUrl).then(
+          (data:any)=>{
+            this.PlayTrack(idx);
+          }
+        );
+      }
+    );
+  }
+
+  public async fooflyPlayTrack(track:any){
+    if(track==null){
+      return;
+    }
+    this.GetState().then(
+      (data:any) =>{
+        let len = data.playlists.length;
+        var findFG = false;
+        for(let i=0; i<len; i++){
+          if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+            findFG = true;
+            this.addAndPlay(i,track);
+            break;
+          }
+        }
+        if(!findFG){
+          this.createPlaylist(AppConfig.settings.wkPlaylist).then(
+            (data:any) =>{
+              let len = data.playlists.length;
+              var findFG = false;
+              for(let i=0; i<len; i++){
+                if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+                  findFG = true;
+                  this.addAndPlay(i,track);
+                  break;
+                }
+              }
+            }
+          );
+        }
+      });
+  }
+
+  public async fooflyPlayTracks(tracks:any){
+    if(tracks==null || tracks.length <= 0){
+      return;
+    }
+    this.GetState().then(
+      async (data:any) =>{
+        let len = data.playlists.length;
+        var findFG = false;
+        for(let i=0; i<len; i++){
+          if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+            findFG = true;
+            await this.clearPlaylist(i);
+            for(let i=0;i<tracks.length;i++){
+              await this.addTracksToPlaylist(tracks[i].fileUrl);
+            }
+            this.PlayTrack(0);
+            break;
+          }
+        }
+        if(!findFG){
+          this.createPlaylist(AppConfig.settings.wkPlaylist).then(
+            async (data:any) =>{
+              let len = data.playlists.length;
+              var findFG = false;
+              for(let i=0; i<len; i++){
+                if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+                  findFG = true;
+                  await this.clearPlaylist(i);
+                  for(let i=0;i<tracks.length;i++){
+                    await this.addTracksToPlaylist(tracks[i].fileUrl);
+                  }
+                  this.PlayTrack(0);
+                  break;
+                }
+              }
+            }
+          );
+        }
+      });
+  }
+
   async presentError(event:any){
 
     var message;

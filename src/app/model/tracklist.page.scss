@@ -1,12 +1,4 @@
-ion-header{
-  background-color: rgb(249,227,66);
-}
-ion-toolbar{
-  --background: rgb(249,227,66);
-}
-ion-searchbar{
-  --background: #fff;
-}
+
 ion-content{
     --ion-background-color: #fff;
 }
@@ -87,7 +79,6 @@ ion-content{
 ion-card {
     position: relative;
     text-align: center;
-    --background: #fff;
   }
   
   .card-img-box{

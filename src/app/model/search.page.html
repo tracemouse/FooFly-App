@@ -21,29 +21,22 @@
 
 <ion-content>
 
-   <ion-card mode="ios" id="search-card" *ngIf="(title != '')">
-      <div class="card-img-box">
-         <img src="{{coverImg}}" class="card-img" />
+   <div class="result-header" *ngIf="(title != '')">
+      <div class="result-header-button" *ngIf="(tracks.length > 0)">
+               <ion-button (click)="playTracks()" color="danger" size="small">
+                  <ion-icon slot="start" name="ios-play"></ion-icon>
+                  {{'common.playall' | translate}}
+               </ion-button>
       </div>
-      <div class="card-text-box">
-         <div class="card-title">{{title}}</div>
-         <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
-         <p class="card-subtitle">
-            {{tracks.length}} {{'tracklist.tracks' | translate}}
-         </p>
-         <div class="card-subtitle">
-            <ion-button (click)="playTracks()" color="danger" size="small">
-               <ion-icon slot="start" name="ios-play"></ion-icon>
-               {{'common.playall' | translate}}
-            </ion-button>
-         </div>
+      <div class="result-header-title">
+               {{tracks.length}} {{'tracklist.tracks' | translate}}
       </div>
-   </ion-card>
+   </div>
    <ion-list class="list-2" lines="none" id="il-track">
       <ion-item *ngFor="let item of tracks,let i = index">
          <div item-start class="track-seq" *ngIf="(showTrackSeq)">{{(i + 1)}}</div>
          <ion-label>
-            <span class="track-title">{{item.trackTitle}}</span><br>
+            <span class="track-title">{{item.track}}</span><br>
             <div>
                <span class="track-audioType">{{item.audioType}}</span>
                <span class="track-sampleRate">{{item.sampleRate}}</span>
@@ -52,7 +45,7 @@
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.fileUrl == playFileUrl" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons slot="end" *ngIf="item.fileUrl != playFileUrl" >
-            <ion-button (click)="playTrack(item);" color="danger">
+            <ion-button (click)="playTrack(item.idx);" color="danger">
               <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon> 
             </ion-button>
          </ion-buttons>

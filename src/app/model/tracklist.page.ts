@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,ViewChild,ElementRef  } from '@angular/core';
+import { Component, OnInit, Input,ViewChild,ElementRef, ComponentFactoryResolver  } from '@angular/core';
 import { ModalController, NavParams,IonInfiniteScroll  } from '@ionic/angular';
 
 import { AppConfig} from "../app.config";
@@ -32,6 +32,7 @@ export class TracklistPage implements OnInit {
 
   page = 1;
   totalPages = 1;
+  headerTitle = "";
 
   constructor(public modalController: ModalController,
               public navParams: NavParams,
@@ -48,6 +49,7 @@ export class TracklistPage implements OnInit {
     this.title = this.input.title;
     this.totalTracks = this.input.totalTracks;
     this.totalPages = this.input.totalPages;
+    this.headerTitle = this.input.headerTitle;
 
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
 
@@ -116,7 +118,17 @@ export class TracklistPage implements OnInit {
     });
   }
 
-  playTrack(idx:any) {
+  async playTrack(track:any) {
+    let idx = track.idx;
+    if(this.input.type == "playlist"){
+      this.playPlaylist(idx);
+    }else{
+      this.myHttpService.fooflyPlayTrack(track);
+    }
+
+  }
+
+  async playPlaylist(idx:any){
     this.myHttpService.SwithPlaylist(this.playlistIdx).then(
       data =>{
         this.myHttpService.PlayTrack(idx);
@@ -126,7 +138,11 @@ export class TracklistPage implements OnInit {
   }
 
   playTracks() {
-    this.myHttpService.PlayTrack(0);
+    if(this.input.type == "playlist"){
+      this.playPlaylist(0);
+    }else{
+      this.myHttpService.fooflyPlayTracks(this.tracks);
+    }
     this.cancel(false);
   }
 

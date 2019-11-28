@@ -11,6 +11,24 @@ ion-item{
   font-weight: bold;
   margin-left: 10px;
   color: #222;
+
+  .header-title-1{
+    display:inline-block;
+  }
+  .header-title-2{
+    display:inline-block;
+    vertical-align: bottom;
+    font-size: 0.7rem;
+    font-weight: 100;
+    color: #fff;
+    background-color: rgb(6,122,165);
+    border-radius: 16px;
+    // border: 1px solid #555;
+    padding: 2px 13px;
+    margin-left: 5px;
+    margin-bottom: 3px;
+  }
+
 }
 
 .header-toolbar{
