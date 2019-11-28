@@ -178,6 +178,7 @@ export class MyHttpService {
         }
         this.addTracksToPlaylist(track.fileUrl).then(
           (data:any)=>{
+            this.sleep(500);
             this.PlayTrack(idx);
           }
         );
@@ -230,8 +231,10 @@ export class MyHttpService {
           if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
             findFG = true;
             await this.clearPlaylist(i);
+            // this.sleep(500);
             for(let i=0;i<tracks.length;i++){
               await this.addTracksToPlaylist(tracks[i].fileUrl);
+              this.sleep(100);
             }
             this.PlayTrack(0);
             break;
@@ -248,6 +251,7 @@ export class MyHttpService {
                   await this.clearPlaylist(i);
                   for(let i=0;i<tracks.length;i++){
                     await this.addTracksToPlaylist(tracks[i].fileUrl);
+                    this.sleep(50);
                   }
                   this.PlayTrack(0);
                   break;
@@ -355,6 +359,13 @@ export class MyHttpService {
       ]
     });
     toast.present();
+  }
+
+  public sleep(delay) {
+    var start = (new Date()).getTime();
+    while ((new Date()).getTime() - start < delay) {
+      continue;
+    }
   }
 }
 
