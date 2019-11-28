@@ -4,6 +4,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { MyDBService}  from "../my-db.service";
 import { MyHttpService} from "../my-http.service";
 import { AppConfig } from '../app.config';
+import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-search',
@@ -139,13 +140,13 @@ export class SearchPage implements OnInit {
     });
   }
 
-  playTrack(idx:any) {
-    this.myHttpService.SwithPlaylist(this.playlistIdx).then(
-      data =>{
-        this.myHttpService.PlayTrack(idx);
-        this.cancel(false);
-      }
-    );
+  playTrack(track:any) {
+    this.myHttpService.fooflyPlayTrack(track);
+  }
+
+  playTracks(){
+    this.myHttpService.fooflyPlayTracks(this.tracks);
+    this.cancel(false);
   }
 
 }

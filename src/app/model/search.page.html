@@ -45,7 +45,7 @@
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.fileUrl == playFileUrl" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons slot="end" *ngIf="item.fileUrl != playFileUrl" >
-            <ion-button (click)="playTrack(item.idx);" color="danger">
+            <ion-button (click)="playTrack(item);" color="danger">
               <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon> 
             </ion-button>
          </ion-buttons>
