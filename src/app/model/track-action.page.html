@@ -4,8 +4,8 @@
          <img src="{{coverImg}}" class="header-img" />
       </div>
       <div class="header-title-box">
-         <span class="track-title">{{track.track}}</span><br>
-         <div>
+         <div class="track-title">{{track.track}}</div>
+         <div class="track-subtitle">
             <span class="track-audioType">{{track.audioType}}</span>
             <span class="track-sampleRate">{{track.sampleRate}}</span>
             <span class="track-artist">{{track.artist}} - {{track.album}}</span>
@@ -18,8 +18,8 @@
          <ion-item button detail="false" *ngFor="let item of playlists,let i = index" (click)="add(item,i);">
             <div class="playlist-icon">
                <svg t="1567298877876" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" p-id="14020" xmlns:xlink="http://www.w3.org/1999/xlink" width="20"
-                  height="20">
+                  xmlns="http://www.w3.org/2000/svg" p-id="14020" xmlns:xlink="http://www.w3.org/1999/xlink" width="25"
+                  height="25">
                   <defs>
                      <style type="text/css"></style>
                   </defs>

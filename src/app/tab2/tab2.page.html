@@ -78,8 +78,8 @@
               {{item.artist}}
             </div>
             <ion-buttons class="item-play-button">
-              <ion-button (click)="playTrack(item);" color="danger">
-                <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon>
+              <ion-button (click)="playFolder(item);" color="danger">
+                <ion-icon name="logo-youtube"></ion-icon>
               </ion-button>
             </ion-buttons>
           </div>
@@ -103,6 +103,11 @@
             <div class="item-subtitle">
               {{item.artist}}
             </div>
+            <ion-buttons class="item-play-button">
+              <ion-button (click)="playAlbum(item);" color="danger">
+                <ion-icon name="logo-youtube"></ion-icon>
+              </ion-button>
+            </ion-buttons>
           </div>
         </li>
       </ul>
@@ -123,6 +128,11 @@
             <div class="item-subtitle">
               {{item.count}} {{'tab2.tracks' | translate}}
             </div>
+            <ion-buttons class="item-play-button">
+              <ion-button (click)="playArtist(item);" color="danger">
+                <ion-icon name="logo-youtube"></ion-icon>
+              </ion-button>
+            </ion-buttons>
           </div>
         </li>
       </ul>

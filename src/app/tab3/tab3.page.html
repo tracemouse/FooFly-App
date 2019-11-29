@@ -1,17 +1,26 @@
 <ion-header mode="ios">
-  <ion-toolbar  class="header-toolbar">
+  <ion-toolbar class="header-toolbar">
     <div class="header-title">{{'tab3.header' | translate}}</div>
     <ion-buttons slot="end">
       <ion-button (click)="refresh()" color="danger">
-         <!-- <ion-icon name="ios-refresh-circle"></ion-icon>  -->
-         <!-- <img src="assets/svg/refresh.svg"/> -->
-         <svg t="1567300353460" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="36803" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22"><defs><style type="text/css"></style></defs><path d="M827.5 830.3c-176.1 173.8-459.6 171.8-633.3-4.4-173.7-176.2-171.7-460 4.4-633.7 176.1-173.8 459.6-171.8 633.3 4.4 173.6 176.1 171.7 459.9-4.4 633.7zM513.1 276c-36.4 0-70.7 8.5-101.4 23.3l15.2-36.1-43.5-18.3-54.8 130.4 5.5 2.3-1.2 3.9 37.3 11.3 1.9 0.8 0.1-0.2 16.2 4.9v4.8c1.1-1.3 2.4-2.5 3.6-3.7l76.3 23.2 13.7-45.1-43.6-13.2c22.4-11.4 47.6-18.1 74.5-18.1 91.2 0 165.1 74 165.1 165.2 0 91.2-73.9 165.2-165.1 165.2-83.1 0-151.6-61.5-163.2-141.4h-70.6C291 654 391.2 746.8 513.1 746.8c129.9 0 235.2-105.4 235.2-235.4C748.3 381.3 643 276 513.1 276z" fill="#ef4b4b" p-id="36804"></path></svg>
+        <!-- <ion-icon name="ios-refresh-circle"></ion-icon>  -->
+        <!-- <img src="assets/svg/refresh.svg"/> -->
+        <svg t="1567300353460" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+          p-id="36803" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22">
+          <defs>
+            <style type="text/css"></style>
+          </defs>
+          <path
+            d="M827.5 830.3c-176.1 173.8-459.6 171.8-633.3-4.4-173.7-176.2-171.7-460 4.4-633.7 176.1-173.8 459.6-171.8 633.3 4.4 173.6 176.1 171.7 459.9-4.4 633.7zM513.1 276c-36.4 0-70.7 8.5-101.4 23.3l15.2-36.1-43.5-18.3-54.8 130.4 5.5 2.3-1.2 3.9 37.3 11.3 1.9 0.8 0.1-0.2 16.2 4.9v4.8c1.1-1.3 2.4-2.5 3.6-3.7l76.3 23.2 13.7-45.1-43.6-13.2c22.4-11.4 47.6-18.1 74.5-18.1 91.2 0 165.1 74 165.1 165.2 0 91.2-73.9 165.2-165.1 165.2-83.1 0-151.6-61.5-163.2-141.4h-70.6C291 654 391.2 746.8 513.1 746.8c129.9 0 235.2-105.4 235.2-235.4C748.3 381.3 643 276 513.1 276z"
+            fill="#ef4b4b" p-id="36804"></path>
+        </svg>
       </ion-button>
-   </ion-buttons>
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar class="search-bar">
-    <ion-searchbar mode="ios" (ionChange)="handleSbInput($event)" (keyup)="sbKeyup($event)" id="sb-playlist" placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
- </ion-toolbar>
+    <ion-searchbar mode="ios" (ionChange)="handleSbInput($event)" (keyup)="sbKeyup($event)" id="sb-playlist"
+      placeholder="{{'common.search-placeholder' | translate}}"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -20,15 +29,26 @@
   </ion-refresher> -->
 
   <ion-list class="list-1" lines="none" id="il-playlist">
-      <ion-item button detail="false" *ngFor="let item of playlists,let i = index" (click)="showTracks(i);">
-          <!-- <ion-icon name="list-box" item-start color="danger"></ion-icon> -->
-          <!-- <img src="assets/svg/playlist.svg" class="playlist-icon"/> -->
-          <div class="playlist-icon">
-            <svg t="1567298877876" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14020" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><defs><style type="text/css"></style></defs><path d="M838.99432863 162.40722482l-186.33127437 38.02037807c-13.51137403 2.82796201-23.25213204 14.61113702-23.25213205 28.43672906v412.09690783c0 23.09502305-15.86800901 43.20497508-38.49170507 48.54668107L534.04575904 702.86218588c-34.24976206 8.01255901-61.27251012 37.39194207-61.42961915 72.58435814-0.31421799 48.07535409 44.30473808 83.58198817 90.96611119 72.74146715l29.85071007-6.91279599c48.70379009-11.31184801 83.26777017-53.73127811 85.62440516-103.22061322h0.47132701v-372.34833075c0-10.84052103 7.69834101-20.26706103 18.38175304-22.46658704l150.35331329-30.63625506c10.84052103-2.19952601 18.69597103-11.78317502 18.69597104-22.93791404v-104.47748521c0.15710901-14.76824603-13.35426503-25.76587604-27.96540206-22.78080504zM166.72491631 255.88708001h375.96183773v33.14999904H166.72491631zM166.72491631 387.38731327h375.96183773v33.14999905H166.72491631z" fill="#ef4b4b" p-id="14021"></path><path d="M166.72491631 518.88754654h375.96183773V552.03754558H166.72491631zM166.72491631 650.3877798h202.98482839v33.14999904H166.72491631z" fill="#ef4b4b" p-id="14022"></path></svg>
-          </div>
-          <ion-label class="item-title">{{item.name}}</ion-label>
-          <ion-note slot="end"><span class="item-count">{{item.count}}</span></ion-note>
-        </ion-item>
+    <ion-item button detail="false" *ngFor="let item of playlists,let i = index" (click)="showTracks(i);">
+      <!-- <ion-icon name="list-box" item-start color="danger"></ion-icon> -->
+      <!-- <img src="assets/svg/playlist.svg" class="playlist-icon"/> -->
+      <div class="playlist-icon">
+        <svg t="1567298877876" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+          p-id="14020" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25">
+          <defs>
+            <style type="text/css"></style>
+          </defs>
+          <path
+            d="M838.99432863 162.40722482l-186.33127437 38.02037807c-13.51137403 2.82796201-23.25213204 14.61113702-23.25213205 28.43672906v412.09690783c0 23.09502305-15.86800901 43.20497508-38.49170507 48.54668107L534.04575904 702.86218588c-34.24976206 8.01255901-61.27251012 37.39194207-61.42961915 72.58435814-0.31421799 48.07535409 44.30473808 83.58198817 90.96611119 72.74146715l29.85071007-6.91279599c48.70379009-11.31184801 83.26777017-53.73127811 85.62440516-103.22061322h0.47132701v-372.34833075c0-10.84052103 7.69834101-20.26706103 18.38175304-22.46658704l150.35331329-30.63625506c10.84052103-2.19952601 18.69597103-11.78317502 18.69597104-22.93791404v-104.47748521c0.15710901-14.76824603-13.35426503-25.76587604-27.96540206-22.78080504zM166.72491631 255.88708001h375.96183773v33.14999904H166.72491631zM166.72491631 387.38731327h375.96183773v33.14999905H166.72491631z"
+            fill="#ef4b4b" p-id="14021"></path>
+          <path
+            d="M166.72491631 518.88754654h375.96183773V552.03754558H166.72491631zM166.72491631 650.3877798h202.98482839v33.14999904H166.72491631z"
+            fill="#ef4b4b" p-id="14022"></path>
+        </svg>
+      </div>
+      <ion-label class="item-title">{{item.name}}</ion-label>
+      <ion-note slot="end"><span class="item-count">{{item.count}}</span></ion-note>
+    </ion-item>
   </ion-list>
 
 </ion-content>

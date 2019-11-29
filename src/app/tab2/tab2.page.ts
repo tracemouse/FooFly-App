@@ -631,4 +631,52 @@ export class Tab2Page {
 
     event.target.blur();
   }
+
+  async playFolder(item:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+
+    var tracks = [];
+    if(item!=null){
+      tracks = this.tracksByfolder.slice(item.start, item.start + item.count);
+    }
+
+    if(tracks == null || tracks.length <= 0){
+      return;
+    }
+
+    this.myHttpService.fooflyPlayTracks(tracks);
+  }
+
+  async playAlbum(item:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    var tracks = [];
+    if(item!=null){
+      tracks = this.tracksByAlbum.slice(item.start, item.start + item.count);
+    }
+
+    if(tracks == null || tracks.length <= 0){
+      return;
+    }
+
+    this.myHttpService.fooflyPlayTracks(tracks);
+  }
+
+  async playArtist(item:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    var tracks = [];
+    if(item!=null){
+      tracks = this.tracksByArtist.slice(item.start, item.start + item.count);
+    }
+
+    if(tracks == null || tracks.length <= 0){
+      return;
+    }
+
+    this.myHttpService.fooflyPlayTracks(tracks);
+  }
 }

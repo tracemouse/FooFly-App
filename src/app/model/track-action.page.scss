@@ -22,17 +22,25 @@ ion-content{
 }
 
 .header-title-box{
-  margin-left: 5px;
+  margin-left: 8px;
+  // height: 50px;
+  // line-height: 50px;
+  display:inline-block;
+
 }
 
 .track-title{
+    margin-top: 5px;
     color: #333;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 400;
     word-break: break-all;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+.track-subtitle{
+  margin-top: 3px;
 }
 
 .track-artist{
@@ -71,7 +79,8 @@ ion-content{
 }
  
 .item-title{
-  font-size: 0.9rem;
+  font-size: 1rem;
+  color: #333;
 }
 
 .playlist-box{
@@ -90,7 +99,7 @@ ion-content{
 
 .playlist-icon{
   margin-right: 8px;
-  margin-top: 2px;
+  margin-top: 5px;
   margin-left: 5px;
 }
 
@@ -113,7 +122,7 @@ ion-content{
   .cancel-button{
     display:inline-block;
     width: 100%;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     background: #e5e5e5;
     border-radius: 5px;
     text-align: center;
@@ -125,6 +134,6 @@ ion-content{
 }
 
 .ul-box{
-  height: calc(500px - 100px - 60px);
+  height: calc(500px - 100px - 65px);
   overflow: auto;
 }
