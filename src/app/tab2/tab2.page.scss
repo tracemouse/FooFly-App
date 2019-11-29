@@ -67,6 +67,7 @@ ion-item{
   background-color: #fff;
   border-radius: 4px;
   padding-bottom: 15px;
+  position: relative;
 }
 
 .item-img{
@@ -132,6 +133,7 @@ ion-item{
 
 .item-play-button{
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 8px;
+  right: 3px;
+  font-size: 12px;
 }
