@@ -38,8 +38,12 @@ ion-content{
 .track-seq{
   /*width: 30px !important;*/
   margin: 0 auto;
-  margin-right: 10px;
-  font-size: 0.6 rem;
+  // margin-right: 10px;
+  min-width: 30px;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.4);
+  margin-right: 3px;
+  text-align: center;
 }
 
 .track-playbutton{
@@ -49,13 +53,14 @@ ion-content{
 }
 
 .track-isPlaying{
-  margin-right: 10px !important;
+  // margin-right: 10px !important;
+  font-size: 15px;
   margin: 0 auto; 
 }
 
 .track-title{
   color: #333;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
   word-break: break-all;
   white-space: normal;

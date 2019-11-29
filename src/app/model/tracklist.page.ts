@@ -214,6 +214,7 @@ export class TracklistPage implements OnInit {
       backdropDismiss: true,
       enterAnimation: playlistEnterAnimation,
       leaveAnimation: playlistLeaveAnimation,
+      cssClass: "halfModal",
       componentProps: {
         'input':input
       }

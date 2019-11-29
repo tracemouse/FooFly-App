@@ -112,8 +112,11 @@ export function playlistEnterAnimation(AnimationC: Animation, baseEl: HTMLElemen
   const wrapperAnimation = new AnimationC();
   wrapperAnimation.addElement(baseEl.querySelector('.modal-wrapper'));
 
+  // wrapperAnimation.beforeStyles({ 'opacity': 1 })
+  //     .fromTo('translateY', '100%', `${window.innerHeight/2}px`);
+
   wrapperAnimation.beforeStyles({ 'opacity': 1 })
-      .fromTo('translateY', '100%', `${window.innerHeight/2}px`);
+  .fromTo('translateY', '100%', `${window.innerHeight - 500}px`);
 
   backdropAnimation.fromTo('opacity', 0.01, 0.4);
 
@@ -139,8 +142,11 @@ export function playlistLeaveAnimation(AnimationC: Animation, baseEl: HTMLElemen
   wrapperAnimation.addElement(wrapperEl);
   const wrapperElRect = wrapperEl!.getBoundingClientRect();
 
+  // wrapperAnimation.beforeStyles({ 'opacity': 1 })
+  //                 .fromTo('translateY', `${window.innerHeight/2}px`, `${window.innerHeight}px`);
+
   wrapperAnimation.beforeStyles({ 'opacity': 1 })
-                  .fromTo('translateY', `${window.innerHeight/2}px`, `${window.innerHeight}px`);
+    .fromTo('translateY', `${window.innerHeight - 500}px`, `${window.innerHeight}px`);
 
   backdropAnimation.fromTo('opacity', 0.4, 0.0);
 

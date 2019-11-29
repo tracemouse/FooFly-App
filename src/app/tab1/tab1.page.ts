@@ -8,6 +8,11 @@ import { NowplayingPage } from "../model/nowplaying.page";
 import { MyHttpService} from "../my-http.service"; 
 import { AppConfig } from '../app.config';
 
+import { TrackActionPage } from "../model/track-action.page";
+
+import { playlistEnterAnimation } from "../modal-transitions";
+import { playlistLeaveAnimation } from "../modal-transitions";
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -408,4 +413,24 @@ export class Tab1Page {
     return per / 100;
   }
 
+  async trackAction(track:any, idx:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    let input = {
+      'track':track
+    };
+    const modal = await this.modalController.create({
+      component: TrackActionPage,
+      backdropDismiss: true,
+      cssClass: "halfModal",
+      enterAnimation: playlistEnterAnimation,
+      leaveAnimation: playlistLeaveAnimation,
+      componentProps: {
+        'input':input
+      }
+    });
+
+    return await modal.present();
+  }
 }

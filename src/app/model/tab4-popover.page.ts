@@ -72,6 +72,7 @@ export class Tab4PopoverPage implements OnInit {
       const modalShutdown = await this.modalController.create({
       component: ShutdownPage,
       backdropDismiss: true,
+      cssClass: "halfModal",
       enterAnimation: popEnterAnimation,
       leaveAnimation: popLeaveAnimation
     });
