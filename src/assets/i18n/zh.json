@@ -91,6 +91,10 @@
         "button-text": "登录",
         "password-placeholder":""
     },
+    "trackAction":{
+        "addToPlaylist":"添加到播放列表",
+        "cancel":"取消"
+    },
     "message": {
         "ok": "确认",
         "cancel": "取消",
@@ -109,6 +113,5 @@
         "err-conn-fail-msg": "请检查Foobar2000是否开启和IP、端口是否正确",
         "err-conn-fail-msg1": "可能是因为socket连接被断开了，请点击右边的关闭按钮重试",
         "err-update-fail": "获取版本信息失败，请稍后再试"
-
     }
 }

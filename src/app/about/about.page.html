@@ -2,15 +2,10 @@
     <ion-toolbar class="header-toolbar">
         <ion-title></ion-title>
         <ion-buttons slot="start">
-           <ion-button [routerLink]="['/tabs/tab4']" color="danger">
+           <ion-button (click)="back()" color="danger">
               <ion-icon name="ios-arrow-back"></ion-icon> 
            </ion-button>
         </ion-buttons>
-          <!--
-          <ion-buttons slot="start">
-              <ion-back-button>s</ion-back-button>
-          </ion-buttons>
-        -->
     </ion-toolbar>
   </ion-header>
 

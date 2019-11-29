@@ -38,7 +38,7 @@
 
 <ion-content>
    <ion-list class="list-2" lines="none" id="il-track-12345">
-      <ion-item *ngFor="let item of showTracks,let i = index" lines="none">
+      <ion-item button detail="false" (click)="playTrack(item);" *ngFor="let item of showTracks,let i = index" lines="none">
          <div item-start class="track-seq" *ngIf="(showTrackSeq)">{{(i + 1)}}</div>
          <ion-label>
             <span class="track-title">{{item.track}}</span><br>
@@ -49,9 +49,15 @@
             </div>
          </ion-label>
          <ion-icon name="volume-high" *ngIf="item.fileUrl == playFileUrl" color="warning" class="track-isPlaying"></ion-icon>
-         <ion-buttons item-end *ngIf="item.fileUrl != playFileUrl" >
+         <!-- <ion-buttons item-end *ngIf="item.fileUrl != playFileUrl" >
                <ion-button (click)="playTrack(item);" color="danger">
                  <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon> 
+               </ion-button>
+         </ion-buttons> -->
+         <ion-buttons slot="end">
+               <ion-button (click)="trackAction(item,i);" color="danger">
+                 <!-- <ion-icon name="more" class="track-playbutton"></ion-icon>  -->
+                 <svg t="1574989236163" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8818" width="28" height="28"><path d="M490.666667 384C526.012885 384 554.666667 355.346347 554.666667 320 554.666667 284.653653 526.012885 256 490.666667 256 455.320448 256 426.666667 284.653653 426.666667 320 426.666667 355.346347 455.320448 384 490.666667 384ZM490.666667 618.666667C526.012885 618.666667 554.666667 590.013013 554.666667 554.666667 554.666667 519.32032 526.012885 490.666667 490.666667 490.666667 455.320448 490.666667 426.666667 519.32032 426.666667 554.666667 426.666667 590.013013 455.320448 618.666667 490.666667 618.666667ZM490.666667 853.333333C526.012885 853.333333 554.666667 824.67968 554.666667 789.333333 554.666667 753.986987 526.012885 725.333333 490.666667 725.333333 455.320448 725.333333 426.666667 753.986987 426.666667 789.333333 426.666667 824.67968 455.320448 853.333333 490.666667 853.333333Z" p-id="8819" fill="#d81e06"></path></svg>
                </ion-button>
          </ion-buttons>
       </ion-item>

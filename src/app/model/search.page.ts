@@ -5,6 +5,11 @@ import { MyDBService}  from "../my-db.service";
 import { MyHttpService} from "../my-http.service";
 import { AppConfig } from '../app.config';
 
+import { TrackActionPage } from "./track-action.page";
+
+import { playlistEnterAnimation } from "../modal-transitions";
+import { playlistLeaveAnimation } from "../modal-transitions";
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.page.html',
@@ -107,28 +112,10 @@ export class SearchPage implements OnInit {
         let fileUrl = track.fileUrl;
         let index = fileUrl.lastIndexOf(".");
         track['audioType'] = fileUrl.substr(index + 1).toUpperCase();
+        track['isPlaying'] = false;
         this.tracks.push(track);
       }
     });
-
-    // var mydata = {"action":"librarySearch", "query":query};
-    // this.wsService.callMB(mydata,null,true).subscribe(
-    //   data=>{
-    //       // console.log(data);
-    //       if(!data.isSucc){
-    //         return;
-    //       }
-    //       this.tracks = data;
-    //       var len = this.tracks.length;
-    //       for(var i=0; i<len; i++){
-    //         var fileUrl = this.tracks[i].fileUrl;
-    //         var index = fileUrl.lastIndexOf(".");
-    //         this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-    //       }
-    //     },
-    //     err=>{
-    //       this.cancel(true);
-    //     });    
   }
 
   cancel(error:any) {
@@ -139,7 +126,8 @@ export class SearchPage implements OnInit {
     });
   }
 
-  playTrack(track:any) {
+  playTrack(track:any, idx:any) {
+    this.tracks[idx].isPlaying = true;
     this.myHttpService.fooflyPlayTrack(track);
   }
 
@@ -148,4 +136,23 @@ export class SearchPage implements OnInit {
     this.cancel(false);
   }
 
+  async trackAction(track:any, idx:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    let input = {
+      'track':track
+    };
+    const modal = await this.modalController.create({
+      component: TrackActionPage,
+      backdropDismiss: true,
+      enterAnimation: playlistEnterAnimation,
+      leaveAnimation: playlistLeaveAnimation,
+      componentProps: {
+        'input':input
+      }
+    });
+
+    return await modal.present();
+  }
 }

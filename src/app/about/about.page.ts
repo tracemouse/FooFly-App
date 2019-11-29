@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService }from "@ngx-translate/core";
-import { AlertController  } from '@ionic/angular';
+import { AlertController,NavController  } from '@ionic/angular';
 
 import { AppConfig} from "../app.config";
 
@@ -22,6 +22,7 @@ export class AboutPage implements OnInit {
 
   constructor(public httpClient:HttpClient,
               public alertController: AlertController,
+              public navController:NavController,
               public translateService: TranslateService) { }
 
   ngOnInit() {
@@ -52,31 +53,6 @@ export class AboutPage implements OnInit {
           this.presentAlert(this.message.info,'',this.message['info-update-msg5'],this.message.ok);
           return;
         }
-
-        // if(this.versionApp == versionApp && this.versionPlugin == versionPlugin){
-        //   this.presentAlert(this.message.info,'',this.message['info-update-msg1'],this.message.ok);
-        //   return;
-        // }
-        // if(this.versionApp == versionApp && this.versionPlugin != versionPlugin){
-        //   this.presentAlert(this.message.info,'',this.message['info-update-msg6'],this.message.ok);
-        //   return;
-        // }
-        // if(this.versionApp != versionApp && this.versionPlugin == versionPlugin){
-        //   if(window.location.hostname == this.officalSite){
-        //     this.presentAlert(this.message.info,'',this.message['info-update-msg4'],this.message.ok,this.reload);
-        //   }else{
-        //     this.presentAlert(this.message.info,'',this.message['info-update-msg5'],this.message.ok);
-        //   }
-        //   return;
-        // }
-        // if(this.versionApp != versionApp && this.versionPlugin != versionPlugin){
-        //   if(window.location.hostname == this.officalSite){
-        //     this.presentAlert(this.message.info,'',this.message['info-update-msg3'],this.message.ok,this.reload);
-        //   }else{
-        //     this.presentAlert(this.message.info,'',this.message['info-update-msg2'],this.message.ok);
-        //   }
-        //   return;
-        // }
       },
       error=>{
         this.reading = false;
@@ -107,6 +83,10 @@ export class AboutPage implements OnInit {
 
   reload(){
     window.location.reload();
+  }
+
+  back(){
+    this.navController.back();
   }
  
 }

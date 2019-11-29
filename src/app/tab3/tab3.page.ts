@@ -21,7 +21,7 @@ export class Tab3Page {
   loadingDuration = AppConfig.settings.timeout * 60 * 1000;
   loading:any;
 
-  public playlists = [];
+  playlists = [];
 
   constructor(
               public myHttpService: MyHttpService,
@@ -74,21 +74,6 @@ export class Tab3Page {
   }
 
   async showTracks(idx:any) {
-    // await this.initLoading();
-    // await this.loading.present();
-
-    // console.log(item);
-    // var mydata = {"action":"playlistTracklist","playlistUrl":item.playlistUrl};
-    // this.wsService.callMB(mydata).subscribe(
-    //   data=>{
-    //     this.loading.dismiss();
-    //     // console.log(data);
-    //     if(!data.isSucc){
-    //       return;
-    //     }
-    //     this.showTracksPage(data,item);
-    //   }
-    // );
 
     this.myHttpService.SwithPlaylist(idx).then(
       (data:any) => {

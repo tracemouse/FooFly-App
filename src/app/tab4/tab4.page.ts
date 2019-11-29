@@ -141,66 +141,7 @@ export class Tab4Page {
     });
     return await popover.present();
 
-    // const modalShutdown = await this.modalController.create({
-    //   component: ShutdownPage,
-    //   backdropDismiss: false,
-    //   enterAnimation: popEnterAnimation,
-    //   leaveAnimation: popLeaveAnimation
-    // });
-    // await modalShutdown.present();
-    // return;
   }
-
-  // async more() {
-  //   var more = "";
-  //   var closescreen="";
-  //   var shutdown30 = "";
-  //   var shutdown60 = "";
-  //   var shutdown0 = "";
-  //   await this.translateService.get("tab4").subscribe(value=>{
-  //     more = value.more;
-  //     closescreen = value.closescreen;
-  //     shutdown0 = value.shutdown0;
-  //     shutdown30 = value.shutdown30;
-  //     shutdown60 = value.shutdown60;
-  //   });
-
-  //   const actionSheet = await this.actionSheetController.create({
-  //     header: more,
-  //     buttons: [{
-  //       text: closescreen,
-  //       icon: '',
-  //       handler: () => {
-  //         this.closeScreen();
-  //       }
-  //     }, {
-  //       text: shutdown0,
-  //       icon: '',
-  //       handler: () => {
-  //         this.shutdown(0);
-  //       }
-  //     },{
-  //       text: shutdown30,
-  //       icon: '',
-  //       handler: () => {
-  //         this.shutdown(30);
-  //       }
-  //     }, {
-  //       text: shutdown60,
-  //       icon: '',
-  //       handler: () => {
-  //         this.shutdown(60);
-  //       }
-  //     }, {
-  //       text: 'Cancel',
-  //       icon: '',
-  //       role: 'cancel',
-  //       handler: () => {
-  //       }
-  //     }]
-  //   });
-  //   await actionSheet.present();
-  // }
 
   setAnimation(event: any) {
     AppConfig.settings.animation = (this.animation) ? "true" : "false";

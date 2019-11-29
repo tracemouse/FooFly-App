@@ -23,6 +23,7 @@ import { NowplayingPage } from "./model/nowplaying.page";
 import { SettingPage } from "./model/setting.page";
 import { ShutdownPage } from "./model/shutdown.page";
 import { Tab4PopoverPage } from "./model/tab4-popover.page";
+import { TrackActionPage } from "./model/track-action.page";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/' ,'.json');
@@ -31,13 +32,14 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [AppComponent,
                 TracklistPage,
+                TrackActionPage,
                 SearchPage,
                 NowplayingPage,
                 SettingPage,
                 ShutdownPage,
                 Tab4PopoverPage
   ],
-  entryComponents: [TracklistPage,SearchPage,NowplayingPage,SettingPage,ShutdownPage,Tab4PopoverPage],
+  entryComponents: [TracklistPage,SearchPage,NowplayingPage,SettingPage,ShutdownPage,Tab4PopoverPage,TrackActionPage],
   // imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   imports: [BrowserModule, 
             IonicModule.forRoot({

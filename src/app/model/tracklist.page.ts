@@ -3,8 +3,10 @@ import { ModalController, NavParams,IonInfiniteScroll  } from '@ionic/angular';
 
 import { AppConfig} from "../app.config";
 import { MyHttpService} from "../my-http.service";
-// import { ThrowStmt } from '@angular/compiler';
-// import { WebsocketService} from "../websocket.service"; 
+import { TrackActionPage } from "./track-action.page";
+
+import { playlistEnterAnimation } from "../modal-transitions";
+import { playlistLeaveAnimation } from "../modal-transitions";
 
 @Component({
   selector: 'app-tracklist',
@@ -63,10 +65,8 @@ export class TracklistPage implements OnInit {
       this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
     }
     
-    // console.log(this.tracks);
     this.coverImg = this.defaultImg;
-    // this.coverImg = this.fileUrl;
-    // console.log(this.input.type);
+
     switch(this.input.type){
       // case 'folder':
       //     this.coverImg = this.folderImg;
@@ -86,23 +86,6 @@ export class TracklistPage implements OnInit {
           this.coverImg = imgUrl;
           break;
     }
-    
-
-    // var mydata = {"action":"getLibArtwork", "fileUrl":this.fileUrl,"pushData":""};
-    // this.wsService.callMB(mydata,null,true).subscribe(
-    //   data=>{
-    //       this.pushImg(data.img);
-    //   },
-    //   err=>{
-    //     this.cancel(true);
-    //   }
-    // );
-
-    // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-    // imgUrl += "?fileUrl=" + encodeURI(this.fileUrl);
-    // this.coverImg = imgUrl;
-
-
   }
 
   pushImg(img:any){
@@ -176,7 +159,7 @@ export class TracklistPage implements OnInit {
     this.infiniteScroll.nativeElement.disabled = true;
  
     this.showTracks = this.tracks.filter((item,index)=>{
-      var str = (index + 1) + item.trackTitle + item.audioType + item.artist + item.album + item.sampleRate;
+      var str =  item.track + " " + item.audioType + " " + item.artist + " " + item.album;
       // console.log(str);
       if(str.toLowerCase().indexOf(query) > -1){
         return item;
@@ -217,5 +200,25 @@ export class TracklistPage implements OnInit {
       }
     )
 
+  }
+
+  async trackAction(track:any, idx:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    let input = {
+      'track':track
+    };
+    const modal = await this.modalController.create({
+      component: TrackActionPage,
+      backdropDismiss: true,
+      enterAnimation: playlistEnterAnimation,
+      leaveAnimation: playlistLeaveAnimation,
+      componentProps: {
+        'input':input
+      }
+    });
+
+    return await modal.present();
   }
 }
