@@ -36,6 +36,8 @@ export class TracklistPage implements OnInit {
   totalPages = 1;
   headerTitle = "";
 
+  isPlayingIdx = null;
+
   constructor(public modalController: ModalController,
               public navParams: NavParams,
               public myHttpService: MyHttpService) 
@@ -101,21 +103,28 @@ export class TracklistPage implements OnInit {
     });
   }
 
-  async playTrack(track:any) {
+  async playTrack(track:any,i:any) {
+    if(this.isPlayingIdx != i) {
+      if(this.isPlayingIdx != null){
+        this.tracks[this.isPlayingIdx]["isPlaying"] = false;
+      }
+      this.tracks[i]["isPlaying"] = true;
+      this.isPlayingIdx = i;
+    }
+
     let idx = track.idx;
     if(this.input.type == "playlist"){
       this.playPlaylist(idx);
     }else{
       this.myHttpService.fooflyPlayTrack(track);
     }
-
   }
 
   async playPlaylist(idx:any){
     this.myHttpService.SwithPlaylist(this.playlistIdx).then(
       data =>{
         this.myHttpService.PlayTrack(idx);
-        this.cancel(false);
+        // this.cancel(false);
       }
     );
   }

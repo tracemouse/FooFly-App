@@ -92,6 +92,10 @@
         "button-text": "Login",
         "password-placeholder":""
     },
+    "trackAction":{
+        "addToPlaylist":"Add to playlist",
+        "cancel":"Cancel"
+    },
     "message": {
         "ok": "OK",
         "cancel": "Cancel",

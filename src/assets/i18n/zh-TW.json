@@ -92,6 +92,10 @@
         "button-text": "登錄",
         "password-placeholder":"如未設置密碼請留空"
     },
+    "trackAction":{
+        "addToPlaylist":"添加到播放列表",
+        "cancel":"取消"
+    },
     "message": {
         "ok": "確認",
         "cancel": "取消",

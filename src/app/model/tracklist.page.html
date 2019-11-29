@@ -39,9 +39,13 @@
 
 <ion-content>
    <ion-list class="list-2" lines="none" id="il-track-12345">
-      <ion-item button detail="false" (click)="playTrack(item);" *ngFor="let item of showTracks,let i = index"
+      <ion-item button detail="false" (click)="playTrack(item,i);" *ngFor="let item of showTracks,let i = index"
          lines="none">
-         <div item-start class="track-seq" *ngIf="(showTrackSeq)">{{(i + 1)}}</div>
+         <!-- <div item-start class="track-seq" *ngIf="(showTrackSeq)">{{(i + 1)}}</div> -->
+         <div item-start class="track-seq" *ngIf="(showTrackSeq)">
+            <span *ngIf="!item.isPlaying">{{(i + 1)}}</span>
+            <ion-icon name="volume-high" *ngIf="item.isPlaying" color="warning" class="track-isPlaying"></ion-icon>
+         </div>         
          <ion-label>
             <span class="track-title">{{item.track}}</span><br>
             <div>

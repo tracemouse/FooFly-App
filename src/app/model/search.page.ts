@@ -30,6 +30,8 @@ export class SearchPage implements OnInit {
 
   showTrackSeq = false;
 
+  isPlayingIdx = null;
+
   constructor(public modalController: ModalController,
               public navParams: NavParams,
               public myHttpService: MyHttpService,
@@ -126,8 +128,15 @@ export class SearchPage implements OnInit {
     });
   }
 
-  playTrack(track:any, idx:any) {
-    this.tracks[idx].isPlaying = true;
+  playTrack(track:any, i:any) {
+    if(this.isPlayingIdx != i) {
+      if(this.isPlayingIdx != null){
+        this.tracks[this.isPlayingIdx]["isPlaying"] = false;
+      }
+      this.tracks[i]["isPlaying"] = true;
+      this.isPlayingIdx = i;
+    }
+
     this.myHttpService.fooflyPlayTrack(track);
   }
 
