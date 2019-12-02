@@ -15,14 +15,19 @@ ion-content{
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 5px;
+
+  ion-button{
+    --border-radius: 12px;
+  }
 }
 
 .result-header-title{
   position: absolute;
   bottom: 8px;
   left: 0px;
-  font-size: 0.8rem;
-  color: rgba(0, 0, 0, 0.4);  
+  font-size: 1rem;
+  font-weight: 600;
+  // color: rgba(0, 0, 0, 0.4);  
 }
 
 .result-header-button{

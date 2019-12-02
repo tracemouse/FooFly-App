@@ -140,7 +140,7 @@ export class TracklistPage implements OnInit {
 
   handleSbInput(event:any) {
     // console.log(event);
-    console.log("search input=" + event.target.value);
+    // console.log("search input=" + event.target.value);
     const query = event.target.value.toLowerCase();
     requestAnimationFrame(() => {
       var items:any;
@@ -202,6 +202,7 @@ export class TracklistPage implements OnInit {
           let index = fileUrl.lastIndexOf(".");
           data.playlist[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
           data.playlist[i]['idx'] = i + (this.page - 1) * parseInt(data.playlistItemsPerPage);
+          data.playlist[i].sampleRate = this.myHttpService.formatSampleRate(data.playlist[i].sampleRate);
         }
         this.tracks = this.tracks.concat(data.playlist);
         this.showTracks = [...this.tracks];

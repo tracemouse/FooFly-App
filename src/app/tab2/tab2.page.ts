@@ -215,6 +215,7 @@ export class Tab2Page {
       let arr = fileUrl.split("\\");
       data.playlist[i]['folder'] = arr[arr.length - 2];
       data.playlist[i]['idx'] = i + (pageIdx - 1) * parseInt(data.playlistItemsPerPage);
+      data.playlist[i].sampleRate = this.myHttpService.formatSampleRate(data.playlist[i].sampleRate);
     }
     this.tracks = this.tracks.concat(data.playlist);
  

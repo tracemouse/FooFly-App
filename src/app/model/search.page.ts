@@ -108,7 +108,7 @@ export class SearchPage implements OnInit {
       if (
           (track.track.indexOf(query) > -1) ||
           (track.artist.indexOf(query) > -1 )  ||
-          (track.album.indexOf(query) > -1)
+          (track.album.indexOf(query) > -1) 
         ) 
       {
         let fileUrl = track.fileUrl;

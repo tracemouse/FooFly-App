@@ -308,6 +308,8 @@ export class Tab1Page {
         tracks[i]['isPlaying'] = false;
       }
 
+      tracks[i].sampleRate = this.myHttpService.formatSampleRate(tracks[i].sampleRate);
+
       let fileUrl = tracks[i].fileUrl;
       let index = fileUrl.lastIndexOf(".");
       tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();

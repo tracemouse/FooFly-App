@@ -81,6 +81,7 @@ export class Tab3Page {
         let len = data.playlist.length;
         for(let i=0; i<len;i++){
           data.playlist[i]['idx'] = i;
+          data.playlist[i].sampleRate = this.myHttpService.formatSampleRate(data.playlist[i].sampleRate);
         }
         let totalTracks = data.playlists[idx].count;
         let totalPages = Math.ceil(totalTracks / parseInt(data.playlistItemsPerPage));

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient  } from '@angular/common/http';
 import { NavController,ToastController } from '@ionic/angular';
 import { AppConfig } from './app.config';
-import { timeout } from 'rxjs/operators';
+import { timeout, sample } from 'rxjs/operators';
 import { TranslateService }from "@ngx-translate/core";
 import { ThrowStmt } from '@angular/compiler';
 
@@ -365,6 +365,59 @@ export class MyHttpService {
     var start = (new Date()).getTime();
     while ((new Date()).getTime() - start < delay) {
       continue;
+    }
+  }
+
+  public formatSampleRate(sampleRate:string){
+    if(sampleRate.length < 3) return sampleRate;
+    let str1 = this.left(sampleRate, sampleRate.length - 2);
+    let str2 = this.right(sampleRate,2);
+    if(str1.length < 4) return sampleRate;
+    if(str1.length < 7) {
+      try{
+        let int1 = parseInt(str1);
+        let float2 = int1 / 1000;
+        return float2.toFixed(1) + "K" + str2;
+      }catch(ex){
+        return sampleRate;
+      }
+    }else{
+      try{
+        let int1 = parseInt(str1);
+        let float2 = int1 / 1000 / 1000;
+        if(str1.length < 8){
+          return float2.toFixed(2) + "M" + str2;
+        }else{
+          return float2.toFixed(1) + "M" + str2;
+        }
+      }catch(ex){
+        return sampleRate;
+      }
+    }
+  }
+
+  public left(mainStr,lngLen){
+    if(lngLen>0){
+      return mainStr.substring(0,lngLen);
+    }
+    else{
+      return null;
+    }
+  }
+    
+  public right(mainStr,lngLen){
+    if(mainStr.length - lngLen >=0 && mainStr.length >=0 && mainStr.length-lngLen <= mainStr.length){
+    return  mainStr.substring(mainStr.length-lngLen,mainStr.length)
+    }else{
+      return null;
+    }
+  }
+
+  public mid(mainStr,starnum,endnum){
+    if(mainStr.length >= 0){
+      return mainStr.substr(starnum,endnum)
+    }else{
+      return null;
     }
   }
 }

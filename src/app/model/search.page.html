@@ -24,7 +24,7 @@
 
    <div class="result-header" *ngIf="(title != '')">
       <div class="result-header-button" *ngIf="(tracks.length > 0)">
-         <ion-button (click)="playTracks()" color="danger" size="small">
+         <ion-button (click)="playTracks()" color="danger" size="small" >
             <ion-icon slot="start" name="ios-play"></ion-icon>
             {{'common.playall' | translate}}
          </ion-button>
