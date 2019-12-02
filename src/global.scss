@@ -28,6 +28,8 @@
 
 .halfModal{
     .modal-wrapper{
-        border-radius: 10px !important;
+        border-top-left-radius: 10px !important;
+        border-top-right-radius: 10px !important;
+        border: 1px solid transparent;
     }
 }

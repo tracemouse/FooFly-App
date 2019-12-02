@@ -17,7 +17,8 @@ export class NowplayingPage {
   nowIdx = -1;
   nowFileUrl:any;
   title: string = "";
-  audioType = "";
+  audioType = "-";
+  sampleRate = "-";
   playState = "6";
   duration=100;
   audiobar=0;
@@ -91,6 +92,7 @@ export class NowplayingPage {
     this.playFileUrl = "";
 
     this.nowTrack = data.playing;
+    this.sampleRate = this.myHttpService.formatSampleRate(this.nowTrack.sampleRate);
 
     if(this.title != this.nowTrack.track){
       this.title = this.nowTrack.track;

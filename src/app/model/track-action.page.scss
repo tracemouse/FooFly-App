@@ -22,6 +22,7 @@ ion-content{
 }
 
 .header-title-box{
+  width: calc(100vw - 80px);
   margin-left: 8px;
   // height: 50px;
   // line-height: 50px;
@@ -30,25 +31,31 @@ ion-content{
 }
 
 .track-title{
-    margin-top: 2px;
+    margin-top: 1px;
     color: #333;
     font-size: 1.1rem;
-    font-weight: 400;
+    font-weight: 600;
     word-break: break-all;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 .track-subtitle{
-  margin-top: 3px;
+  margin-top: 2px;
+  color: rgba(0, 0, 0, 0.4);
+  // word-break: break-all;
+  // white-space: nowrap;
+  // text-overflow: ellipsis;
+  // overflow: hidden;
+  // margin-bottom: 1px;
 }
 
 .track-artist{
     font-size: 0.7rem;
     color: rgba(0, 0, 0, 0.4);
     word-break: break-all;
+    white-space: nowrap;
     text-overflow: ellipsis;
-    white-space: nowrap; 
     overflow: hidden;
 }
 

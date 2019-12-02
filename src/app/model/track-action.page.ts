@@ -43,6 +43,25 @@ export class TrackActionPage implements OnInit {
 
   }
   
+  ionViewWillEnter(){
+
+    //fix border radius bug of safari
+    // let obj = document.getElementsByTagName("ion-content")[1];
+    let obj = document.getElementById("trackActionIon");
+    let shadow = obj.shadowRoot;
+
+    const childNodes = Array.from(shadow.childNodes);
+
+    childNodes.forEach(childNode => {
+      if (childNode.nodeName.toLowerCase() === 'main') {
+        let obj1 = <HTMLElement>childNode;
+        // alert(obj.textContent);
+        obj1.style.backgroundColor = "transparent";
+      }
+    });
+
+  }
+
   cancel(error:any) {
     this.modalController.dismiss({
         // result: 'modal_cancel'
