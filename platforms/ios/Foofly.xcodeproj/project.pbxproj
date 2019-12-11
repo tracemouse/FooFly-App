@@ -22,10 +22,10 @@
 		BE214FDA685A4DCD9AD1A180 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0E9906EB0C24C5E89EF66D1 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2150170DD66748C8AB4AFC8F /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 474B769E413442A6ABD1ED0D /* CDVSplashScreen.m */; };
 		BCB89E8EE5654098AEFE8F4D /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBF970621D64A87B632B4E3 /* CDVViewController+SplashScreen.m */; };
-		4C1E9691B7D9444BAFE2CEA0 /* CDVStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E12E746264847CEA9D9C6C0 /* CDVStatusBar.m */; };
 		E0D67737F5EF4742BC920FCC /* SQLitePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = BC550792906444F3B8FFEE53 /* SQLitePlugin.m */; };
 		75ED5AC597FF436CB38817F2 /* PSPDFThreadSafeMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = F7DC157044E245008344B887 /* PSPDFThreadSafeMutableDictionary.m */; settings = {COMPILER_FLAGS = "-w"; }; };
 		D097E0DADDD342FEB650A256 /* sqlite3.c in Resources */ = {isa = PBXBuildFile; fileRef = 6CF6C8E8BB05456F9A5B6C5A /* sqlite3.c */; settings = {COMPILER_FLAGS = "-w -DSQLITE_THREADSAFE=1 -DSQLITE_DEFAULT_SYNCHRONOUS=3 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_OMIT_DECLTYPE -DSQLITE_OMIT_DEPRECATED -DSQLITE_OMIT_PROGRESS_CALLBACK -DSQLITE_OMIT_SHARED_CACHE -DSQLITE_TEMP_STORE=2 -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_RTREE -DSQLITE_DEFAULT_PAGE_SIZE=4096"; }; };
+		906D8FCA2A97485CA058A507 /* CDVStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 10532E63E1714181B39FEE94 /* CDVStatusBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,14 +90,14 @@
 		8DBF970621D64A87B632B4E3 /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		01E3C8F8D9344B5EBF4FC0A1 /* CDVSplashScreen.h */ = {isa = PBXFileReference; name = "CDVSplashScreen.h"; path = "cordova-plugin-splashscreen/CDVSplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		4B6E6EDA792E43018BBF7350 /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.h"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
-		1E12E746264847CEA9D9C6C0 /* CDVStatusBar.m */ = {isa = PBXFileReference; name = "CDVStatusBar.m"; path = "cordova-plugin-statusbar/CDVStatusBar.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		EE585772C36E48269DD9AEAF /* CDVStatusBar.h */ = {isa = PBXFileReference; name = "CDVStatusBar.h"; path = "cordova-plugin-statusbar/CDVStatusBar.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		BC550792906444F3B8FFEE53 /* SQLitePlugin.m */ = {isa = PBXFileReference; name = "SQLitePlugin.m"; path = "cordova-sqlite-storage/SQLitePlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		F7DC157044E245008344B887 /* PSPDFThreadSafeMutableDictionary.m */ = {isa = PBXFileReference; name = "PSPDFThreadSafeMutableDictionary.m"; path = "cordova-sqlite-storage/PSPDFThreadSafeMutableDictionary.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		6CF6C8E8BB05456F9A5B6C5A /* sqlite3.c */ = {isa = PBXFileReference; name = "sqlite3.c"; path = "cordova-sqlite-storage/sqlite3.c"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		964998A69CAE480281EED1A7 /* SQLitePlugin.h */ = {isa = PBXFileReference; name = "SQLitePlugin.h"; path = "cordova-sqlite-storage/SQLitePlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		9EA4B7B0523445B28C5D8BC8 /* PSPDFThreadSafeMutableDictionary.h */ = {isa = PBXFileReference; name = "PSPDFThreadSafeMutableDictionary.h"; path = "cordova-sqlite-storage/PSPDFThreadSafeMutableDictionary.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		DB452529968E499BA3AC8B18 /* sqlite3.h */ = {isa = PBXFileReference; name = "sqlite3.h"; path = "cordova-sqlite-storage/sqlite3.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		10532E63E1714181B39FEE94 /* CDVStatusBar.m */ = {isa = PBXFileReference; name = "CDVStatusBar.m"; path = "cordova-plugin-statusbar/CDVStatusBar.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		E1A0120EB6434EE2ABFCD09F /* CDVStatusBar.h */ = {isa = PBXFileReference; name = "CDVStatusBar.h"; path = "cordova-plugin-statusbar/CDVStatusBar.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,14 +220,14 @@
 				8DBF970621D64A87B632B4E3 /* CDVViewController+SplashScreen.m */,
 				01E3C8F8D9344B5EBF4FC0A1 /* CDVSplashScreen.h */,
 				4B6E6EDA792E43018BBF7350 /* CDVViewController+SplashScreen.h */,
-				1E12E746264847CEA9D9C6C0 /* CDVStatusBar.m */,
-				EE585772C36E48269DD9AEAF /* CDVStatusBar.h */,
 				BC550792906444F3B8FFEE53 /* SQLitePlugin.m */,
 				F7DC157044E245008344B887 /* PSPDFThreadSafeMutableDictionary.m */,
 				6CF6C8E8BB05456F9A5B6C5A /* sqlite3.c */,
 				964998A69CAE480281EED1A7 /* SQLitePlugin.h */,
 				9EA4B7B0523445B28C5D8BC8 /* PSPDFThreadSafeMutableDictionary.h */,
 				DB452529968E499BA3AC8B18 /* sqlite3.h */,
+				10532E63E1714181B39FEE94 /* CDVStatusBar.m */,
+				E1A0120EB6434EE2ABFCD09F /* CDVStatusBar.h */,
 			);
 			name = Plugins;
 			path = "Foofly/Plugins";
@@ -360,10 +360,10 @@
 				819C8428437947B9987078D8 /* IONAssetHandler.m in Sources */,
 				2150170DD66748C8AB4AFC8F /* CDVSplashScreen.m in Sources */,
 				BCB89E8EE5654098AEFE8F4D /* CDVViewController+SplashScreen.m in Sources */,
-				4C1E9691B7D9444BAFE2CEA0 /* CDVStatusBar.m in Sources */,
 				E0D67737F5EF4742BC920FCC /* SQLitePlugin.m in Sources */,
 				75ED5AC597FF436CB38817F2 /* PSPDFThreadSafeMutableDictionary.m in Sources */,
 				D097E0DADDD342FEB650A256 /* sqlite3.c in Resources */,
+				906D8FCA2A97485CA058A507 /* CDVStatusBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
