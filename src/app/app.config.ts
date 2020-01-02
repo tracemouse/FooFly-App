@@ -6,6 +6,7 @@ export class AppConfig {
   public static env = "prd";
   public static fooflyRoot = "/foofly/";
   public static fooflyOffical = "http://foofly.tracemouse.top/";
+  public static fooflyVersion = "https://raw.githubusercontent.com/tracemouse/FooFly/master/version.json";
 
   public static settings = {
     "versionPlugin":"",

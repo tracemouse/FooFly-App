@@ -39,7 +39,8 @@ export class AboutPage implements OnInit {
   async checkUpdate(){
 
     this.reading = true;
-    var url = AppConfig.fooflyOffical + "version.json";
+    // var url = AppConfig.fooflyOffical + "version.json";
+    var url = AppConfig.fooflyVersion;
     this.httpClient.get(url).subscribe(
       (version:any) =>{
         this.reading = false;
