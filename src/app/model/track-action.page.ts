@@ -73,7 +73,7 @@ export class TrackActionPage implements OnInit {
   add(item,i){
     this.myHttpService.SwithPlaylist(i).then(
       (data:any)=>{
-        this.myHttpService.addTracksToPlaylist(i, this.track.fileUrl);
+        this.myHttpService.addTrackToPlaylist(i, this.track);
         this.cancel(false);
       }
     );

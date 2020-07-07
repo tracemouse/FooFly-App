@@ -126,6 +126,11 @@ export class MyHttpService {
     return this.CallFoo(url);
   }
 
+  public SetMute(){
+    let url = "cmd=playControl&param1=mute";
+    return this.CallFoo(url);
+  }
+
   public SetRepeat(idx:any){
     let url = "cmd=playControl&param1=playbackOrder&param2=" + idx;
     return this.CallFoo(url);
@@ -137,7 +142,7 @@ export class MyHttpService {
   }
 
   public GoPage(playlistIdx:any,page:any){
-    let url = "cmd=playlistGet&param1=" + playlistIdx + "&page=" + page;
+    let url = "cmd=playlistGet&param1=" + playlistIdx + "&param2=" + page;
     return this.CallFoo(url);
   }
 
@@ -177,12 +182,20 @@ export class MyHttpService {
     return this.CallFoo(url);
   }
 
-  public addTracksToPlaylist(playlistIdx:any, file:any){
-    let fileUrl = encodeURIComponent(file);
+  public addTrackToPlaylist(playlistIdx:any, track:any){
+    let strTrack = encodeURIComponent(JSON.stringify(track));
     // let url = "cmd=Browse&param1=" + fileUrl + "&param3=js/browser.json";
-    let url = "cmd=playlistAddItem&param1=" + playlistIdx + "&param2=" + fileUrl;
+    let url = "cmd=playlistAddItem&param1=" + playlistIdx + "&param2=" + strTrack;
     return this.CallFoo(url);
   }
+
+  public addFileToPlaylist(playlistIdx:any, file:any){
+    let fileUrl = encodeURIComponent(file);
+    // let url = "cmd=Browse&param1=" + fileUrl + "&param3=js/browser.json";
+    let url = "cmd=playlistAddFile&param1=" + playlistIdx + "&param2=" + fileUrl;
+    return this.CallFoo(url);
+  }
+
 
   public async addAndPlay(playlistIdx:any,track:any){
        
@@ -194,7 +207,7 @@ export class MyHttpService {
         }catch(ex){
 
         }
-        this.addTracksToPlaylist(playlistIdx, track.fileUrl).then(
+        this.addTrackToPlaylist(playlistIdx, track).then(
           (data:any)=>{
             this.sleep(500);
             this.PlayTrack(playlistIdx,trackIdx);
@@ -254,7 +267,7 @@ export class MyHttpService {
             await this.clearPlaylist(i);
             // this.sleep(500);
             for(let i=0;i<tracks.length;i++){
-              await this.addTracksToPlaylist(playlistIdx, tracks[i].fileUrl);
+              await this.addTrackToPlaylist(playlistIdx, tracks[i]);
               this.sleep(100);
             }
             this.PlayTrack(playlistIdx,0);
@@ -272,7 +285,7 @@ export class MyHttpService {
                   findFG = true;
                   await this.clearPlaylist(i);
                   for(let i=0;i<tracks.length;i++){
-                    await this.addTracksToPlaylist(playlistIdx,tracks[i].fileUrl);
+                    await this.addTrackToPlaylist(playlistIdx,tracks[i]);
                     this.sleep(50);
                   }
                   this.PlayTrack(playlistIdx, 0);

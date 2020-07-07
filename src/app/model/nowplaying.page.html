@@ -92,9 +92,9 @@
         </ion-col>
         <ion-col>
           <ion-buttons>
-            <ion-button color="danger" (click)="setVolume()" class="play-button">
-              <ion-icon *ngIf="(volume != '0')" name="volume-high" class="play-volume"></ion-icon>
-              <ion-icon *ngIf="(volume == '0')" name="volume-off" class="play-volume"></ion-icon>
+            <ion-button color="danger" (click)="setMute()" class="play-button">
+              <ion-icon *ngIf="(isMuted != '1')" name="volume-high" class="play-volume"></ion-icon>
+              <ion-icon *ngIf="(isMuted == '1')" name="volume-off" class="play-volume"></ion-icon>
             </ion-button>
           </ion-buttons>
           <!--<ion-icon name="volume-off"></ion-icon>-->

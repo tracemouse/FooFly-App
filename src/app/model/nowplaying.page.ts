@@ -27,6 +27,7 @@ export class NowplayingPage {
   shuffle = false;
   repeat = 0;
   volume = "100";
+  isMuted = "0";
 
   coverImg = "assets/img/cover.jpg";
 
@@ -67,6 +68,7 @@ export class NowplayingPage {
         // console.log(data);
         if(data.currentTrack != "?"){
           this.nowTrack = data.playing;
+          this.isMuted = data.isMuted;
           this.pushNowTrack(data);
         }else{
           this.title = "";
@@ -174,6 +176,11 @@ export class NowplayingPage {
       localStorage.setItem("volume",this.volume);
       this.myHttpService.SetVolume("0");
     }
+  }
+
+  setMute(){
+    this.isMuted = (this.isMuted=="1")?"0":"1";
+    this.myHttpService.SetMute();
   }
 
   getPercent(num, total) {
