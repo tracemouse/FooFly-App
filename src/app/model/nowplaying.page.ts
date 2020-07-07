@@ -117,7 +117,8 @@ export class NowplayingPage {
     // console.log(this.duration);
     // console.log(this.audiobar);
 
-    this.coverImg = AppConfig.settings.rootUrl + data.albumArt;
+    // this.coverImg = AppConfig.settings.rootUrl + data.albumArt;
+    this.coverImg = this.myHttpService.GetArtworkUrl(this.nowTrack);
   }
 
   cancel(error:any) {

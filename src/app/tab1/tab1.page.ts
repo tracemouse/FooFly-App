@@ -121,7 +121,7 @@ export class Tab1Page {
       return;
     }else{
       this.minPage = this.minPage - 1;
-      this.myHttpService.GoPage(this.minPage).then(
+      this.myHttpService.GoPage(this.currentPlaylist,this.minPage).then(
         (data:any)=>{
           this.currentPage = parseInt(data.currentPage);
           this.currentPage = (this.currentPage ==0)?1:this.currentPage;
@@ -145,7 +145,7 @@ export class Tab1Page {
       return;
     }else{
       this.maxPage = this.maxPage + 1;
-      this.myHttpService.GoPage(this.maxPage).then(
+      this.myHttpService.GoPage(this.currentPlaylist,this.maxPage).then(
         (data:any)=>{
           this.currentPage = parseInt(data.currentPage);
           this.currentPage = (this.currentPage ==0)?1:this.currentPage;
@@ -198,7 +198,7 @@ export class Tab1Page {
       }
     );
 
-    this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
+    // this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
 
   }
  
@@ -257,7 +257,8 @@ export class Tab1Page {
     }
 
     this.playState = data.isPlaying;
-    this.coverImg = AppConfig.settings.rootUrl + data.albumArt;
+    // this.coverImg = AppConfig.settings.rootUrl + data.albumArt;
+    this.coverImg = this.myHttpService.GetArtworkUrl(data.playing);
     this.audiobar = data.trackpos;
     this.duration = data.tracklen;
     let perc = this.getPercent(this.audiobar, this.duration);
@@ -352,9 +353,9 @@ export class Tab1Page {
     return;
   }
 
-  playTrack(idx:any) {
+  playTrack(track:any) {
     // this.playFileUrl = track.fileUrl;
-    this.myHttpService.PlayTrack(idx);
+    this.myHttpService.PlayTrack(track.playlistIdx,track.trackIdx);
   }
 
   playNext(event){

@@ -199,7 +199,7 @@ export class Tab2Page {
       return;
     }
 
-    this.myHttpService.GoPage(idx).then(
+    this.myHttpService.GoPage(this.playlistIdx,idx).then(
       data=>{
           this.saveAllTracks(data,idx);
           this.getPage(idx + 1);

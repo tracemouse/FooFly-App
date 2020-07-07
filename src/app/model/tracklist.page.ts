@@ -123,7 +123,7 @@ export class TracklistPage implements OnInit {
   async playPlaylist(idx:any){
     this.myHttpService.SwithPlaylist(this.playlistIdx).then(
       data =>{
-        this.myHttpService.PlayTrack(idx);
+        this.myHttpService.PlayTrack(this.playlistIdx, idx);
         // this.cancel(false);
       }
     );
@@ -194,7 +194,7 @@ export class TracklistPage implements OnInit {
     }
 
     this.page = this.page + 1;
-    this.myHttpService.GoPage(this.page).then(
+    this.myHttpService.GoPage(this.playlistIdx, this.page).then(
       (data:any)=>{
         let len = data.playlist.length;
         for(let i=0; i<len;i++){

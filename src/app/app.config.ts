@@ -2,9 +2,9 @@
 export class AppConfig {
 
   public static version = "1.0.0";
-  // public static env = "dev";
-  public static env = "prd";
-  public static fooflyRoot = "/foofly/";
+  public static env = "dev";
+  // public static env = "prd";
+  public static fooflyRoot = "/api";
   public static fooflyOffical = "http://foofly.tracemouse.top/";
   public static fooflyVersion = "https://raw.githubusercontent.com/tracemouse/FooFly/master/version.json";
 

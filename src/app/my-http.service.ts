@@ -21,6 +21,12 @@ export class MyHttpService {
               public navCtrl: NavController) {
 
    }
+
+  public GetArtworkUrl(track:any){
+    let url = "/getArtwork?fileUrl=" + encodeURIComponent(track.fileUrl);
+    url = AppConfig.settings.rootUrl + url;
+    return url;
+   }
   
   public CallFoo(url:string){
     // if (r)	requestStr += '&cmd='+r;
@@ -72,57 +78,66 @@ export class MyHttpService {
   }
 
   public GetState(){
-    return this.CallFoo("");
+    return this.CallFoo("cmd=status");
+  }
+
+  public Play(){
+    let url = "cmd=playControl&param1=play";
+    return this.CallFoo(url);
+  }
+
+  public Pause(){
+    let url = "cmd=playControl&param1=pause";
+    return this.CallFoo(url);
   }
 
   public PlayNext(){
-    let url = "cmd=StartNext";
+    let url = "cmd=playControl&param1=next";
     return this.CallFoo(url);
   }
 
   public PlayPrev(){
-    let url = "cmd=StartPrevious";
+    let url = "cmd=playControl&param1=prev";
     return this.CallFoo(url);
   }
 
   public PlayPause(){
-    let url = "cmd=PlayOrPause";
-    return this.CallFoo(url);
-  }
-
-  public SetPostion(postion:any){
-    let url = "cmd=Seek&param1=" + postion;
-    return this.CallFoo(url);
-  }
-
-  public PlayTrack(idx:any){
-    let url = "cmd=Start&param1=" + idx;
-    return this.CallFoo(url);
-  }
-
-  public SetVolume(volume:any){
-    let url = "cmd=Volume&param1=" + volume;
-    return this.CallFoo(url);
-  }
-
-  public SetRepeat(idx:any){
-    let url = "cmd=PlaybackOrder&param1=" + idx;
-    return this.CallFoo(url);
-  }
-
-  public SwithPlaylist(idx:any){
-    let url = "cmd=SwitchPlaylist&param1=" + idx;
+    let url = "cmd=playControl&param1=playpause";
     return this.CallFoo(url);
   }
 
   public FocusOnPlaying(){
-    // let url = "cmd=FocusOnPlaying&param3=NoResponse";
-    let url = "cmd=FocusOnPlaying";
+    let url = "cmd=playControl&param1=FocusOnPlaying";
     return this.CallFoo(url);
   }
 
-  public GoPage(idx:any){
-    let url = "cmd=P&param1=" + idx;
+  public SetPostion(postion:any){
+    let url = "cmd=playControl&pamr1=seek&param2=" + postion;
+    return this.CallFoo(url);
+  }
+
+  public PlayTrack(playlistIdx:any, trackIdx:any){
+    let url = "cmd=playlistPlay&param1=" + playlistIdx + "&param2=" + trackIdx;
+    return this.CallFoo(url);
+  }
+
+  public SetVolume(volume:any){
+    let url = "cmd=playControl&param1=volume&param2=" + volume;
+    return this.CallFoo(url);
+  }
+
+  public SetRepeat(idx:any){
+    let url = "cmd=playControl&param1=playbackOrder&param2=" + idx;
+    return this.CallFoo(url);
+  }
+
+  public SwithPlaylist(plyalistIdx:any){
+    let url = "cmd=playlistSwitch&param1=" + plyalistIdx;
+    return this.CallFoo(url);
+  }
+
+  public GoPage(playlistIdx:any,page:any){
+    let url = "cmd=playlistGet&param1=" + playlistIdx + "&page=" + page;
     return this.CallFoo(url);
   }
 
@@ -136,50 +151,53 @@ export class MyHttpService {
     return this.CallFoo(url);
   }
 
-  public async clearPlaylist(palylistIdx:any){
-    await this.SwithPlaylist(palylistIdx).then(
-      async (data) =>{
-        let url = "cmd=EmptyPlaylist&param3=NoResponse";
-        await this.CallFoo(url).then(
-          (data)=>{
-            // console.log("deleted");
-          }
-        );
-      });
+  public async clearPlaylist(playlistIdx:any){
+    let url = "cmd=playlistClear&param1=" + playlistIdx;
+    return this.CallFoo(url);
+    // await this.SwithPlaylist(playlistIdx).then(
+    //   async (data) =>{
+    //     let url = "cmd=EmptyPlaylist&param3=NoResponse";
+    //     await this.CallFoo(url).then(
+    //       (data)=>{
+    //         // console.log("deleted");
+    //       }
+    //     );
+    //   });
   }
 
   public createPlaylist(playlist:any){
     playlist = encodeURIComponent(playlist);
     // let url = "cmd=CreatePlaylist&param1=" + playlist + "&param3=NoResponse";
-    let url = "cmd=CreatePlaylist&param1=" + playlist;
+    let url = "cmd=playlistAdd&param1=" + playlist;
     return this.CallFoo(url);
   }
 
   public removePlaylist(idx:any){
-    let url = "cmd=RemovePlaylist&param1=" + idx + "&param3=NoResponse";
+    let url = "cmd=playlistRemove&param1=" + idx + "&param3=NoResponse";
     return this.CallFoo(url);
   }
 
-  public addTracksToPlaylist(file:any){
+  public addTracksToPlaylist(playlistIdx:any, file:any){
     let fileUrl = encodeURIComponent(file);
     // let url = "cmd=Browse&param1=" + fileUrl + "&param3=js/browser.json";
-    let url = "cmd=Browse&param1=" + fileUrl;
+    let url = "cmd=playlistAddItem&param1=" + playlistIdx + "&param2=" + fileUrl;
     return this.CallFoo(url);
   }
 
   public async addAndPlay(playlistIdx:any,track:any){
+       
     this.SwithPlaylist(playlistIdx).then(
       (data:any) =>{
-        let idx = 0;
+        let trackIdx = 0;
         try{
-          idx = parseInt(data.playlists[playlistIdx].count);
+          trackIdx = parseInt(data.playlists[playlistIdx].count);
         }catch(ex){
 
         }
-        this.addTracksToPlaylist(track.fileUrl).then(
+        this.addTracksToPlaylist(playlistIdx, track.fileUrl).then(
           (data:any)=>{
             this.sleep(500);
-            this.PlayTrack(idx);
+            this.PlayTrack(playlistIdx,trackIdx);
           }
         );
       }
@@ -190,33 +208,35 @@ export class MyHttpService {
     if(track==null){
       return;
     }
-    this.GetState().then(
-      (data:any) =>{
-        let len = data.playlists.length;
-        var findFG = false;
-        for(let i=0; i<len; i++){
-          if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
-            findFG = true;
-            this.addAndPlay(i,track);
-            break;
-          }
-        }
-        if(!findFG){
-          this.createPlaylist(AppConfig.settings.wkPlaylist).then(
-            (data:any) =>{
-              let len = data.playlists.length;
-              var findFG = false;
-              for(let i=0; i<len; i++){
-                if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
-                  findFG = true;
-                  this.addAndPlay(i,track);
-                  break;
-                }
-              }
-            }
-          );
-        }
-      });
+    this.PlayTrack(track.playlistIdx,track.trackIdx);
+
+    // this.GetState().then(
+    //   (data:any) =>{
+    //     let len = data.playlists.length;
+    //     var findFG = false;
+    //     for(let i=0; i<len; i++){
+    //       if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+    //         findFG = true;
+    //         this.addAndPlay(i,track);
+    //         break;
+    //       }
+    //     }
+    //     if(!findFG){
+    //       this.createPlaylist(AppConfig.settings.wkPlaylist).then(
+    //         (data:any) =>{
+    //           let len = data.playlists.length;
+    //           var findFG = false;
+    //           for(let i=0; i<len; i++){
+    //             if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+    //               findFG = true;
+    //               this.addAndPlay(i,track);
+    //               break;
+    //             }
+    //           }
+    //         }
+    //       );
+    //     }
+    //   });
   }
 
   public async fooflyPlayTracks(tracks:any){
@@ -229,14 +249,15 @@ export class MyHttpService {
         var findFG = false;
         for(let i=0; i<len; i++){
           if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+            let playlistIdx = i;
             findFG = true;
             await this.clearPlaylist(i);
             // this.sleep(500);
             for(let i=0;i<tracks.length;i++){
-              await this.addTracksToPlaylist(tracks[i].fileUrl);
+              await this.addTracksToPlaylist(playlistIdx, tracks[i].fileUrl);
               this.sleep(100);
             }
-            this.PlayTrack(0);
+            this.PlayTrack(playlistIdx,0);
             break;
           }
         }
@@ -247,13 +268,14 @@ export class MyHttpService {
               var findFG = false;
               for(let i=0; i<len; i++){
                 if(AppConfig.settings.wkPlaylist == data.playlists[i].name){
+                  let playlistIdx = i;
                   findFG = true;
                   await this.clearPlaylist(i);
                   for(let i=0;i<tracks.length;i++){
-                    await this.addTracksToPlaylist(tracks[i].fileUrl);
+                    await this.addTracksToPlaylist(playlistIdx,tracks[i].fileUrl);
                     this.sleep(50);
                   }
-                  this.PlayTrack(0);
+                  this.PlayTrack(playlistIdx, 0);
                   break;
                 }
               }

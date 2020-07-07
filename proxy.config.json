@@ -1,11 +1,11 @@
 {
-  "/foofly": {
-    "target": "http://127.0.0.1:8888/foofly",
+  "/api": {
+    "target": "http://127.0.0.1:7777/api",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-        "^/foofly": ""
+        "^/api": ""
     }
   }
 }
