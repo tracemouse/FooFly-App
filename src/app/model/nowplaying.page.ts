@@ -135,10 +135,11 @@ export class NowplayingPage {
 
   setPlayPosition(event:any){
     this.playPostion = event.target.value;
-    let perc = this.getPercent(this.playPostion, this.duration);
+    // let perc = this.getPercent(this.playPostion, this.duration);
 
     // var mydata = {"action":"setPosition","position":this.playPostion};
-    this.myHttpService.SetPostion(perc);
+    // this.myHttpService.SetPostion(perc);
+    this.myHttpService.SetPostion(this.playPostion);
 
   }
 

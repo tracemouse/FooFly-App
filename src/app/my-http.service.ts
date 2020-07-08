@@ -23,7 +23,8 @@ export class MyHttpService {
    }
 
   public GetArtworkUrl(track:any){
-    let url = "/getArtwork?fileUrl=" + encodeURIComponent(track.fileUrl);
+    // let url = "/getArtwork?fileUrl=" + encodeURIComponent(track.fileUrl);
+    let url = "/api?cmd=albumart&param1="+track.playlistIdx+"&param2="+track.trackIdx;
     url = AppConfig.settings.rootUrl + url;
     return url;
    }
@@ -112,7 +113,7 @@ export class MyHttpService {
   }
 
   public SetPostion(postion:any){
-    let url = "cmd=playControl&pamr1=seek&param2=" + postion;
+    let url = "cmd=playControl&param1=seek&param2=" + postion;
     return this.CallFoo(url);
   }
 
@@ -143,6 +144,11 @@ export class MyHttpService {
 
   public GoPage(playlistIdx:any,page:any){
     let url = "cmd=playlistGet&param1=" + playlistIdx + "&param2=" + page;
+    return this.CallFoo(url);
+  }
+
+  public GetAllTracks(playlistIdx:any){
+    let url = "cmd=playlistGet&param1=" + playlistIdx + "&param2=all";
     return this.CallFoo(url);
   }
 
@@ -268,9 +274,9 @@ export class MyHttpService {
             // this.sleep(500);
             for(let i=0;i<tracks.length;i++){
               await this.addTrackToPlaylist(playlistIdx, tracks[i]);
+              if(i==0) {this.PlayTrack(playlistIdx,0);}
               this.sleep(100);
             }
-            this.PlayTrack(playlistIdx,0);
             break;
           }
         }
@@ -286,9 +292,9 @@ export class MyHttpService {
                   await this.clearPlaylist(i);
                   for(let i=0;i<tracks.length;i++){
                     await this.addTrackToPlaylist(playlistIdx,tracks[i]);
+                    if(i==0) {this.PlayTrack(playlistIdx,0);}
                     this.sleep(50);
                   }
-                  this.PlayTrack(playlistIdx, 0);
                   break;
                 }
               }

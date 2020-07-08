@@ -160,11 +160,13 @@ export class Tab4Page {
     this.mute = (this.mute) ? false : true;
     this.muteIcon = (!this.mute) ? "volume-high" : "volume-off";
 
-    if (this.mute) {
-      this.myHttpService.SetVolume("0");
-    } else {
-      this.myHttpService.SetVolume(this.volume);
-    }
+    // if (this.mute) {
+    //   this.myHttpService.SetVolume("0");
+    // } else {
+    //   this.myHttpService.SetVolume(this.volume);
+    // }
+
+    this.myHttpService.SetMute();
 
   }
 

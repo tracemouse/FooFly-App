@@ -194,11 +194,15 @@ export class Tab1Page {
         //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
         // }
         // this.tracks = data.playlist;
-        this.tracks = this.formatPlaylist(data);
+        this.myHttpService.GoPage(this.currentPlaylist,this.currentPage).then(
+          (data:any)=>{
+            this.tracks = this.formatPlaylist(data);
+          }
+        );
       }
     );
 
-    // this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
+     this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
 
   }
  

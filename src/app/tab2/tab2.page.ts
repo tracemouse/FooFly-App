@@ -173,15 +173,19 @@ export class Tab2Page {
             this.myDBService.saveSettingsData();
           }
 
-          this.myHttpService.SwithPlaylist(this.playlistIdx).then(
-            (data:any) =>{
-                // console.log(data);
-                this.totalTracks = parseInt(data.playlists[this.playlistIdx].count);
-                this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
-                // console.log("total tracks=" + this.totalTracks);
-                // console.log("total pages=" + this.totalPages);
+          this.totalTracks = parseInt(data.playlists[this.playlistIdx].count);
+          // this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
+          this.totalPages = 1;
     
-                this.getPage(1);
+          // this.getPage(1);
+          this.myHttpService.GetAllTracks(this.playlistIdx).then(
+            (data:any)=>{
+                this.saveAllTracks(data,1);
+                if(this.refreshEvent != null){
+                  this.refreshEvent.target.complete();
+                }
+                this.loading.dismiss();
+                this.sgLibrary = "folder";
             }
           );
         }
@@ -243,6 +247,7 @@ export class Tab2Page {
     this.folders = [];
     // console.log(this.tracks[0]);
 
+    var lastTrack={};
     var name = "";
     var artist = "";
     var count = 0;
@@ -263,8 +268,9 @@ export class Tab2Page {
           folder.type = fileUrl.substr(index+1).toUpperCase();
           folder.sampleRate = sampleRate;
 
-          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+          // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          // imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+          var imgUrl = this.myHttpService.GetArtworkUrl(lastTrack);
           folder.artWork = imgUrl;
           folder.artist = artist;
           this.folders.push(folder);
@@ -277,6 +283,7 @@ export class Tab2Page {
         artist = track.artist;
       }
       count ++;
+      lastTrack = track;
     }
     if(name != ""){
       var folder = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
@@ -287,8 +294,9 @@ export class Tab2Page {
       var index = fileUrl.lastIndexOf(".");
       folder.type = fileUrl.substr(index+1).toUpperCase();
       folder.sampleRate = sampleRate;
-      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      // imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+      var imgUrl = this.myHttpService.GetArtworkUrl(lastTrack);
       folder.artWork = imgUrl;
       folder.artist = artist;
       this.folders.push(folder);
@@ -330,6 +338,7 @@ export class Tab2Page {
     this.tracksByAlbum = this.tracksByAlbum.sort(this.sortByAlbum);
     this.albums = [];
 
+    var lastTrack={};
     var name = "";
     var artist = "";
     var count = 0;
@@ -350,8 +359,9 @@ export class Tab2Page {
           album.type = fileUrl.substr(index+1).toUpperCase();
           album.sampleRate = sampleRate;
 
-          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+          // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          // imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+          var imgUrl = this.myHttpService.GetArtworkUrl(lastTrack);
           album.artWork = imgUrl;
           album.artist = artist;
           this.albums.push(album);
@@ -364,6 +374,7 @@ export class Tab2Page {
         artist = track.artist;
       }
       count ++;
+      lastTrack = track;
     }
     if(name != ""){
       var album = {'name':'','artist':'','fileUrl':'','count':0,start: 0, 'artWork':this.cover,'type':'','sampleRate':''};
@@ -374,8 +385,9 @@ export class Tab2Page {
       var index = fileUrl.lastIndexOf(".");
       album.type = fileUrl.substr(index+1).toUpperCase();
       album.sampleRate = sampleRate;
-      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      // imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+      var imgUrl = this.myHttpService.GetArtworkUrl(lastTrack);
       album.artWork = imgUrl;
       album.artist = artist;
       this.albums.push(album);
@@ -411,7 +423,8 @@ export class Tab2Page {
     this.tracksByArtist = [...this.tracks];
     this.tracksByArtist = this.tracksByArtist.sort(this.sortByArtist);
     this.artists = [];
-
+    
+    var lastTrack = {};
     var name = "";
     var count = 0;
     var fileUrl = "";
@@ -428,8 +441,9 @@ export class Tab2Page {
           artist.count = count;
           artist.start = start;
 
-          var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-          imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+          // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          // imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+          var imgUrl = this.myHttpService.GetArtworkUrl(lastTrack);
           artist.artWork = imgUrl;
 
           this.artists.push(artist);
@@ -439,6 +453,7 @@ export class Tab2Page {
         start = i;
         fileUrl = track.fileUrl;
       }
+      lastTrack = track;
       count ++;
     }
     if(name != ""){
@@ -447,8 +462,9 @@ export class Tab2Page {
       artist.fileUrl = fileUrl;
       artist.count = count;
       artist.start = start;
-      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-      imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+      // var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+      // imgUrl += "?fileUrl=" + encodeURIComponent(fileUrl);
+      var imgUrl = this.myHttpService.GetArtworkUrl(lastTrack);
       artist.artWork = imgUrl;
       this.artists.push(artist);
     }

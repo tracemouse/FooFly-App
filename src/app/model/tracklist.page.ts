@@ -55,6 +55,8 @@ export class TracklistPage implements OnInit {
     this.totalPages = this.input.totalPages;
     this.headerTitle = this.input.headerTitle;
 
+    // console.log(this.tracks);
+
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
 
     this.showTracks = [...this.tracks];

@@ -75,16 +75,19 @@ export class Tab3Page {
 
   async showTracks(idx:any) {
 
-    this.myHttpService.SwithPlaylist(idx).then(
+    // this.myHttpService.SwithPlaylist(idx).then(
+    this.myHttpService.GoPage(idx,1).then(
       (data:any) => {
-        this.playlists[idx]['albumArt'] = data.albumArt;
+        this.playlists[idx]['albumArt'] = "";
         let len = data.playlist.length;
         for(let i=0; i<len;i++){
           data.playlist[i]['idx'] = i;
           data.playlist[i].sampleRate = this.myHttpService.formatSampleRate(data.playlist[i].sampleRate);
         }
-        let totalTracks = data.playlists[idx].count;
-        let totalPages = Math.ceil(totalTracks / parseInt(data.playlistItemsPerPage));
+        //let totalTracks = data.playlists[idx].count;
+        let totalTracks = data.totTrack;
+        // let totalPages = Math.ceil(totalTracks / parseInt(data.playlistItemsPerPage));
+        let totalPages = data.totPage;
         this.showTracksPage(data.playlist,this.playlists[idx],idx,totalTracks,totalPages);
       }
     );
