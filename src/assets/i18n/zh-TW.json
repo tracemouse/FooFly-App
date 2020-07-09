@@ -40,6 +40,7 @@
         "animation": "專輯封面動畫",
         "autoDJ": "自動DJ",
         "show-track-seq": "顯示歌曲序號",
+        "albumartFromF2K": "通過Foobar2000獲取封面",
         "mute": "靜音",
         "volume": "音量",
         "connection":"當前連接",

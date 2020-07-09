@@ -34,6 +34,7 @@ export class Tab4Page {
   mbLoaded = false;
   muteIcon = "volume-high";
   showTrackSeq = false;
+  albumartFromF2K = false;
   playlists: any = [];
   musicLib = "";
 
@@ -61,6 +62,7 @@ export class Tab4Page {
     this.musicLib = AppConfig.settings.musicLib;
     this.animation = (AppConfig.settings.animation == "true") ? true : false;
     this.showTrackSeq = (AppConfig.settings.showTrackSeq == "true") ? true : false;
+    this.albumartFromF2K = (AppConfig.settings.albumartFromF2K == "true") ? true : false;
     // console.log("tab4=" + JSON.stringify(AppConfig.settings));
 
     this.myHttpService.GetState().then(
@@ -150,6 +152,11 @@ export class Tab4Page {
 
   setShowTrackSeq(event) {
     AppConfig.settings.showTrackSeq = (this.showTrackSeq) ? "true" : "false";
+    this.myDBService.saveSettingsData();
+  }
+
+  setAlbumartFromF2K(event) {
+    AppConfig.settings.albumartFromF2K = (this.albumartFromF2K) ? "true" : "false";
     this.myDBService.saveSettingsData();
   }
 

@@ -39,6 +39,7 @@
         "animation": "专辑封面动画",
         "autoDJ": "自动DJ",
         "show-track-seq": "显示歌曲序号",
+        "albumartFromF2K": "通过Foobar200获取封面",
         "mute": "静音",
         "volume": "音量",
         "connection":"当前连接",

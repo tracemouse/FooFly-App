@@ -23,6 +23,7 @@ export class AppConfig {
     "animation": "true",
     "timeout": 0.2,
     "showTrackSeq": "true",
+    "albumartFromF2K":"false",
     "musicLib":"0",
     "musicLibPlaylist":"musicLibPl",
     "musicLibTracks":"musicLibTk",

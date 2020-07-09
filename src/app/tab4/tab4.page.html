@@ -68,6 +68,11 @@
         <ion-label>{{'tab4.show-track-seq' | translate}}</ion-label>
         <ion-toggle [(ngModel)]="showTrackSeq" (ionChange)="setShowTrackSeq($event)" color="danger"></ion-toggle>
       </ion-item>
+      <ion-item lines="none">
+        <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
+        <ion-label>{{'tab4.albumartFromF2K' | translate}}</ion-label>
+        <ion-toggle [(ngModel)]="albumartFromF2K" (ionChange)="setAlbumartFromF2K($event)" color="danger"></ion-toggle>
+      </ion-item>
       <!-- <ion-item lines="none">
         <ion-icon item-left name="volume-off" color="danger"></ion-icon>
         <ion-label>{{'tab4.mute' | translate}}</ion-label>

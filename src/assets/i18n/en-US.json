@@ -40,6 +40,7 @@
         "animation": "Animated Cover",
         "autoDJ": "AutoDJ",
         "show-track-seq": "Show Track Seq.",
+        "albumartFromF2K": "Get Albumart From F2K",
         "mute": "Mute",
         "volume": "Volume",
         "connection":"Connection",

@@ -23,8 +23,10 @@ export class MyHttpService {
    }
 
   public GetArtworkUrl(track:any){
-    // let url = "/getArtwork?fileUrl=" + encodeURIComponent(track.fileUrl);
-    let url = "/api?cmd=albumart&param1="+track.playlistIdx+"&param2="+track.trackIdx;
+    let url = "/getArtwork?fileUrl=" + encodeURIComponent(track.fileUrl);
+    if(AppConfig.settings.albumartFromF2K == "true"){
+      url = "/api?cmd=albumart&param1="+track.playlistIdx+"&param2="+track.trackIdx;
+    }
     url = AppConfig.settings.rootUrl + url;
     return url;
    }
