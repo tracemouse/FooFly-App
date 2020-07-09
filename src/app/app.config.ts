@@ -24,6 +24,8 @@ export class AppConfig {
     "timeout": 0.2,
     "showTrackSeq": "true",
     "musicLib":"0",
+    "musicLibPlaylist":"musicLibPl",
+    "musicLibTracks":"musicLibTk",
     "wkPlaylist":"Foofly Playing"
   };
 

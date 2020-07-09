@@ -24,7 +24,7 @@ export class Tab2Page {
   // loadingDuration = 3 * 1000;
   loadingDuration = AppConfig.settings.timeout * 60 * 1000;
 
-  tracks = [];
+  tracks:any = [];
   tracksByfolder = [];
   tracksByAlbum = [];
   tracksByArtist = [];
@@ -90,7 +90,8 @@ export class Tab2Page {
 
   ionViewWillEnter(){
     if(this.musicLib != AppConfig.settings.musicLib){
-      this.refresh();
+      // this.refresh();
+      this.initMusicLib();
     }
   }
 
@@ -114,26 +115,80 @@ export class Tab2Page {
     // );
   }
 
+  initMusicLib(){
+    this.musicLib = "";
+    let musicLibPlaylist:any = localStorage.getItem(AppConfig.settings.musicLibPlaylist);
+    let needRefresh = false;
+    if(musicLibPlaylist == null){
+      needRefresh = true;
+    }else{
+      this.musicLib = musicLibPlaylist.name;
+      if(this.musicLib != AppConfig.settings.musicLib){
+        this.musicLib = AppConfig.settings.musicLib;
+        needRefresh = true;
+      }
+    }
+
+    this.myHttpService.GetState().then(
+      (data:any) =>{
+        let len = data.playlists.length;
+        var findFG = false;
+        for(let i=0; i<len; i++){
+          if(this.musicLib == data.playlists[i].name){
+            this.playlistIdx = i;
+            if(data.playlists[i].count != musicLibPlaylist.count){
+              needRefresh = true;
+            }
+            musicLibPlaylist = data.playlists[i];
+            findFG = true;
+            break;
+          }
+        }
+        if(!findFG){
+          this.playlistIdx = 0;
+          AppConfig.settings.musicLib = data.playlists[this.playlistIdx].name;
+          this.musicLib = AppConfig.settings.musicLib;
+          musicLibPlaylist = data.playlists[this.playlistIdx];
+          this.myDBService.saveSettingsData();
+          needRefresh = true;
+        }
+        localStorage.setItem(AppConfig.settings.musicLibPlaylist,musicLibPlaylist);
+        if(needRefresh){
+          this.refresh();
+        }else{
+          this.tracks = localStorage.getItem(AppConfig.settings.musicLibTracks);
+          if(this.tracks == null){
+            this.refresh();
+            return;
+          }
+          this.sgLibrary = "folder";
+        }
+      }
+    );
+
+  }
+
   ionViewWillLeave(){
     // console.log("tab2 will leave");
     if(this.loading != null)
       this.loading.dismiss();
-
-    // this.wsService.closeWSJsonrpc();
-   }
+  }
  
-   ngOnDestroy(){
+  ngOnDestroy(){
      //Called once, before the instance is destroyed.
      //Add 'implements OnDestroy' to the class.
      if(this.loading != null)
       this.loading.dismiss();
-   } 
+  } 
 
   refresh(){
     this.tracks = [];
     this.tracksByfolder=[];
     this.tracksByAlbum=[];
     this.tracksByArtist=[];
+    this.folders = [];
+    this.albums = [];
+    this.artists = [];
     this.sgLibrary = "";
     this.getAllTracks();
   }
@@ -186,6 +241,7 @@ export class Tab2Page {
                 }
                 this.loading.dismiss();
                 this.sgLibrary = "folder";
+                localStorage.setItem(AppConfig.settings.musicLibTracks, this.tracks);
             }
           );
         }
@@ -200,6 +256,7 @@ export class Tab2Page {
       }
       this.loading.dismiss();
       this.sgLibrary = "folder";
+      localStorage.setItem(AppConfig.settings.musicLibTracks, this.tracks);
       return;
     }
 
@@ -212,7 +269,6 @@ export class Tab2Page {
   }
 
   async saveAllTracks(data:any,pageIdx:any){
-
     let len = data.playlist.length;
     for(let i=0; i<len;i++){
       let fileUrl = data.playlist[i].fileUrl;
@@ -223,10 +279,6 @@ export class Tab2Page {
     }
     this.tracks = this.tracks.concat(data.playlist);
  
-    this.folders = [];
-    this.albums = [];
-    this.artists = [];
-
     // await this.refreshFolder();
     // this.refreshFolder();
 

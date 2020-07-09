@@ -30,8 +30,9 @@ export class TrackActionPage implements OnInit {
 
   ngOnInit() {
     this.track = this.input.track;
-    let imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-    imgUrl += "?fileUrl=" + encodeURIComponent(this.track.fileUrl);
+    // let imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+    // imgUrl += "?fileUrl=" + encodeURIComponent(this.track.fileUrl);
+    let imgUrl = this.myHttpService.GetArtworkUrl(this.track);
     this.coverImg = imgUrl;
     // console.log(this.track);
     this.myHttpService.GetState().then(

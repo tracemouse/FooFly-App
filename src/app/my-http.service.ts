@@ -23,8 +23,8 @@ export class MyHttpService {
    }
 
   public GetArtworkUrl(track:any){
-    let url = "/getArtwork?fileUrl=" + encodeURIComponent(track.fileUrl);
-    // let url = "/api?cmd=albumart&param1="+track.playlistIdx+"&param2="+track.trackIdx;
+    // let url = "/getArtwork?fileUrl=" + encodeURIComponent(track.fileUrl);
+    let url = "/api?cmd=albumart&param1="+track.playlistIdx+"&param2="+track.trackIdx;
     url = AppConfig.settings.rootUrl + url;
     return url;
    }
@@ -72,7 +72,7 @@ export class MyHttpService {
           console.log('%c 请求处理失败 %c', 'color:red', 'url', this.url, 'err', error);
           reject(error);
           // this.presentError(error);
-          this.exit();
+          // this.exit();
         }
         )
       });
@@ -334,14 +334,14 @@ export class MyHttpService {
           handler: () => {
             toast.dismiss();
             // this.navCtrl.navigateBack("/login");
-            this.exit();
+            // this.exit();
           }
         }
       ]
     });
     toast.onDidDismiss().then(
       data=>{
-        this.exit();
+        // this.exit();
       }
     );
 
