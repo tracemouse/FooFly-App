@@ -24,8 +24,21 @@ ion-content{
 
 .playlist-icon{
     margin-right: 8px;
+    margin-top: 5px;
 }
 
 .item-title{
     color: #333;
+    font-size: 1.1rem;
+}
+
+.item-count{
+    display:inline-block;
+    background-color: #e5e5e5;
+    border-radius: 10px;
+    color: #999;
+    font-size: 0.7rem;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
 }

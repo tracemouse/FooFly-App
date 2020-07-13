@@ -3,8 +3,8 @@ import { ModalController, NavParams,AlertController  } from '@ionic/angular';
 import { TranslateService }from "@ngx-translate/core";
 
 
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
+// import { WebsocketService} from "../websocket.service"; 
 import { AppConfig } from '../app.config';
 
 @Component({
@@ -31,7 +31,8 @@ export class ShutdownPage implements OnInit {
               public alertController:AlertController,
               public translateService:TranslateService,
               public elementRef:ElementRef,
-              public wsService: WebsocketService
+              public myHttpService:MyHttpService
+              // public wsService: WebsocketService
               ) 
   { 
 
@@ -102,16 +103,16 @@ export class ShutdownPage implements OnInit {
   }
 
   closeScreen(){
-    var mydata = {"action":"closeScreen"};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-        this.cancel();
-      }
-    );
+    // var mydata = {"action":"closeScreen"};
+    // this.wsService.callMB(mydata).subscribe(
+    //   data=>{
+    //     // console.log(data);
+    //     if(!data.isSucc){
+    //       return;
+    //     }
+    //     this.cancel();
+    //   }
+    // );
   }
   
   async shutdown(minutes:any){
@@ -145,16 +146,21 @@ export class ShutdownPage implements OnInit {
 
   shutdownPC(minutes:any){
     this.cancel();
-    var mydata = {"action":"shutdown","minutes":minutes};
-    this.wsService.callMB(mydata).subscribe(
+    this.myHttpService.shudown(minutes).then(
       data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-        this.wsService.presentToast(this.i18nMessage['info'],this.i18nMessage['info-command-ok']);
+        this.myHttpService.presentToast(this.i18nMessage['info'],this.i18nMessage['info-command-ok']);
       }
     );
+    // var mydata = {"action":"shutdown","minutes":minutes};
+    // this.wsService.callMB(mydata).subscribe(
+    //   data=>{
+    //     // console.log(data);
+    //     if(!data.isSucc){
+    //       return;
+    //     }
+    //     this.wsService.presentToast(this.i18nMessage['info'],this.i18nMessage['info-command-ok']);
+    //   }
+    // );
   }
 
   async more() {

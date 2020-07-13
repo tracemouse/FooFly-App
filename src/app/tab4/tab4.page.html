@@ -25,9 +25,9 @@
       
       <ion-item button lines="none" [routerLink]="['/about']">
           <ion-avatar slot="start">
-              <img src="assets/icons/favicon.png">
+              <img src="assets/img/logo.png">
             </ion-avatar>
-        <ion-label class="mb-title">MuscBee Fly</ion-label>
+        <ion-label class="mb-title">Foofly</ion-label>
         <ion-note slot="end">{{version}}</ion-note>
       </ion-item>
 
@@ -47,20 +47,31 @@
           <ion-select-option *ngFor="let item of languages" value="{{item.language}}">{{item.dis}}</ion-select-option>
         </ion-select>
       </ion-item>
+      <ion-item button lines="none">
+        <!-- <ion-icon item-left name="globe" color="primary"></ion-icon> -->
+        <ion-label>{{'tab2.header' | translate}}</ion-label>
+        <ion-select placeholder="" [(ngModel)]="musicLib" (ionChange)="setMusicLib($event)" interface="popover">
+          <ion-select-option *ngFor="let item of playlists" value="{{item.name}}">{{item.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
       <ion-item lines="none">
         <!-- <ion-icon item-left name="logo-ionic" color="primary"></ion-icon> -->
         <ion-label>{{'tab4.animation' | translate}}</ion-label>
         <ion-toggle [(ngModel)]="animation" (ionChange)="setAnimation($event)" color="danger"></ion-toggle>
       </ion-item>
-      <ion-item lines="none">
-        <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
+      <!-- <ion-item lines="none">
         <ion-label>{{'tab4.autoDJ' | translate}}</ion-label>
         <ion-toggle [(ngModel)]="autoDJ" (ionChange)="setAutoDJ($event)" color="danger"></ion-toggle>
-      </ion-item>
+      </ion-item> -->
       <ion-item lines="none">
         <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
         <ion-label>{{'tab4.show-track-seq' | translate}}</ion-label>
         <ion-toggle [(ngModel)]="showTrackSeq" (ionChange)="setShowTrackSeq($event)" color="danger"></ion-toggle>
+      </ion-item>
+      <ion-item lines="none">
+        <!-- <ion-icon item-left name="headset" color="primary"></ion-icon> -->
+        <ion-label>{{'tab4.albumartFromF2K' | translate}}</ion-label>
+        <ion-toggle [(ngModel)]="albumartFromF2K" (ionChange)="setAlbumartFromF2K($event)" color="danger"></ion-toggle>
       </ion-item>
       <!-- <ion-item lines="none">
         <ion-icon item-left name="volume-off" color="danger"></ion-icon>

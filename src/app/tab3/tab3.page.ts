@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ModalController,NavController,LoadingController} from '@ionic/angular';
+import { TranslateService }from "@ngx-translate/core";
 
 import { AppConfig } from '../app.config';
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
+// import { WebsocketService} from "../websocket.service"; 
 import { TracklistPage } from "../model/tracklist.page";
 
 import { rightEnterAnimation } from "../modal-transitions";
@@ -15,16 +16,16 @@ import { rightLeaveAnimation } from "../modal-transitions";
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
-
+  i18n:any;
   // loadingDuration = 3 * 1000;
   loadingDuration = AppConfig.settings.timeout * 60 * 1000;
   loading:any;
 
-  public playlists = [];
+  playlists = [];
 
   constructor(
-              // public myHttpService: MyHttpService,
-              public wsService: WebsocketService,
+              public myHttpService: MyHttpService,
+              public translateService:TranslateService,
               public modalController: ModalController,
               public navCtrl: NavController,
               public loadingController: LoadingController) {
@@ -35,20 +36,16 @@ export class Tab3Page {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    var mydata = {"action":"getPlaylist"};
-    this.wsService.callMB(mydata).subscribe(
+    this.myHttpService.GetState().then(
       data=>{
         // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
         this.pushData(data);
       }
     );
   }
 
   pushData(data:any){
-    this.playlists = data;
+    this.playlists = data.playlists;
   }
 
   ionViewWillEnter(){
@@ -76,34 +73,49 @@ export class Tab3Page {
     // return await this.loading.present();
   }
 
-  async showTracks(item:any) {
-    await this.initLoading();
-    await this.loading.present();
+  async showTracks(idx:any) {
 
-    // console.log(item);
-    var mydata = {"action":"playlistTracklist","playlistUrl":item.playlistUrl};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
-        this.loading.dismiss();
-        // console.log(data);
-        if(!data.isSucc){
-          return;
+    // this.myHttpService.SwithPlaylist(idx).then(
+    this.myHttpService.GoPage(idx,1).then(
+      (data:any) => {
+        this.playlists[idx]['albumArt'] = "";
+        let len = data.playlist.length;
+        for(let i=0; i<len;i++){
+          data.playlist[i]['idx'] = i;
+          data.playlist[i].sampleRate = this.myHttpService.formatSampleRate(data.playlist[i].sampleRate);
         }
-        this.showTracksPage(data,item);
+        //let totalTracks = data.playlists[idx].count;
+        let totalTracks = data.totTrack;
+        // let totalPages = Math.ceil(totalTracks / parseInt(data.playlistItemsPerPage));
+        let totalPages = data.totPage;
+        this.showTracksPage(data.playlist,this.playlists[idx],idx,totalTracks,totalPages);
       }
     );
-
   }
 
-  async showTracksPage(tracks: any, item:any) {
+  async showTracksPage(tracks: any, item:any, idx:any,totalTracks:any,totalPages:any) {
+    this.translateService.get("tab3").subscribe(res=>{
+      this.i18n = res;
+    });
+    let headerTitle = this.i18n['header'];
+    var input = {
+      'from' : 'tab3',
+      'title': item.name,
+      'headerTitle':headerTitle,
+      'fileUrl': item.albumArt,
+      'tracks': tracks,
+      'playlistIdx': idx,
+      'totalTracks': totalTracks,
+      'totalPages': totalPages,
+      'type': 'playlist'
+    };
+
     const modal = await this.modalController.create({
       component: TracklistPage,
       enterAnimation: rightEnterAnimation,
       leaveAnimation: rightLeaveAnimation,
       componentProps: {
-        'title':item.name,
-        'fileUrl': "",
-        'tracks': tracks
+        'input': input
       }
     });
 
@@ -124,16 +136,12 @@ export class Tab3Page {
     await this.initLoading();
     await this.loading.present();
 
-    var mydata = {"action":"getPlaylist"};
-    this.wsService.callMB(mydata).subscribe(
+    this.myHttpService.GetState().then(
       data=>{
-        this.loading.dismiss();
-        event.target.complete();
         // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
         this.pushData(data);
+        event.target.complete();
+        this.loading.dismiss();
       }
     );
   }
@@ -151,13 +159,9 @@ export class Tab3Page {
   }
 
   refresh(){
-    var mydata = {"action":"getPlaylist"};
-    this.wsService.callMB(mydata).subscribe(
+    this.myHttpService.GetState().then(
       data=>{
         // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
         this.pushData(data);
       }
     );

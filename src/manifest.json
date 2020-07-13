@@ -1,10 +1,10 @@
 ﻿{
   "scope": "/",
-  "name": "MusicBee Fly",
-  "short_name": "MusicBee Fly",
+  "name": "Foofly",
+  "short_name": "Foofly",
   "start_url": "/",
   "display": "standalone",
-  "description": "MusicBee Remote Control",
+  "description": "Foobar2000 Remote Control",
   "dir": "ltr",
   "lang": "en",
   "orientation": "portrait",

@@ -1,0 +1,146 @@
+ion-content{
+    --ion-background-color: #fff;
+    --padding-bottom: calc(100vh / 2);
+}
+
+.header-toolbar{
+    --border-width: 0 !important;
+
+}
+
+.header-box{
+  display:-webkit-inline-box;
+  border-bottom: solid 1px #ddd;
+  width: 100%;
+  padding: 8px;
+}
+
+.header-img{
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+.header-title-box{
+  width: calc(100vw - 80px);
+  margin-left: 8px;
+  // height: 50px;
+  // line-height: 50px;
+  display:inline-block;
+
+}
+
+.track-title{
+    margin-top: 1px;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+    word-break: break-all;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.track-subtitle{
+  margin-top: 2px;
+  color: rgba(0, 0, 0, 0.4);
+  // word-break: break-all;
+  // white-space: nowrap;
+  // text-overflow: ellipsis;
+  // overflow: hidden;
+  // margin-bottom: 1px;
+}
+
+.track-artist{
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.4);
+    word-break: break-all;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.track-audioType{
+    text-transform:capitalize;
+    text-overflow: ellipsis;
+    font-size: 0.6rem;
+    line-height: 0.9rem;
+    color: #ffce00;
+    border: 1px solid #ffce00;
+    border-radius: 3px;
+    margin: 0 auto;
+    margin-right: 5px;
+    padding: 1px;
+  }
+  
+  .track-sampleRate{
+    text-transform:capitalize;
+    text-overflow: ellipsis;
+    font-size: 0.6rem;
+    line-height: 0.9rem;
+    color:#7ecfc0;
+    border: 1px solid #7ecfc0;
+    border-radius: 3px;
+    margin: 0 auto;
+    margin-right: 5px;
+    padding: 1px;
+}
+ 
+.item-title{
+  font-size: 1rem;
+  color: #333;
+}
+
+.playlist-box{
+  height: 200px;
+  width:100%;
+  overflow: hidden; 
+  white-space: nowrap;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.playlist-scroll{
+  overflow: auto;
+}
+
+.playlist-icon{
+  margin-right: 8px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.playlist-header{
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.4);
+  padding: 3px;
+  padding-left: 8px;
+}
+
+.cancel-box{
+  width:100%;
+  background-color: #f5f5f5;
+  height: 100px;
+  // position: fixed;
+  // top: calc(100vh  - 250px - 50px);
+  // bottom: 0px;
+  padding: 10px;
+
+  .cancel-button{
+    display:inline-block;
+    width: 100%;
+    font-size: 0.9rem;
+    background: #e5e5e5;
+    border-radius: 5px;
+    text-align: center;
+    color: #555;
+    line-height: 35px;
+    height: 35px;
+  }
+
+}
+
+.ul-box{
+  height: calc(500px - 100px - 65px);
+  overflow: auto;
+}

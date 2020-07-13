@@ -1,8 +1,12 @@
 <ion-header mode="ios">
    <ion-toolbar class="header-toolbar">
-      <div class="header-title"><label class="header-title-1">{{'tab1.header' | translate}}</label>
-         <label class="header-title-2">{{tracks.length}}
-            {{'tracklist.tracks' | translate}}</label></div>
+      <div class="header-title">
+         <label class="header-title-1">{{'tab1.header' | translate}}</label>
+         <label class="header-title-2">
+            {{totalTracks}}
+            {{'tracklist.tracks' | translate}}
+         </label>
+      </div>
       <ion-buttons slot="end">
          <!-- <ion-button  [routerLink]="['/playing']" color="danger"> -->
          <ion-button (click)="more()" color="danger">
@@ -37,24 +41,17 @@
          </ion-button>
       </ion-buttons>
    </ion-toolbar>
-   <ion-nav></ion-nav>
-</ion-header>
-
-<ion-content>
-   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">
-      <ion-refresher-content></ion-refresher-content>
-   </ion-refresher>
-   
    <ion-card mode="ios" id="search-card" (click)="more()">
       <div class="card-img-box">
          <img src="{{coverImg}}" class="card-img" />
       </div>
       <div class="card-text-box">
-         <div class="card-title">{{title}}</div>
+         <div class="card-title">{{nowTrack.track}}</div>
          <!--<div class="card-subtitle">{{(nowIdx + 1)}} / {{tracks.length}} {{'search.tracks' | translate}}</div>-->
          <p class="card-subtitle">
-            <span class="track-audioType">{{audioType}}</span>
-            <span class="track-sampleRate">{{nowTrack.sampleRate}}</span>{{nowTrack.artist}} - {{nowTrack.album}}
+            <!-- <span class="track-audioType">{{audioType}}</span> -->
+            <!-- <span class="track-sampleRate">{{nowTrack.len}}</span> -->
+            {{nowTrack.artist}} - {{nowTrack.album}}
          </p>
          <div class="card-progress" id="card-progress">
             <!-- <Progress value="{{audiobar}}" max="{{duration}}" ></Progress> -->
@@ -64,10 +61,10 @@
                <ion-button (click)="playPrev($event)" color="danger" class="play-button play-button-1">
                   <ion-icon name="skip-backward"></ion-icon>
                </ion-button>
-               <ion-button *ngIf="(playState == '3')" (click)="playPause($event)" color="danger" class="play-button">
+               <ion-button *ngIf="(playState == '1')" (click)="playPause($event)" color="danger" class="play-button">
                   <ion-icon name="pause"></ion-icon>
                </ion-button>
-               <ion-button *ngIf="(playState != '3')" (click)="playPause($event)" color="danger" class="play-button">
+               <ion-button *ngIf="(playState != '1')" (click)="playPause($event)" color="danger" class="play-button">
                   <ion-icon name="play"></ion-icon>
                </ion-button>
                <ion-button (click)="playNext($event)" color="danger" class="play-button">
@@ -77,27 +74,53 @@
          </div>
       </div>
    </ion-card>
+</ion-header>
+
+<ion-content delegate-handle="dashboard" (ionScrollEnd)="test($event);">
+   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="0" pullMax="10">
+      <ion-refresher-content></ion-refresher-content>
+   </ion-refresher>
+
+
 
    <ion-list class="list-2" lines="none" id="il-track">
-      <ion-item *ngFor="let item of tracks,let i = index">
-         <div item-start class="track-seq" *ngIf="(showTrackSeq)" >
-            {{i+1}}
+      <ion-item button detail="false" (click)="playTrack(item);" *ngFor="let item of tracks,let i = index"
+         id="track-{{item.idx}}">
+         <div item-start class="track-seq" *ngIf="(showTrackSeq)">
+            <span *ngIf="!item.isPlaying">{{(item.trackIdx +1)}}</span>
+            <ion-icon name="volume-high" *ngIf="item.isPlaying" color="warning" class="track-isPlaying"></ion-icon>
          </div>
          <ion-label>
-            <span class="track-title">{{item.trackTitle}}</span><br>
+            <span class="track-title">{{item.track}}</span><br>
             <div>
                <span class="track-audioType">{{item.audioType}}</span>
                <span class="track-sampleRate">{{item.sampleRate}}</span>
                <span class="track-artist">{{item.artist}} - {{item.album}}</span>
             </div>
          </ion-label>
-         <ion-icon name="volume-high" *ngIf="item.isPlaying" color="warning" class="track-isPlaying"></ion-icon>
+         <!-- <ion-icon name="volume-high" *ngIf="item.isPlaying" color="warning" class="track-isPlaying"></ion-icon>
          <ion-buttons slot="end" *ngIf="!item.isPlaying">
-            <ion-button (click)="playTrack(item);" color="danger">
+            <ion-button (click)="playTrack(item.idx);" color="danger">
                <ion-icon name="logo-youtube" class="track-playbutton"></ion-icon>
+            </ion-button>
+         </ion-buttons> -->
+         <ion-buttons slot="end">
+            <ion-button (click)="trackAction(item,i);" color="danger">
+               <!-- <ion-icon name="more" class="track-playbutton"></ion-icon>  -->
+               <svg t="1574989236163" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" p-id="8818" width="28" height="28">
+                  <path
+                     d="M490.666667 384C526.012885 384 554.666667 355.346347 554.666667 320 554.666667 284.653653 526.012885 256 490.666667 256 455.320448 256 426.666667 284.653653 426.666667 320 426.666667 355.346347 455.320448 384 490.666667 384ZM490.666667 618.666667C526.012885 618.666667 554.666667 590.013013 554.666667 554.666667 554.666667 519.32032 526.012885 490.666667 490.666667 490.666667 455.320448 490.666667 426.666667 519.32032 426.666667 554.666667 426.666667 590.013013 455.320448 618.666667 490.666667 618.666667ZM490.666667 853.333333C526.012885 853.333333 554.666667 824.67968 554.666667 789.333333 554.666667 753.986987 526.012885 725.333333 490.666667 725.333333 455.320448 725.333333 426.666667 753.986987 426.666667 789.333333 426.666667 824.67968 455.320448 853.333333 490.666667 853.333333Z"
+                     p-id="8819" fill="red"></path>
+               </svg>
             </ion-button>
          </ion-buttons>
       </ion-item>
       <ion-item lines="none"></ion-item>
    </ion-list>
+
+   <ion-infinite-scroll #IonInfiniteScroll threshold="100px" (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" immediate-check="false" loadingText="">
+      </ion-infinite-scroll-content>
+   </ion-infinite-scroll>
 </ion-content>

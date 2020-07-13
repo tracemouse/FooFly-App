@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
-import { ModalController,NavController } from '@ionic/angular';
+import { Component,ViewChild } from '@angular/core';
+import { ModalController,NavController,IonContent } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import * as ProgressBar from "progressbar.js";
 
-// import { AppConfig} from "../app.config";
-// import { MyHttpService} from "../my-http.service";
 import { NowplayingPage } from "../model/nowplaying.page";
-import { WebsocketService} from "../websocket.service";
+import { MyHttpService} from "../my-http.service"; 
 import { AppConfig } from '../app.config';
+
+import { TrackActionPage } from "../model/track-action.page";
+
+import { playlistEnterAnimation } from "../modal-transitions";
+import { playlistLeaveAnimation } from "../modal-transitions";
 
 @Component({
   selector: 'app-tab1',
@@ -16,6 +19,9 @@ import { AppConfig } from '../app.config';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  @ViewChild(IonContent,{read: IonContent, static:false}) ionContent:IonContent;
+  
+  interval:any;
  
   tracks: any = [];
   nowTrack: any = {'trackTitle':'','artist':'','sampleRate':'','album':'','fileUrl':''};
@@ -29,6 +35,12 @@ export class Tab1Page {
   duration=100;
   audiobar=0;
   nav:any;
+  totalTracks = 0;
+  currentPlaylist = 0;
+  minPage = 1;
+  maxPage = 1;
+  totalPages = 1;
+  currentPage = 1;
 
   indefinite = "0";
 
@@ -37,10 +49,9 @@ export class Tab1Page {
   progressbar:any;
 
   constructor(
-              // public myHttpService: MyHttpService,
+              public myHttpService: MyHttpService,
               public navCtrl: NavController,
               public modalController: ModalController,
-              public wsService: WebsocketService,
               public router: Router,
               public activeRoute: ActivatedRoute) 
   { 
@@ -74,11 +85,19 @@ export class Tab1Page {
 
     this.progressbar.set(0);
 
+
+  }
+
+  test(e:any){
+    // console.log(event);
+    // console.log("scroll to =" + event.target.scrollTop);
+    // console.log(this.ionContent);
+    // console.log(e);
   }
 
   ionViewWillLeave(){
-  //  console.log("tab1 will leave");
-    // clearInterval(this.interval);
+ 
+    clearInterval(this.interval);
   }
 
   ngOnDestroy(){
@@ -89,145 +108,219 @@ export class Tab1Page {
 
   ionViewDidLoad(){
   //  console.log("tab1 did load");
-
   }
 
+
+
   async doRefresh(event){
-    this.wsService.closeWSPlaying();
-    this.wsService.wsPlaying = null;
 
-    this.ionViewWillEnter();
+    // this.ionViewWillEnter();
 
-    event.target.complete();
+    if(this.minPage == 1){
+      event.target.complete();
+      return;
+    }else{
+      this.minPage = this.minPage - 1;
+      this.myHttpService.GoPage(this.currentPlaylist,this.minPage).then(
+        (data:any)=>{
+          this.currentPage = parseInt(data.currentPage);
+          this.currentPage = (this.currentPage ==0)?1:this.currentPage;
+          // let len = data.playlist.length;
+          // for(let i=0; i<len;i++){
+          //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+          // }
+          // this.tracks = data.playlist.concat(this.tracks);
+          this.tracks = this.formatPlaylist(data).concat(this.tracks);
+          event.target.complete();
+        }
+      )
+
+    }
+  }
+
+  async loadMore(event:any){
+
+    if(this.maxPage == this.totalPages){
+      event.target.complete();
+      return;
+    }else{
+      this.maxPage = this.maxPage + 1;
+      this.myHttpService.GoPage(this.currentPlaylist,this.maxPage).then(
+        (data:any)=>{
+          this.currentPage = parseInt(data.currentPage);
+          this.currentPage = (this.currentPage ==0)?1:this.currentPage;
+          // let len = data.playlist.length;
+          // for(let i=0; i<len;i++){
+          //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+          // }
+          // this.tracks = this.tracks.concat(data.playlist);
+          this.tracks = this.tracks.concat(this.formatPlaylist(data));
+          event.target.complete();
+        }
+      )
+
+    }
   }
   
   ionViewWillEnter(){
     // console.log("tab1 view will enter");
     // console.log(this.playingSvgantimate);
+    clearInterval(this.interval);
 
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
 
     this.nowFileUrl = "";
 
-    var mydata = {"action":"getNowPlayingList"};
-    this.wsService.callMB(mydata).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
+    this.myHttpService.FocusOnPlaying().then(
+      (data:any)=>{
+        let idx = parseInt(data.currentPlaylist);
+        this.currentPlaylist = idx;
+        this.totalTracks = data.playlists[idx].count;
+        this.totalPages = Math.ceil(this.totalTracks / parseInt(data.playlistItemsPerPage));
+        this.currentPage = parseInt(data.currentPage);
+        this.currentPage = (this.currentPage ==0)?1:this.currentPage;
+        this.minPage = this.currentPage;
+        this.maxPage = this.currentPage;
+
+        if(data.currentTrack != "?"){
+          this.title = data.playing.track;
+          this.nowTrack = data.playing;
+        }else{
+          this.title = "";
+          this.nowTrack = {};
         }
-        this.tracks = data;
-        var len = this.tracks.length;
-        for(var i=0; i<len; i++){
-          var fileUrl = this.tracks[i].fileUrl;
-          var index = fileUrl.lastIndexOf(".");
-          this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-        }
+        // let len = data.playlist.length;
+        // for(let i=0; i<len;i++){
+        //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+        // }
+        // this.tracks = data.playlist;
+        this.myHttpService.GoPage(this.currentPlaylist,this.currentPage).then(
+          (data:any)=>{
+            this.tracks = this.formatPlaylist(data);
+          }
+        );
       }
     );
 
-    this.wsService.openWSPlaying();
-    this.wsService.obPlaying.subscribe(
-      (data)=>{
-        // console.log(data);
-        this.pushNowTrack(data);
-      }
-    );
+     this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
+
   }
  
-
-  async getCoverImg(){
-    // var mydata = {"action":"getLibArtwork", "fileUrl":this.tracks[0].fileUrl};
-    // var mydata = {"action":"getArtwork"}
-
-    // this.wsService.callMB(mydata).subscribe(
-    //   data=>{
-    //       // console.log(data);
-    //       this.pushImg(data);
-    //   }
-    // );
-    var getTimestamp=new Date().getTime();
-    var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork?" + getTimestamp;
-    this.coverImg = imgUrl;
-
+  private getState(){
+    this.myHttpService.GetState().then(
+      (data:any)=>{
+        // console.log(data);
+        this.pushTrack(data);
+      },
+      (error)=>{
+        clearInterval(this.interval);
+      }
+    );
   }
 
-  pushImg(img:any){
-    this.coverImg = img;
-  }
-  
-  // async getNowplaying(){
-  //   var mydata = {"action":"getNowPlaying"};
-  //   var postStr = JSON.stringify(mydata);
+  private pushTrack(data:any){
+    if(parseInt(data.currentPlaylist) != this.currentPlaylist){
+      this.ionViewWillEnter();
+      return;
+    }
+    data.currentPage = (data.currentPage == "0")?"1":data.currentPage;
+    // this.tracks = data.playlist;
+    if( this.currentPage != parseInt(data.currentPage)){
+      this.currentPage = parseInt(data.currentPage);
+      if(this.currentPage > this.maxPage){
+        this.maxPage = this.currentPage;
+        // let len = data.playlist.length;
+        // for(let i=0; i<len;i++){
+        //   data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+        // }
+        // this.tracks = this.tracks.concat(data.playlist);
+        this.tracks = this.tracks.concat(this.formatPlaylist(data));
+      }
+    }
 
-  //   this.myHttpService.CallMusicBee(postStr).then(
-  //     (data)=>{
-  //         // console.log(data);
-  //         this.pushNowTrack(data);
-  //     }
-  //   );
-  //  }
+    if(data.currentTrack != "?"){
+      if(this.title != data.playing.track){
+        this.nowTrack = data.playing;
+        this.title = data.playing.track;
+        let message = data.playing.artist + "-" + data.playing.album;
+        this.myHttpService.presentTrackToast(this.title,message);
+        let len = this.tracks.length;
+        for(let i=0; i<len; i++){
+          if(this.tracks[i].track == this.title){
+            this.tracks[i]['isPlaying'] = true;
+            this.locatePlayingTrack(this.tracks[i].idx);
+          }else{
+            this.tracks[i]['isPlaying'] = false;
+          }
+        }
+      }
+    }else{
+      this.nowTrack = "";
+      this.title = "";
+      return;
+    }
 
-  pushNowTrack(data:any){
-    if(data.playState == "3"){
+    this.playState = data.isPlaying;
+    // this.coverImg = AppConfig.settings.rootUrl + data.albumArt;
+    this.coverImg = this.myHttpService.GetArtworkUrl(data.playing);
+    this.audiobar = data.trackpos;
+    this.duration = data.tracklen;
+    let perc = this.getPercent(this.audiobar, this.duration);
+    this.progressbar.set(perc);
+
+    if(data.isPlaying == "1"){
       this.playingAnimateStart();
     }else{
       this.playingAnimateStop();
     }
+    // let len = this.tracks.length;
+    // for(let i=0; i<len; i++){
+    //   if(this.tracks[i].track == this.title){
+    //     this.tracks[i]['isPlaying'] = true;
+    //   }else{
+    //     this.tracks[i]['isPlaying'] = false;
+    //   }
 
-    this.duration = data.duration;
-    this.audiobar = data.playPosition;
+    //   let fileUrl = this.tracks[i].fileUrl;
+    //   let index = fileUrl.lastIndexOf(".");
+    //   this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
+    // }
+  }
 
-    let perc = this.getPercent(this.audiobar, this.duration);
-    this.progressbar.set(perc);
-
-    this.playFileUrl = "";
-
-    this.nowTrack = data.track;
-    this.title = this.nowTrack.trackTitle;
-    var index = this.nowTrack.fileUrl.lastIndexOf(".");
-    this.audioType = (this.nowTrack.fileUrl.substr(index+1)).toUpperCase();
-    this.playState = data.playState;
-    // console.log(this.nowTrack);
-    var idx = -1;
-    var len = this.tracks.length;
-    for(var i=0; i < len; i++){
-      if(this.tracks[i].fileUrl == this.nowTrack.fileUrl){
-        idx = i;
-        this.tracks[i]['isPlaying'] = true;
-      }else{
-        this.tracks[i]['isPlaying'] = false;
-      }
-    }
-
-    if(idx == -1){
-      var mydata = {"action":"getNowPlayingList"};
-      this.wsService.callMB(mydata).subscribe(
-        data=>{
-          // console.log(data);
-          this.tracks = data;
-          var len = this.tracks.length;
-          for(var i=0; i<len; i++){
-            var fileUrl = this.tracks[i].fileUrl;
-            var index = fileUrl.lastIndexOf(".");
-            this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-          }
-        }
-      );
-      return;
-    }
-
-    if(this.nowFileUrl != this.nowTrack.fileUrl){
-      this.nowFileUrl = this.nowTrack.fileUrl;
-
-      this.getCoverImg();
-    }
-
-    if(this.nowIdx != idx){
-      this.nowIdx = idx;
-    }
+  locatePlayingTrack(idx:any){
+    let obj = document.getElementById("track-" + idx);
+    if(!obj) return;
     
-    // console.log(idx);
+    let offset = obj.offsetTop;
+    // console.log("offset=" + offset);
+    // this.ionContent.scrollToBottom(obj.off)
+    // this.ionContent.scrollToBottom(obj.offsetTop);
+    // window.scrollTo(0,offset);
+    this.ionContent.scrollToPoint(0,offset,500);
+    // this.ionContent.scr
+ 
+  }
+
+  formatPlaylist(data:any){
+    let tracks = data.playlist;
+    let len = tracks.length;
+    for(let i=0; i<len; i++){
+      data.playlist[i]['idx'] = i + (this.currentPage - 1) * parseInt(data.playlistItemsPerPage);
+
+      if(tracks[i].track == this.title){
+        tracks[i]['isPlaying'] = true;
+      }else{
+        tracks[i]['isPlaying'] = false;
+      }
+
+      tracks[i].sampleRate = this.myHttpService.formatSampleRate(tracks[i].sampleRate);
+
+      let fileUrl = tracks[i].fileUrl;
+      let index = fileUrl.lastIndexOf(".");
+      tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
+    }
+
+    return tracks;
   }
 
   async more() {
@@ -236,6 +329,7 @@ export class Tab1Page {
     // this.navCtrl.navigateForward("/playing");
     // this.router.navigateByUrl("/playing");
     // this.router.navigate(['/playing']);
+    clearInterval(this.interval);
 
     const modal = await this.modalController.create({
         component: NowplayingPage,
@@ -245,13 +339,7 @@ export class Tab1Page {
 
     modal.onDidDismiss().then(res=>{
       if(!res.data.hasError){
-        this.wsService.openWSPlaying();
-        this.wsService.obPlaying.subscribe(
-          (data)=>{
-            // console.log(data);
-            this.pushNowTrack(data);
-          }
-        );
+        this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
       }else{
         this.navCtrl.navigateForward("/login");
       }
@@ -270,30 +358,27 @@ export class Tab1Page {
   }
 
   playTrack(track:any) {
-    this.playFileUrl = track.fileUrl;
-    var mydata = {"action":"playNow","fileUrl":this.playFileUrl};
-    this.wsService.sendWSPlaying(mydata);
+    // this.playFileUrl = track.fileUrl;
+    this.myHttpService.PlayTrack(track.playlistIdx,track.trackIdx);
   }
 
   playNext(event){
     event.preventDefault(); 
     event.stopPropagation();
-    var mydata = {"action":"playNext"};
-    this.wsService.sendWSPlaying(mydata);
+
+    this.myHttpService.PlayNext();
   }
 
   playPrev(event){
     event.preventDefault(); 
     event.stopPropagation();
-    var mydata = {"action":"playPrev"};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.PlayPrev();
   }
 
   playPause(event){
     event.preventDefault(); 
     event.stopPropagation();
-    var mydata = {"action":"playPause"};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.PlayPause();
   }
 
   playingAnimateStop(){
@@ -335,4 +420,24 @@ export class Tab1Page {
     return per / 100;
   }
 
+  async trackAction(track:any, idx:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    let input = {
+      'track':track
+    };
+    const modal = await this.modalController.create({
+      component: TrackActionPage,
+      backdropDismiss: true,
+      cssClass: "halfModal",
+      enterAnimation: playlistEnterAnimation,
+      leaveAnimation: playlistLeaveAnimation,
+      componentProps: {
+        'input':input
+      }
+    });
+
+    return await modal.present();
+  }
 }

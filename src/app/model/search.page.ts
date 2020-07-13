@@ -2,9 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
 import { MyDBService}  from "../my-db.service";
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
 import { AppConfig } from '../app.config';
+
+import { TrackActionPage } from "./track-action.page";
+
+import { playlistEnterAnimation } from "../modal-transitions";
+import { playlistLeaveAnimation } from "../modal-transitions";
 
 @Component({
   selector: 'app-search',
@@ -13,6 +17,10 @@ import { AppConfig } from '../app.config';
 })
 export class SearchPage implements OnInit {
   
+  @Input() input:any;
+  
+  playlistIdx: any;
+  allTracks:any = [];
   tracks: any = [];
   title: string = "";
   coverImg = "assets/img/cover.jpg";
@@ -22,17 +30,21 @@ export class SearchPage implements OnInit {
 
   showTrackSeq = false;
 
+  isPlayingIdx = null;
+
   constructor(public modalController: ModalController,
               public navParams: NavParams,
-              public wsService: WebsocketService,
-              // public myHttpService: MyHttpService,
+              public myHttpService: MyHttpService,
               public myDBService: MyDBService) 
   { 
-
+    navParams.get('input'); 
   }
 
   ngOnInit() {
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
+    this.allTracks = this.input.tracks;
+    this.playlistIdx = this.input.playlistIdx;
+
   }
 
   ngAfterViewInit(): void {
@@ -92,24 +104,20 @@ export class SearchPage implements OnInit {
       // searchCard.style.visibility = "visible";
     }
 
-    var mydata = {"action":"librarySearch", "query":query};
-    this.wsService.callMB(mydata,null,true).subscribe(
-      data=>{
-          // console.log(data);
-          if(!data.isSucc){
-            return;
-          }
-          this.tracks = data;
-          var len = this.tracks.length;
-          for(var i=0; i<len; i++){
-            var fileUrl = this.tracks[i].fileUrl;
-            var index = fileUrl.lastIndexOf(".");
-            this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
-          }
-        },
-        err=>{
-          this.cancel(true);
-        });    
+    this.allTracks.forEach( (track:any) =>{
+      if (
+          (track.track.indexOf(query) > -1) ||
+          (track.artist.indexOf(query) > -1 )  ||
+          (track.album.indexOf(query) > -1) 
+        ) 
+      {
+        let fileUrl = track.fileUrl;
+        let index = fileUrl.lastIndexOf(".");
+        track['audioType'] = fileUrl.substr(index + 1).toUpperCase();
+        track['isPlaying'] = false;
+        this.tracks.push(track);
+      }
+    });
   }
 
   cancel(error:any) {
@@ -120,62 +128,41 @@ export class SearchPage implements OnInit {
     });
   }
 
-  playTrack(track:any) {
-    var tracks = ""
-    tracks = tracks + track.fileUrl;
-    this.playFileUrl = track.fileUrl;
-    var mydata = {"action":"playTracks","tracks":tracks};
-    this.wsService.callMB(mydata,null,true).subscribe(
-      data=>{
-        // console.log(data);
-        // this.cancel(false);
-        if(!data.isSucc){
-          return;
-        }
-      },
-      err=>{
-        this.cancel(true);
+  playTrack(track:any, i:any) {
+    if(this.isPlayingIdx != i) {
+      if(this.isPlayingIdx != null){
+        this.tracks[this.isPlayingIdx]["isPlaying"] = false;
       }
-    );
-  }
-
-  playTracks() {
-    var tracks = ""
-    var i = 0;
-    for(let track of this.tracks){
-      i++;
-      if (i == 1) {
-        tracks = tracks + track.fileUrl;
-      }else{
-        tracks = tracks + "*" + track.fileUrl;
-      }
+      this.tracks[i]["isPlaying"] = true;
+      this.isPlayingIdx = i;
     }
-    
-    // console.log(tracks);
-    var mydata = {"action":"playTracks","tracks":tracks};
-    this.wsService.callMB(mydata,null,true).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-        this.cancel(false);
-      },
-      err=>{
-        this.cancel(true);
-      }
-    );
+
+    this.myHttpService.fooflyPlayTrack(track);
   }
 
-  handleSbInput(event:any) {
-    const query = event.target.value.toLowerCase();
-    requestAnimationFrame(() => {
-      var items:any;
-      items = Array.from(document.querySelector('#il-track').children);
-      items.forEach(item => {
-        const shouldShow = item.textContent.toLowerCase().indexOf(query) > -1;
-        item.style.display = shouldShow ? 'block' : 'none';
-      });
+  playTracks(){
+    this.myHttpService.fooflyPlayTracks(this.tracks);
+    this.cancel(false);
+  }
+
+  async trackAction(track:any, idx:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    let input = {
+      'track':track
+    };
+    const modal = await this.modalController.create({
+      component: TrackActionPage,
+      backdropDismiss: true,
+      enterAnimation: playlistEnterAnimation,
+      leaveAnimation: playlistLeaveAnimation,
+      cssClass: "halfModal",
+      componentProps: {
+        'input':input
+      }
     });
+
+    return await modal.present();
   }
 }

@@ -6,13 +6,45 @@ ion-content{
     --border-width: 0 !important;
 
 }
- 
+
+.result-header{
+  // display: inline-block;
+  position: relative;
+  height: 35px;
+  border-bottom: solid 1px #ddd;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+
+  ion-button{
+    --border-radius: 12px;
+  }
+}
+
+.result-header-title{
+  position: absolute;
+  bottom: 8px;
+  left: 0px;
+  font-size: 1rem;
+  font-weight: 600;
+  // color: rgba(0, 0, 0, 0.4);  
+}
+
+.result-header-button{
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
 
 .track-seq{
     /*width: 30px !important;*/
     margin: 0 auto;
-    margin-right: 10px;
-    font-size: 0.6 rem;
+    // margin-right: 10px;
+    min-width: 30px;
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.4);
+    margin-right: 3px;
+    text-align: center;
 }
 
 .track-playbutton{
@@ -64,57 +96,9 @@ ion-content{
 }
 
 .track-isPlaying{
-    margin-right: 10px !important;
-    margin: 0 auto; 
+  // margin-right: 10px !important;
+  font-size: 18px;
+  margin: 0 auto; 
 }
-
-ion-card {
-    position: relative;
-    text-align: center;
-  }
-  
-  .card-img-box{
-    display:inline-block;
-    text-align: center;
-    width:110px;
-    vertical-align: middle;
-    margin: 10px 0;
-  
-    .card-img{
-      border-radius: 5%;
-      margin: 0 auto;
-      width: 90px;
-      height: 90px;
-    }
-  }
-  
-  .card-text-box{
-   display:inline-block; 
-   width:calc(100% - 110px);
-   vertical-align: middle;
-   padding: 5px 8px 5px 0;
-  
-   .card-title {
-    text-align: left;
-    font-size: 1rem;
-    // width: 100%;
-    font-weight: 500;
-    color: #333;
-    text-overflow: ellipsis;
-    white-space: normal; 
-    overflow: hidden;
-  }
-
-  .card-subtitle {
-    margin: 0;
-    margin-top: 5px;
-    font-size: 0.7rem;
-    color: rgba(0, 0, 0, 0.4);
-    text-align: left;
-
-  }
- 
-  
-  }
 
  

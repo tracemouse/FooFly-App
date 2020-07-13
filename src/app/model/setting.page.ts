@@ -5,7 +5,7 @@ import { TranslateService }from "@ngx-translate/core";
 // import { timeout } from 'rxjs/operators';
 
 import { AppConfig } from '../app.config';
-import { WebsocketService} from "../websocket.service"; 
+// import { WebsocketService} from "../websocket.service"; 
 
 @Component({
   selector: 'app-setting',
@@ -26,7 +26,7 @@ export class SettingPage implements OnInit {
   constructor(public modalController: ModalController,
               public navParams: NavParams,
               // public http:HttpClient,
-              public wsService: WebsocketService,
+              // public wsService: WebsocketService,
               public alertController: AlertController,
               public translateService: TranslateService) 
   { 
@@ -62,13 +62,21 @@ export class SettingPage implements OnInit {
       return;
     }
 
+    AppConfig.settings.interval = this.inputInterval;
 
-    this.loginDisabled = true;
+    this.modalController.dismiss({
+      // result: 'modal_cancel'
+      'save': true,
+      'url': AppConfig.settings.rootUrl,
+      'interval': this.inputInterval
+    });
+
+    // this.loginDisabled = true;
     // var url = AppConfig.settings.protocol + "//" + this.inputIp + ":" + this.inputPort;
     // var wsurl = "ws://" + this.inputIp + ":" + this.inputPort + "/wsjsonrpc"; 
-    var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
+    // var wsurl = AppConfig.global.ws_schema + this.inputIp + ":" + this.inputPort + "/wsjsonrpc?password=" + this.inputPassword; 
 
-    this.testMB(wsurl);
+    // this.testMB(wsurl);
   }
 
   getIp(ip:any){
@@ -87,54 +95,54 @@ export class SettingPage implements OnInit {
     this.inputPassword = password.value;
   }
   
-  async testMB(url:string){
+  // async testMB(url:string){
 
-    var mydata = {"action":"getMB"};
-    this.wsService.callMB(mydata,url,true)
-    .subscribe(
-      res => {
-        // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
-        // console.log(res);
-        this.loginDisabled = false;
-        if(!res.isSucc){
-          return;
-        }
+  //   var mydata = {"action":"getMB"};
+  //   this.wsService.callMB(mydata,url,true)
+  //   .subscribe(
+  //     res => {
+  //       // console.log('%c 请求处理成功 %c', 'color:red', 'url', this.url, 'res', res);
+  //       // console.log(res);
+  //       this.loginDisabled = false;
+  //       if(!res.isSucc){
+  //         return;
+  //       }
 
-        AppConfig.settings.ip = this.inputIp;
-        AppConfig.settings.port = this.inputPort;
-        AppConfig.settings.interval = this.inputInterval;
-        AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
-        AppConfig.settings.versionPlugin = res.pluginVersion;
-        this.modalController.dismiss({
-          // result: 'modal_cancel'
-          'save': true,
-          'url': AppConfig.settings.rootUrl,
-          'interval': this.inputInterval
-        });
-      },error => {
-        console.log('%c 请求处理失败 %c', 'color:red', 'url', url, 'err', error);
-        this.presentConnError();
-      }
-      ); 
-  }
+  //       AppConfig.settings.ip = this.inputIp;
+  //       AppConfig.settings.port = this.inputPort;
+  //       AppConfig.settings.interval = this.inputInterval;
+  //       AppConfig.settings.rootUrl = AppConfig.settings.protocol + "//" + AppConfig.settings.ip + ":" + AppConfig.settings.port;
+  //       AppConfig.settings.versionPlugin = res.pluginVersion;
+  //       this.modalController.dismiss({
+  //         // result: 'modal_cancel'
+  //         'save': true,
+  //         'url': AppConfig.settings.rootUrl,
+  //         'interval': this.inputInterval
+  //       });
+  //     },error => {
+  //       console.log('%c 请求处理失败 %c', 'color:red', 'url', url, 'err', error);
+  //       this.presentConnError();
+  //     }
+  //     ); 
+  // }
  
 
-  async presentConnError() {
-    var message;
-    await this.translateService.get("message").subscribe(res=>{
-      message = res;
-    })
-    const alert = await this.alertController.create({
-      header: message.error,
-      subHeader: message['err-conn-fail'],
-      message: message['err-conn-fail-msg'],
-      buttons: [message.ok]
-    });
+  // async presentConnError() {
+  //   var message;
+  //   await this.translateService.get("message").subscribe(res=>{
+  //     message = res;
+  //   })
+  //   const alert = await this.alertController.create({
+  //     header: message.error,
+  //     subHeader: message['err-conn-fail'],
+  //     message: message['err-conn-fail-msg'],
+  //     buttons: [message.ok]
+  //   });
 
-    alert.onDidDismiss().then(res=>{
-      this.loginDisabled = false;
-     });
+  //   alert.onDidDismiss().then(res=>{
+  //     this.loginDisabled = false;
+  //    });
 
-    await alert.present();
-  }
+  //   await alert.present();
+  // }
 }

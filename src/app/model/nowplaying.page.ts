@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
-// import { MyHttpService} from "../my-http.service";
+import { MyHttpService} from "../my-http.service";
 import { AppConfig} from "../app.config";
-import { WebsocketService} from "../websocket.service";
+// import { WebsocketService} from "../websocket.service";
 
 @Component({
   selector: 'app-nowplaying',
@@ -11,12 +11,14 @@ import { WebsocketService} from "../websocket.service";
   styleUrls: ['./nowplaying.page.scss'],
 })
 export class NowplayingPage {
-  
+  interval:any;
+
   nowTrack: any = {'trackTitle':'','artist':'','sampleRate':'44.1 KHz','album':'','fileUrl':''};
   nowIdx = -1;
   nowFileUrl:any;
   title: string = "";
-  audioType = "";
+  audioType = "-";
+  sampleRate = "-";
   playState = "6";
   duration=100;
   audiobar=0;
@@ -24,6 +26,8 @@ export class NowplayingPage {
   playPostion = 0;
   shuffle = false;
   repeat = 0;
+  volume = "100";
+  isMuted = "0";
 
   coverImg = "assets/img/cover.jpg";
 
@@ -37,31 +41,46 @@ export class NowplayingPage {
 
   antimation = "true";
 
-  interval:any;
+  PlaybackOrder:any;
+ 
 
   constructor(public modalController: ModalController,
               public navParams: NavParams,
-              // public myHttpService: MyHttpService,
-              public wsService: WebsocketService)
+              public myHttpService: MyHttpService)
               
   { 
-
+    this.PlaybackOrder = AppConfig.PlayBackOrder;
   }
  
   ionViewWillEnter(){
-
-
-    this.getCoverImg();
+    // console.log("now enter");
     
-    this.wsService.openWSPlaying();
-    this.wsService.obPlaying.subscribe(
-      data=>{
-        // console.log(data);
-        this.pushNowTrack(data);
-      }
-    );
+    this.interval = setInterval(()=>{this.getState();},AppConfig.settings.interval);
   
     this.antimation = AppConfig.settings.animation;
+  }
+
+  private getState(){
+    this.myHttpService.GetState().then(
+      (data:any)=>{
+        this.repeat = parseInt(data.playBackOrder);
+
+        // console.log(data);
+        if(data.currentTrack != "?"){
+          this.nowTrack = data.playing;
+          this.isMuted = data.isMuted;
+          this.pushNowTrack(data);
+        }else{
+          this.title = "";
+          this.audioType = "";
+          this.nowTrack = {};
+          this.playState = "0";
+        }
+      },
+      (error)=>{
+        clearInterval(this.interval);
+      }
+    );
   }
 
 
@@ -70,56 +89,43 @@ export class NowplayingPage {
     //Add 'implements OnDestroy' to the class.
   }
 
- 
-  async getCoverImg(){
-    // var mydata = {"action":"getLibArtwork", "fileUrl":this.tracks[0].fileUrl};
-    // var mydata = {"action":"getArtwork"}
-    // this.wsService.callMB(mydata,null,true).subscribe(
-    //   data=>{
-    //       // console.log(data);
-    //       this.pushImg(data);
-    //   },
-    //   err=>{
-    //     this.cancel(true);
-    //   });
-      var getTimestamp=new Date().getTime();
-      var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork?" + getTimestamp;
-
-      this.coverImg = imgUrl;
-  }
-
-  pushImg(img:any){
-    this.coverImg = img;
-  }
-
   pushNowTrack(data:any){
+    // console.log(data);
     this.playFileUrl = "";
 
-    this.nowTrack = data.track;
-    this.title = this.nowTrack.trackTitle;
-    var index = this.nowTrack.fileUrl.lastIndexOf(".");
-    this.audioType = (this.nowTrack.fileUrl.substr(index+1)).toUpperCase();
-    this.playState = data.playState;
+    this.nowTrack = data.playing;
+    this.sampleRate = this.myHttpService.formatSampleRate(this.nowTrack.sampleRate);
 
-    var str = "00000" + this.nowTrack.duration.trim();
+    if(this.title != this.nowTrack.track){
+      this.title = this.nowTrack.track;
+      let message = data.playing.artist + "-" + data.playing.album;
+      this.myHttpService.presentTrackToast(this.title,message);
+    }
+
+    // this.audioType = this.nowTrack.codec;
+    let fileUrl = this.nowTrack.fileUrl;
+    let index = fileUrl.lastIndexOf(".");
+    this.audioType = fileUrl.substr(index+1).toUpperCase();
+    this.playState = data.isPlaying;
+
+    var str = "00000" + this.nowTrack.len.trim();
     this.rangerEnd = str.substring(str.length - 5);
 
-    this.duration = data.duration;
-    this.audiobar = data.playPosition;
-    this.repeat = data.repeat;
-    this.shuffle = data.shuffle;
+    this.duration = data.tracklen;
+    this.audiobar = data.trackpos;
+    this.volume = data.volume;
+    // this.repeat = data.repeat;
+    // this.shuffle = data.shuffle;
     // console.log(this.duration);
     // console.log(this.audiobar);
 
-    if(this.nowFileUrl != this.nowTrack.fileUrl){
-      this.nowFileUrl = this.nowTrack.fileUrl;
-      this.getCoverImg();
-    }
-
+    // this.coverImg = AppConfig.settings.rootUrl + data.albumArt;
+    this.coverImg = this.myHttpService.GetArtworkUrl(this.nowTrack);
   }
 
   cancel(error:any) {
-    
+    clearInterval(this.interval);
+
     this.modalController.dismiss({
         // result: 'modal_cancel'
         'dismissed': true,
@@ -129,42 +135,69 @@ export class NowplayingPage {
 
   setPlayPosition(event:any){
     this.playPostion = event.target.value;
-    var mydata = {"action":"setPosition","position":this.playPostion};
-    this.wsService.sendWSPlaying(mydata);
+    // let perc = this.getPercent(this.playPostion, this.duration);
 
-  }
+    // var mydata = {"action":"setPosition","position":this.playPostion};
+    // this.myHttpService.SetPostion(perc);
+    this.myHttpService.SetPostion(this.playPostion);
 
-  setShuffle(){
-    this.shuffle = (this.shuffle)?false:true;
-    var mydata = {"action":"setShuffle","shuffle":this.shuffle};
-    this.wsService.sendWSPlaying(mydata);
   }
 
   setRepeat(){
-    if(this.repeat == 0){
-      this.repeat = 1;
-    }else if(this.repeat == 1){
-      this.repeat = 2;
-    }else{
+    if(this.repeat == 6){
       this.repeat = 0;
+    }else{
+      this.repeat = this.repeat + 1;
     }
 
-    var mydata = {"action":"setRepeat","repeat":this.repeat};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.SetRepeat(this.repeat);
+ 
   }
 
   playNext(){
-    var mydata = {"action":"playNext"};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.PlayNext();
   }
 
   playPrev(){
-    var mydata = {"action":"playPrev"};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.PlayPrev();
   }
 
   playPause(){
-    var mydata = {"action":"playPause"};
-    this.wsService.sendWSPlaying(mydata);
+    this.myHttpService.PlayPause();
+  }
+
+  setVolume(){
+    if(this.volume == '0'){
+      let volume = localStorage.getItem("volume");
+      if(!volume){
+        volume = "100";
+      }
+      this.myHttpService.SetVolume(volume);
+    }else{
+      localStorage.setItem("volume",this.volume);
+      this.myHttpService.SetVolume("0");
+    }
+  }
+
+  setMute(){
+    this.isMuted = (this.isMuted=="1")?"0":"1";
+    this.myHttpService.SetMute();
+  }
+
+  getPercent(num, total) {
+    /// <summary>
+    /// 求百分比
+    /// </summary>
+    /// <param name="num">当前数</param>
+    /// <param name="total">总数</param>
+    num = parseFloat(num);
+    total = parseFloat(total);
+    if (isNaN(num) || isNaN(total)) {
+        return 0;
+    }
+
+    let per =  (total <= 0) ? 0: (Math.round(num / total * 10000) / 100.00);
+    return Math.round(per);
+    //return per / 100;
   }
 }

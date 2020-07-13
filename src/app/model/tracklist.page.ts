@@ -1,9 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, OnInit, Input,ViewChild,ElementRef, ComponentFactoryResolver  } from '@angular/core';
+import { ModalController, NavParams,IonInfiniteScroll  } from '@ionic/angular';
 
 import { AppConfig} from "../app.config";
-// import { MyHttpService} from "../my-http.service";
-import { WebsocketService} from "../websocket.service"; 
+import { MyHttpService} from "../my-http.service";
+import { TrackActionPage } from "./track-action.page";
+
+import { playlistEnterAnimation } from "../modal-transitions";
+import { playlistLeaveAnimation } from "../modal-transitions";
 
 @Component({
   selector: 'app-tracklist',
@@ -11,65 +14,83 @@ import { WebsocketService} from "../websocket.service";
   styleUrls: ['./tracklist.page.scss'],
 })
 export class TracklistPage implements OnInit {
-  
-  @Input() tracks: any = [];
-  @Input() title: string;
-  @Input() fileUrl: string;
+  @ViewChild('IonInfiniteScroll',{read: ElementRef, static:false}) infiniteScroll: ElementRef;
 
+  @Input() input:any;
+  tracks: any = [];
+  title: string;
+  fileUrl: string;
+  playlistIdx: any;
   showTracks: any = [];
-
   defaultImg = "assets/img/cover.jpg";
+  folderImg = "assets/img/folder.jpg";
+  albumImg = "assets/img/album.jpg";
+  artistImg = "assets/img/artist.jpg";
+  playlistImg = "assets/img/playlist.jpg";
   coverImg :string;
-
   playFileUrl = "";
-
   showTrackSeq = false;
+  totalTracks = 0;
+
+  page = 1;
+  totalPages = 1;
+  headerTitle = "";
+
+  isPlayingIdx = null;
 
   constructor(public modalController: ModalController,
               public navParams: NavParams,
-              // public myHttpService: MyHttpService,
-              public wsService: WebsocketService) 
+              public myHttpService: MyHttpService) 
   { 
-    navParams.get('title');
-    navParams.get('fileUrl');
-    navParams.get('tracks');
-
+    navParams.get('input'); 
   }
 
   ngOnInit() {
+
+    this.playlistIdx = this.input.playlistIdx;
+    this.fileUrl = this.input.fileUrl;
+    this.tracks = this.input.tracks;
+    this.title = this.input.title;
+    this.totalTracks = this.input.totalTracks;
+    this.totalPages = this.input.totalPages;
+    this.headerTitle = this.input.headerTitle;
+
+    // console.log(this.tracks);
 
     this.showTrackSeq = (AppConfig.settings.showTrackSeq=="true")?true:false;
 
     this.showTracks = [...this.tracks];
     // console.log(this.tracks);
 
-    var len = this.tracks.length;
-    for(var i=0; i<len; i++){
-      var fileUrl = this.tracks[i].fileUrl;
-      var index = fileUrl.lastIndexOf(".");
+    let len = this.tracks.length;
+    for(let i=0; i<len; i++){
+      let fileUrl = this.tracks[i].fileUrl;
+      let index = fileUrl.lastIndexOf(".");
       this.tracks[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
     }
     
-    // console.log(this.tracks);
     this.coverImg = this.defaultImg;
-    if(this.fileUrl == null || this.fileUrl == "" ){
-      return;
+
+    switch(this.input.type){
+      // case 'folder':
+      //     this.coverImg = this.folderImg;
+      //     break;
+      // case 'album':
+      //     this.coverImg = this.albumImg;
+      //     break;
+      // case 'artist':
+      //     this.coverImg = this.artistImg;
+      //     break;
+      case 'playlist':
+          this.coverImg = this.playlistImg;
+          break;
+      default:
+          // let imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
+          // imgUrl += "?fileUrl=" + encodeURIComponent(this.fileUrl);
+          let imgUrl = this.myHttpService.GetArtworkUrl(this.tracks[0]);
+          this.coverImg = imgUrl;
+          break;
     }
-
-    // var mydata = {"action":"getLibArtwork", "fileUrl":this.fileUrl,"pushData":""};
-    // this.wsService.callMB(mydata,null,true).subscribe(
-    //   data=>{
-    //       this.pushImg(data.img);
-    //   },
-    //   err=>{
-    //     this.cancel(true);
-    //   }
-    // );
-
-    var imgUrl = "http://" + AppConfig.settings.ip + ":" + AppConfig.settings.port + "/getArtwork";
-    imgUrl += "?fileUrl=" + encodeURI(this.fileUrl);
-    this.coverImg = imgUrl;
-
   }
 
   pushImg(img:any){
@@ -85,60 +106,44 @@ export class TracklistPage implements OnInit {
     });
   }
 
-  playTrack(track:any) {
-    var tracks = ""
-    this.playFileUrl = track.fileUrl;
-    tracks = tracks + track.fileUrl;
-    var mydata = {"action":"playTracks","tracks":tracks};
-    var postStr = JSON.stringify(mydata);
+  async playTrack(track:any,i:any) {
+    if(this.isPlayingIdx != i) {
+      if(this.isPlayingIdx != null){
+        this.tracks[this.isPlayingIdx]["isPlaying"] = false;
+      }
+      this.tracks[i]["isPlaying"] = true;
+      this.isPlayingIdx = i;
+    }
 
-    this.wsService.callMB(mydata,null,true).subscribe(
-      data=>{
-        // console.log(data);
+    let idx = track.idx;
+    if(this.input.type == "playlist"){
+      this.playPlaylist(idx);
+    }else{
+      this.myHttpService.fooflyPlayTrack(track);
+    }
+  }
+
+  async playPlaylist(idx:any){
+    this.myHttpService.SwithPlaylist(this.playlistIdx).then(
+      data =>{
+        this.myHttpService.PlayTrack(this.playlistIdx, idx);
         // this.cancel(false);
-        if(!data.isSucc){
-          return;
-        }
-      },
-      err=>{
-        this.cancel(true);
       }
     );
   }
 
   playTracks() {
-    var tracks = ""
-    var i = 0;
-    for(let track of this.tracks){
-      i++;
-      if (i == 1) {
-        tracks = tracks + track.fileUrl;
-      }else{
-        tracks = tracks + "*" + track.fileUrl;
-      }
+    if(this.input.type == "playlist"){
+      this.playPlaylist(0);
+    }else{
+      this.myHttpService.fooflyPlayTracks(this.tracks);
     }
-    
-    // console.log(tracks);
-    var mydata = {"action":"playTracks","tracks":tracks};
-    var postStr = JSON.stringify(mydata);
-
-    this.wsService.callMB(mydata,null,true).subscribe(
-      data=>{
-        // console.log(data);
-        if(!data.isSucc){
-          return;
-        }
-        this.cancel(false);
-      },
-      err=>{
-        this.cancel(true);
-      }
-    );
+    this.cancel(false);
   }
 
   handleSbInput(event:any) {
     // console.log(event);
-    console.log("search input=" + event.target.value);
+    // console.log("search input=" + event.target.value);
     const query = event.target.value.toLowerCase();
     requestAnimationFrame(() => {
       var items:any;
@@ -155,15 +160,18 @@ export class TracklistPage implements OnInit {
   }
 
   handleSbInput1(event:any) {
- 
+
     const query = event.target.value.toLowerCase();
     if(query.length == 0){
+      this.infiniteScroll.nativeElement.disabled = false;
       this.showTracks = [...this.tracks];
       return;
     }
     
+    this.infiniteScroll.nativeElement.disabled = true;
+ 
     this.showTracks = this.tracks.filter((item,index)=>{
-      var str = (index + 1) + item.trackTitle + item.audioType + item.artist + item.album + item.sampleRate;
+      var str =  item.track + " " + item.audioType + " " + item.artist + " " + item.album;
       // console.log(str);
       if(str.toLowerCase().indexOf(query) > -1){
         return item;
@@ -178,5 +186,53 @@ export class TracklistPage implements OnInit {
     }
 
     event.target.blur();
+  }
+
+  async loadMore(event:any){
+    // if(this.input.from == "tab2"){
+    if(this.page >= this.totalPages){
+      event.target.complete();
+      this.infiniteScroll.nativeElement.disabled = true;
+      return;
+    }
+
+    this.page = this.page + 1;
+    this.myHttpService.GoPage(this.playlistIdx, this.page).then(
+      (data:any)=>{
+        let len = data.playlist.length;
+        for(let i=0; i<len;i++){
+          let fileUrl = data.playlist[i].fileUrl;
+          let index = fileUrl.lastIndexOf(".");
+          data.playlist[i]['audioType'] = fileUrl.substr(index+1).toUpperCase();
+          data.playlist[i]['idx'] = i + (this.page - 1) * parseInt(data.playlistItemsPerPage);
+          data.playlist[i].sampleRate = this.myHttpService.formatSampleRate(data.playlist[i].sampleRate);
+        }
+        this.tracks = this.tracks.concat(data.playlist);
+        this.showTracks = [...this.tracks];
+        event.target.complete();
+      }
+    )
+
+  }
+
+  async trackAction(track:any, idx:any){
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    let input = {
+      'track':track
+    };
+    const modal = await this.modalController.create({
+      component: TrackActionPage,
+      backdropDismiss: true,
+      enterAnimation: playlistEnterAnimation,
+      leaveAnimation: playlistLeaveAnimation,
+      cssClass: "halfModal",
+      componentProps: {
+        'input':input
+      }
+    });
+
+    return await modal.present();
   }
 }

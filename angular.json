@@ -49,6 +49,21 @@
                 "glob": "offline.html",
                 "input": "src",
                 "output": "/"
+              },
+              {
+                "glob": "config",
+                "input": "src",
+                "output": "/"
+              },
+              {
+                "glob": "foo_httpcontrol_browser_tpl.html",
+                "input": "src",
+                "output": "/"
+              },
+              {
+                "glob": "foo_httpcontrol_controls_tpl.html",
+                "input": "src",
+                "output": "/"
               }
             ],
             "styles": [
@@ -94,7 +109,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app:build"
+            "browserTarget": "app:build",
+            "proxyConfig":"proxy.config.json"
           },
           "configurations": {
             "production": {
