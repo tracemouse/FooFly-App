@@ -181,4 +181,17 @@ export class MyDBService {
     this.translate.use(AppConfig.settings.language);
   }
 
+  saveJSON(key:any, obj:any){
+     localStorage.setItem(key,JSON.stringify(obj));
+  }
+
+  getJSON(key:any){
+    let str = localStorage.getItem(key);
+    if(str){
+      return JSON.parse(str);
+    }else{
+      return null;
+    }
+  }
+
 }

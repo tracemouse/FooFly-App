@@ -117,7 +117,7 @@ export class Tab2Page {
 
   initMusicLib(){
     this.musicLib = "";
-    let musicLibPlaylist:any = localStorage.getItem(AppConfig.settings.musicLibPlaylist);
+    let musicLibPlaylist:any = this.myDBService.getJSON(AppConfig.settings.musicLibPlaylist);
     let needRefresh = false;
     if(musicLibPlaylist == null){
       needRefresh = true;
@@ -152,11 +152,11 @@ export class Tab2Page {
           this.myDBService.saveSettingsData();
           needRefresh = true;
         }
-        localStorage.setItem(AppConfig.settings.musicLibPlaylist,musicLibPlaylist);
+        this.myDBService.saveJSON(AppConfig.settings.musicLibPlaylist,musicLibPlaylist);
         if(needRefresh){
           this.refresh();
         }else{
-          this.tracks = localStorage.getItem(AppConfig.settings.musicLibTracks);
+          this.tracks = this.myDBService.getJSON(AppConfig.settings.musicLibTracks);
           if(this.tracks == null){
             this.refresh();
             return;
@@ -241,7 +241,7 @@ export class Tab2Page {
                 }
                 this.loading.dismiss();
                 this.sgLibrary = "folder";
-                localStorage.setItem(AppConfig.settings.musicLibTracks, this.tracks);
+                this.myDBService.saveJSON(AppConfig.settings.musicLibTracks, this.tracks);
             }
           );
         }
@@ -256,7 +256,7 @@ export class Tab2Page {
       }
       this.loading.dismiss();
       this.sgLibrary = "folder";
-      localStorage.setItem(AppConfig.settings.musicLibTracks, this.tracks);
+      this.myDBService.saveJSON(AppConfig.settings.musicLibTracks, this.tracks);
       return;
     }
 

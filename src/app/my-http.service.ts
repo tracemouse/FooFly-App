@@ -43,7 +43,8 @@ export class MyHttpService {
       // if(platform == "cordova"){
       //   url = AppConfig.settings.rootUrl + url;
       // }
-      let randrom = "random=" + Math.random();
+      // let randrom = "random=" + Math.random();
+      let randrom = "random=fixed";
       url = (url.endsWith("?"))?(url + randrom):(url + "&" + randrom);
     }else{
       url = url + AppConfig.fooflyRoot;
