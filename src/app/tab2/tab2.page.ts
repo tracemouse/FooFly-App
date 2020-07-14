@@ -39,7 +39,7 @@ export class Tab2Page {
   playlistIdx = 0;
   totalTracks = 0;
   totalPages = 0;
-  musicLib = "";
+  musicLib:any = null;
 
   constructor(public myDBService: MyDBService,
               public myHttpService: MyHttpService,
