@@ -1,2 +1,1 @@
-# MusicBee Ionic
- MusicBee Ionic remote control client
+## WebApp for FooFly
